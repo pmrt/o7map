@@ -119,12 +119,12 @@ class Map {
       this._onMouseUp(opt)
     });
 
-    this.regionGroup.forEachObject(obj => {
+    const objs = this.regionGroup.getObjects("rect");
+    objs.forEach(obj => {
       obj.on("mousedown", opt => {
         this._onObjMouseDown(opt);
       })
     })
-
     return this;
   }
 
@@ -174,7 +174,9 @@ class Map {
       const region = new Region(this.canvas, rd);
       const ok = region.render();
       if (ok) {
-        regions.push(region.fabricObj);
+        regions.push(...region.fabricObjs);
+      } else {
+        this.log(`WARN: Skipping region '${region.name}'`, "warn")
       }
     }
 
@@ -185,6 +187,7 @@ class Map {
     });
 
     this.canvas.add(this.regionGroup);
+    console.log(this.regionGroup)
     this.regionGroup.bringToFront();
     this.centerRegions();
     return this;

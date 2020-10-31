@@ -1,4 +1,5 @@
 import { fabric } from "fabric";
+import { wrapText } from "../helpers";
 import theme from "./theme";
 
 export class RegionData {
@@ -60,7 +61,7 @@ class Region {
 
     this._canvas = canvas;
     this._regionData = regionData;
-    this._obj = null;
+    this._objs = [];
     this._firstRender = true;
   }
 
@@ -80,13 +81,13 @@ class Region {
     return this._regionData.name;
   }
 
-  get fabricObj() {
-    return this._obj;
+  get fabricObjs() {
+    return this._objs;
   }
 
-
   update() {
-    this._obj.set({
+    const [region, text] = this.fabricObjs;
+    region.set({
       left: this.coords.x,
       top: this.coords.y,
       fill: theme.secondary,
@@ -104,15 +105,38 @@ class Region {
         systems: this.systems,
       },
     });
+
+    text.set({
+      left: this.coords.x - text.getScaledWidth() / 2,
+      top: this.coords.y + region.getScaledWidth() / 2 + 8,
+      fontFamily: "Roboto Mono",
+      fill: theme.primary,
+      fontSize: "8",
+      textAlign: "center",
+    })
   }
 
   render() {
-    if (!this.coords.x || !this.coords.y) {
+    if (this.coords.x === null || this.coords.y === null) {
+      return null;
+    }
+
+    if (this.coords.x === undefined || this.coords.y === undefined) {
+      return null;
+    }
+
+    if (Number.isNaN(this.coords.x) || Number.isNaN(this.coords.y)) {
       return null;
     }
 
     if (this._firstRender) {
-      this._obj = new fabric.Rect();
+      this._objs.push(
+        new fabric.Rect(),
+        new fabric.Textbox(wrapText(this.name, 20), {
+          width: 50,
+          fontSize: "8",
+        })
+      );
       this.update();
       this._firstRender = false;
     } else {

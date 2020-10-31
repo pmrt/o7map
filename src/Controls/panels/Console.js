@@ -17,7 +17,7 @@ const Line = ({ index, style, data }) => {
   return (
     <span className={`stdout-line ${level}`} style={style}>
       <small>{formatTime(ts)}</small>
-      {str}
+      {str.substr(0,68)}
     </span>
   )
 };
@@ -36,7 +36,7 @@ const StdoutList = ({ stdout }) => {
   return (
     <List
       className="stdout-list panel"
-      height={200}
+      height={250}
       itemCount={stdout.length}
       itemSize={20}
       itemKey={LineKey}
@@ -53,10 +53,15 @@ const StdoutList = ({ stdout }) => {
     </List>
   )
 }
-
 function Console({ stdout }) {
   return (
-    <StdoutList stdout={stdout}/>
+    <div className="console">
+      <StdoutList stdout={stdout}/>
+      <div className="input-wrapper">
+        <input type="text"></input>
+        <span class="input-placeholder"></span>
+      </div>
+    </div>
   )
 }
 

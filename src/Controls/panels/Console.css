@@ -6,6 +6,10 @@
   color: var(--theme-light-red);
 }
 
+.stdout-line.warn {
+  color: var(--theme-light-yellow);
+}
+
 .stdout-line.system {
   color: var(--theme-purpled-blue);
 }
@@ -35,6 +39,38 @@
   background-color: var(--theme-background-grey);
   border-radius: 0px;
   border: 3px solid transparent;
+}
+
+.console input {
+  position: relative;
+  width: 100%;
+  color: var(--theme-light-grey);
+  background-color: var(--theme-dark-purple);
+  border: none;
+  outline: none;
+  padding: 11px 10px;
+  width: 100%;
+}
+
+.input-placeholder:after {
+  content: "[PRESS ENTER]";
+  position: absolute;
+  top: 0;
+  padding: 10px 0;
+  right: 1em;
+  color: #383838;
+  transform: translateX(0);
+  transition: transform 90ms ease-in;
+}
+
+.console input:focus + .input-placeholder:after {
+  transform: translateX(120px);
+}
+
+.input-wrapper {
+  overflow: hidden;
+  position: relative;
+  margin: 0 15px;
 }
 
 /*

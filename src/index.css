@@ -12,6 +12,9 @@
   --theme-background-grey: #2d2d2d;
   --theme-light-red: #ff5353;
   --theme-purpled-blue: #9191ff;
+  --theme-light-yellow: #ffffcc;
+  --theme-light-grey: #a9a9a9;
+  --theme-dark-purple: #0c0a11;
 }
 
 html, body {
