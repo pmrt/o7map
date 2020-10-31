@@ -6,6 +6,10 @@
   color: var(--theme-light-red);
 }
 
+.stdout-line.system {
+  color: var(--theme-purpled-blue);
+}
+
 .stdout-line small {
   color: var(--theme-secondary);
   margin-right: 12px;

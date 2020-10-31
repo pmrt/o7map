@@ -97,7 +97,7 @@ class Map {
       this.log("ERR: User selected an object but +1 objects were found at those coordinates. Aborting...", "error");
       return
     }
- 
+
     const obj = opt.subTargets[0];
     this.log("Selected: " + obj.get("metadata").name);
   }
@@ -185,7 +185,6 @@ class Map {
     });
 
     this.canvas.add(this.regionGroup);
-    console.log(this.regionGroup)
     this.regionGroup.bringToFront();
     this.centerRegions();
     return this;
