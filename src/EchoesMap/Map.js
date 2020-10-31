@@ -44,7 +44,7 @@ function EchoesMap() {
         start = performance.now();
         await map.fetchMaps();
         end = performance.now();
-        log(`Finished task: map data. Took ${end - start}ms.`);
+        log(`Finished task: map data. Took ${(end - start).toFixed(3)}ms.`);
 
         if (didCancel) {
           return;
@@ -54,13 +54,13 @@ function EchoesMap() {
         start = performance.now();
         map.fillRegions();
         end = performance.now();
-        log(`Finished task: Rendering. Took ${end - start}ms.`);
+        log(`Finished task: Rendering. Took ${(end - start).toFixed(3)}ms.`);
 
-        log(":: Setting up");
+        log(":: Setting up map");
         start = performance.now();
         await map.setup();
         end = performance.now();
-        log(`Finished task: Setup. Took ${end - start}ms.`);
+        log(`Finished task: Setup. Took ${(end - start).toFixed(3)}ms.`);
       } catch (err) {
         log("ERR: " + err.message, "error");
         console.error(err);
@@ -88,7 +88,7 @@ function EchoesMap() {
           const start = performance.now();
           map.centerRegions();
           const end = performance.now();
-          log(`Finished task: Rendering. Took ${end - start}ms.`);
+          log(`Finished task: Rendering. Took ${(end - start).toFixed(3)}ms.`);
         } catch (err) {
           log("ERR: " + err.message, "error");
           console.error(err);
