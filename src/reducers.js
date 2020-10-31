@@ -21,7 +21,8 @@ function rootReducer(state, action) {
     case ActionTypes.ADD_STDOUT_LINE:
       const newLine = {
         ts: action.ts,
-        str: action.str
+        str: action.str,
+        level: action.level,
       }
       return {
         ...state,

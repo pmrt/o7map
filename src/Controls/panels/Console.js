@@ -13,9 +13,9 @@ function formatTime(ts) {
 const LineKey = (index, data) => index;
 
 const Line = ({ index, style, data }) => {
-  const { ts, str } = data[index];
+  const { ts, str, level } = data[index];
   return (
-    <span className="stdout-line" style={style}>
+    <span className={`stdout-line ${level}`} style={style}>
       <small>{formatTime(ts)}</small>
       {str}
     </span>
