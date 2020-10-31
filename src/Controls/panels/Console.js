@@ -5,7 +5,7 @@ import "./Console.css";
 const LineKey = (index, data) => index;
 
 const Line = ({ index, style, data }) => (
-  <span class="stdout-line" style={style}>
+  <span className="stdout-line" style={style}>
     {data[index]}
   </span>
 );
