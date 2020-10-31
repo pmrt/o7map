@@ -28,6 +28,7 @@ function Panel({ defaultPanel, tabTitles, children }) {
             const isActive = SelectedPanelName === activeComp.name;
             return (
               <h3
+              key={title}
               className={isActive ? "active" : ""}
               onClick={() => setPanelName(title)}
               >{title}</h3>
