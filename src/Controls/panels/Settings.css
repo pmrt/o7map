@@ -1,0 +1,14 @@
+.settings li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  position: relative;
+  margin: -1px 0px;
+  border: 1px dashed var(--theme-background-grey);
+}
+
+.settings p {
+  margin-right: 30px;
+}
