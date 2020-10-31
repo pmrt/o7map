@@ -22,6 +22,10 @@ const Line = ({ index, style, data }) => {
   )
 };
 
+const ListStyle = {
+  willChange: "auto"
+}
+
 const StdoutList = ({ stdout }) => {
   let ref = useRef(null);
 
@@ -33,11 +37,12 @@ const StdoutList = ({ stdout }) => {
     <List
       className="stdout-list panel"
       height={200}
-      itemCount={Math.min(stdout.length, 50)}
+      itemCount={stdout.length}
       itemSize={20}
       itemKey={LineKey}
       itemData={stdout}
       ref={ref}
+      style={ListStyle}
     >
       {({ index, style, data}) =>
         <Line
