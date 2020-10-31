@@ -2,7 +2,7 @@ import "./Settings.css"
 
 function Settings() {
   return (
-    <div className="settings">
+    <div className="settings panel">
       <ul>
         <li>
           <p>Show region names</p>

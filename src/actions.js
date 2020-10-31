@@ -5,6 +5,7 @@ export const ActionTypes = {
 export function addStdoutLine(str) {
   return {
     type: ActionTypes.ADD_STDOUT_LINE,
+    ts: Date.now(),
     str,
   }
 }

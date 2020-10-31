@@ -19,9 +19,13 @@ function limitedAppend(arr, el, limit) {
 function rootReducer(state, action) {
   switch (action.type) {
     case ActionTypes.ADD_STDOUT_LINE:
+      const newLine = {
+        ts: action.ts,
+        str: action.str
+      }
       return {
         ...state,
-        stdout: limitedAppend(state.stdout, action.str, MAX_CONSOLE_LINES),
+        stdout: limitedAppend(state.stdout, newLine, MAX_CONSOLE_LINES),
       }
     default:
       return initialState;

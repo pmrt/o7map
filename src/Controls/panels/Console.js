@@ -2,13 +2,25 @@ import { useEffect, useRef } from "react";
 import { FixedSizeList as List } from "react-window";
 import "./Console.css";
 
+function formatTime(ts) {
+  return new Date(ts).toLocaleTimeString(navigator.language, {
+    hour: '2-digit',
+    minute:'2-digit',
+    second: '2-digit',
+  });
+}
+
 const LineKey = (index, data) => index;
 
-const Line = ({ index, style, data }) => (
-  <span className="stdout-line" style={style}>
-    {data[index]}
-  </span>
-);
+const Line = ({ index, style, data }) => {
+  const { ts, str } = data[index];
+  return (
+    <span className="stdout-line" style={style}>
+      <small>{formatTime(ts)}</small>
+      {str}
+    </span>
+  )
+};
 
 const StdoutList = ({ stdout }) => {
   let ref = useRef(null);
@@ -19,9 +31,9 @@ const StdoutList = ({ stdout }) => {
 
   return (
     <List
-      className="stdout-list"
+      className="stdout-list panel"
       height={200}
-      itemCount={10}
+      itemCount={Math.min(stdout.length, 50)}
       itemSize={20}
       itemKey={LineKey}
       itemData={stdout}

@@ -2,6 +2,34 @@
   color: var(--theme-primary);
 }
 
+.stdout-line small {
+  color: var(--theme-secondary);
+  margin-right: 12px;
+}
+
+.stdout-list {
+  scrollbar-width: 6px;
+  scrollbar-color: var(--theme-background-grey) transparent;
+}
+
+.stdout-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stdout-list.panel {
+  margin-right: 0;
+}
+
+.stdout-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.stdout-list::-webkit-scrollbar-thumb {
+  background-color: var(--theme-background-grey);
+  border-radius: 0px;
+  border: 3px solid transparent;
+}
+
+/*
 .stdout-list {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -9,4 +37,4 @@
 
 .stdout-list::-webkit-scrollbar {
   display: none;
-}
+}*/

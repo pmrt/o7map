@@ -35,7 +35,7 @@ function Panel({ defaultPanel, tabTitles, children }) {
             )
           })}
         </div>
-        <div className="panel">
+        <div className="panel-wrapper">
           {cloneElement(Comp)}
         </div>
       </div>

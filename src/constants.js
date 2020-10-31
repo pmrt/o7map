@@ -1,1 +1,1 @@
-export const MAX_CONSOLE_LINES = 50;
+export const MAX_CONSOLE_LINES = 100;
