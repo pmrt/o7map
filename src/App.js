@@ -9,7 +9,6 @@ import Sidebar from "./Sidebar";
 
 function App() {
   const [state, dispatch] = useReducer(rootReducer, initialState);
-  console.log(state);
   return (
     <div className="App">
       <RootDispatch.Provider value={dispatch}>
