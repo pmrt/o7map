@@ -23,7 +23,7 @@ html {
   font-family: 'Roboto Mono', Courier;
   font-size: 11px;
   color: var(--theme-primary);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 body {
