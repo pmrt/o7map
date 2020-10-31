@@ -76,9 +76,14 @@ class Region {
     return this._regionData.systems;
   }
 
+  get name() {
+    return this._regionData.name;
+  }
+
   get fabricObj() {
     return this._obj;
   }
+
 
   update() {
     this._obj.set({
@@ -88,16 +93,24 @@ class Region {
       width: 10,
       height: 10,
       angle: 45,
-      selectable: false,
-      hasControls: false,
+      selectable: true,
+      hasControls: true,
       hoverCursor: 'default',
       originX: 'center',
       originY: 'center',
-      metadata: this.data,
+      metadata: {
+        name: this.name,
+        coords: this.coords,
+        systems: this.systems,
+      },
     });
   }
 
   render() {
+    if (!this.coords.x || !this.coords.y) {
+      return null;
+    }
+
     if (this._firstRender) {
       this._obj = new fabric.Rect();
       this.update();
@@ -105,6 +118,8 @@ class Region {
     } else {
       this.update();
     }
+
+    return true;
   }
 }
 

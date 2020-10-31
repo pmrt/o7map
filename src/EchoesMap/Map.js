@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useContext } from "react";
+import { useRef, useEffect, useContext } from "react";
 
 import { debounce } from "./helpers";
 import Map from "./canvas/map";
@@ -12,11 +12,9 @@ const MARGIN = 20;
 
 function EchoesMap() {
   const dispatch = useContext(RootDispatch);
-  const log = (str) => {
-    dispatch(addStdoutLine(str));
+  const log = (str, lvl="info") => {
+    dispatch(addStdoutLine(str, lvl));
   }
-
-  const [error, setErr] = useState(null);
 
   const mapRef = useRef(null);
   const fabricRef = useRef(null);
@@ -37,7 +35,7 @@ function EchoesMap() {
     let didCancel = false;
     const createMap = async() => {
       log(":: Initiating map generation");
-      const map = new Map(fabricRef.current);
+      const map = new Map(fabricRef.current, log);
 
       try {
         let start, end;
@@ -48,28 +46,24 @@ function EchoesMap() {
         end = performance.now();
         log(`Finished task: map data. Took ${end - start}ms.`);
 
+        if (didCancel) {
+          return;
+        }
+
+        log(":: Filling with regions");
+        start = performance.now();
+        map.fillRegions();
+        end = performance.now();
+        log(`Finished task: Rendering. Took ${end - start}ms.`);
+
         log(":: Setting up");
         start = performance.now();
         await map.setup();
         end = performance.now();
         log(`Finished task: Setup. Took ${end - start}ms.`);
       } catch (err) {
-        setErr(err);
-        return;
-      }
-
-      if (didCancel) {
-        return;
-      }
-
-      try {
-        log(":: Filling with regions");
-        const start = performance.now();
-        map.fillRegions();
-        const end = performance.now();
-        log(`Finished task: Rendering. Took ${end - start}ms.`);
-      } catch (err) {
-        setErr(err);
+        log("ERR: " + err.message, "error");
+        console.error(err);
         return;
       }
 
@@ -96,7 +90,8 @@ function EchoesMap() {
           const end = performance.now();
           log(`Finished task: Rendering. Took ${end - start}ms.`);
         } catch (err) {
-          setErr(err);
+          log("ERR: " + err.message, "error");
+          console.error(err);
           return;
         }
       }
@@ -111,14 +106,6 @@ function EchoesMap() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  if (error) {
-   return (
-    <div className="error">
-      {error.message}
-    </div>
-   )
-  }
 
   return (
     <div className="echoes-map">
