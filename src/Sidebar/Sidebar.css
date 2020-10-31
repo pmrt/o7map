@@ -1,0 +1,8 @@
+.sidebar {
+  background: var(--theme-background-secondary);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 35px;
+  z-index: 9;
+}
