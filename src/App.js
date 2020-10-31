@@ -24,7 +24,7 @@ function App() {
     <div className="App">
       <RootDispatch.Provider value={dispatch}>
         <Sidebar />
-        <Controls stdout={state.stdout}/>
+        <Controls stdout={state.stdout} selectedPanelName={state.selectedPanelName}/>
         <EchoesMap />
       </RootDispatch.Provider>
     </div>

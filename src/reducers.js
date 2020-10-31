@@ -4,6 +4,7 @@ import Storage from "./storage";
 
 export const initialState = {
   stdout: [],
+  selectedPanelName: null,
 }
 
 // defaultState overwrites initialState before being persisted. So
@@ -39,6 +40,11 @@ function rootReducer(state, action) {
         ...state,
         stdout: limitedAppend(state.stdout, newLine, MAX_CONSOLE_LINES),
       }
+    case ActionTypes.SELECT_PANEL_NAME:
+      return {
+        ...state,
+        selectedPanelName: action.name,
+      }
     default:
       return initialState;
   }
@@ -46,6 +52,7 @@ function rootReducer(state, action) {
 
 function persistentReducer(state, action) {
   switch (action.type) {
+    case ActionTypes.SELECT_PANEL_NAME:
     case ActionTypes.ADD_STDOUT_LINE:
       const newState = rootReducer(state, action);
       const clean = {...newState, ...defaultState}

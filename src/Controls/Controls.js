@@ -1,16 +1,25 @@
 import Draggable from 'react-draggable';
 
-import { cloneElement, useState } from 'react';
+import { cloneElement, useContext } from 'react';
 
 import Console from "./panels/Console";
 import Settings from './panels/Settings';
 import "./Controls.css";
+import { RootDispatch } from '../context';
+import { selectPanelName } from '../actions';
 
-function Panel({ defaultPanel, tabTitles, children }) {
-  const [SelectedPanelName, setPanelName] = useState(defaultPanel.name);
+function Panel({ defaultPanel, selectedPanelName, tabTitles, children }) {
+  const dispatch = useContext(RootDispatch);
+
+  let selected;
+  if (!selectedPanelName) {
+    selected = defaultPanel.name;
+  } else if (typeof selectedPanelName === "string") {
+    selected = selectedPanelName;
+  }
 
   const Comp = children.find(comp =>
-    comp.type.name === SelectedPanelName
+    comp.type.name === selected
   ) || null;
 
   return (
@@ -25,12 +34,12 @@ function Panel({ defaultPanel, tabTitles, children }) {
         <div className="topbar draggable">
           {Object.keys(tabTitles).map(title => {
             const activeComp = tabTitles[title];
-            const isActive = SelectedPanelName === activeComp.name;
+            const isActive = selected === activeComp.name;
             return (
               <h3
               key={title}
               className={isActive ? "active" : ""}
-              onClick={() => setPanelName(title)}
+              onClick={() => dispatch(selectPanelName(title))}
               >{title}</h3>
             )
           })}
@@ -43,10 +52,11 @@ function Panel({ defaultPanel, tabTitles, children }) {
   )
 }
 
-function Controls({ stdout }) {
+function Controls({ stdout, selectedPanelName }) {
   return (
     <Panel
       defaultPanel={Console}
+      selectedPanelName={selectedPanelName}
       tabTitles={{ "Console": Console, "Settings": Settings }}
     >
       <Console stdout={stdout}/>
