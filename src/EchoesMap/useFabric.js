@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useCallback } from "react";
 import { fabric } from "fabric";
 
 function useFabric(fabricRef, fabricOpts) {

@@ -1,0 +1,12 @@
+.stdout-line {
+  color: var(--theme-primary);
+}
+
+.stdout-list {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.stdout-list::-webkit-scrollbar {
+  display: none;
+}

@@ -1,13 +1,21 @@
-import { log, debounce } from "./helpers";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useContext } from "react";
+
+import { debounce } from "./helpers";
 import Map from "./canvas/map";
 import theme from "./canvas/theme";
 import "./Map.css";
 import useFabric from "./useFabric";
+import { RootDispatch } from "../context";
+import { addStdoutLine } from "../actions";
 
 const MARGIN = 20;
 
 function EchoesMap() {
+  const dispatch = useContext(RootDispatch);
+  const log = (str) => {
+    dispatch(addStdoutLine(str));
+  }
+
   const [error, setErr] = useState(null);
 
   const mapRef = useRef(null);
@@ -62,7 +70,6 @@ function EchoesMap() {
         log(`Finished task: Rendering. Took ${end - start}ms.`);
       } catch (err) {
         setErr(err);
-        console.error(err)
         return;
       }
 
@@ -96,7 +103,6 @@ function EchoesMap() {
     }
 
     log(":: Setting up dimension listener");
-
     const optimizedOnWinResize = debounce(onWinResize, 100)
     window.addEventListener("resize", optimizedOnWinResize);
     return () => {

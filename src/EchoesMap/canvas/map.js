@@ -66,7 +66,6 @@ class Map {
     });
 
     this.canvas.add(this._regionGroup);
-    console.log(this._regionGroup);
     this.centerRegions();
     return this;
   }

@@ -1,0 +1,1 @@
+export const MAX_CONSOLE_LINES = 50;
