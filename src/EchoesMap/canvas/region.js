@@ -8,12 +8,11 @@ import MapCollection from "./collection";
 export class RegionData {
   constructor(regionData) {
     const {
-      mapID, mapName, scale, ee_gates, avgSec, maxSec, minSec, x1, y1, systems
+      mapID, mapName, ee_gates, avgSec, maxSec, minSec, x1, y1, systems
     } = regionData;
 
     this._id = mapID;
     this._name = mapName;
-    this._scale = scale;
     this._gates = ee_gates;
     this._sec = {
       avg: avgSec,
@@ -60,10 +59,6 @@ class Region {
   constructor(regionData) {
     this._regionData = regionData;
     this._objs = [];
-  }
-
-  get canvas() {
-    return this._canvas;
   }
 
   get coords() {
