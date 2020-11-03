@@ -185,8 +185,6 @@ class Map {
   }
 
   fill(type, ...args) {
-    this.clear();
-
     switch (type) {
       case MapType.REGION:
         this.fillRegions.apply(this, args);
@@ -227,6 +225,11 @@ class Map {
   }
 
   clear() {
+    if (!this._currentMap) {
+      // skip if nothing is rendered
+      return;
+    }
+    
     // clear the corresponding rendered section
     switch (this._currentMap) {
       case MapType.REGION:
