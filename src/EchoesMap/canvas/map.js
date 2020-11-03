@@ -1,5 +1,4 @@
-import { fabric } from "fabric";
-import Region, { RegionData } from "./region";
+import { RegionCollection } from "./region";
 
 import {
   MAX_ZOOM,
@@ -10,7 +9,7 @@ import {
   FONTSIZE,
   MAX_FONTSIZE,
   MIN_FONTSIZE,
-  ObjectType,
+  MapType,
 } from "./consts";
 
 /*
@@ -23,29 +22,28 @@ class Map {
   constructor(fabricCanvas, logger) {
     this._canvas = fabricCanvas;
     this._maps = null;
-    this._regions = null;
+    this._regionCollection = new RegionCollection();
     this._logger = logger;
-    this._rendered = null;
+    this._currentMap = null;
   }
 
   _onMouseWheel(opt) {
     const evt = opt.e;
-    const zoom = this.canvas.getZoom();
+    const zoom = this._canvas.getZoom();
     const delta = evt.deltaY;
 
     let newZoom = zoom * STEP_FACTOR ** delta;
     newZoom = Math.min(newZoom, MAX_ZOOM);
     newZoom = Math.max(newZoom, MIN_ZOOM);
 
-    this.canvas.zoomToPoint({ x: evt.offsetX, y: evt.offsetY }, newZoom);
+    this._canvas.zoomToPoint({ x: evt.offsetX, y: evt.offsetY }, newZoom);
 
-    switch (this._rendered) {
-      case ObjectType.REGION:
-        console.log(FONTSIZE, newZoom)
+    switch (this._currentMap) {
+      case MapType.REGION:
         let newFontSize = FONTSIZE / newZoom;
         newFontSize = Math.min(newFontSize, MAX_FONTSIZE);
         newFontSize = Math.max(newFontSize, MIN_FONTSIZE);
-        this.updateRegionSize(newFontSize);
+        this._regionCollection.updateFontSize(newFontSize);
         break;
       default:
     }
@@ -61,48 +59,48 @@ class Map {
       return;
     }
 
-    this.canvas.isDragging = true;
-    this.canvas.selection = false;
-    this.canvas.lastPosX = evt.clientX;
-    this.canvas.lastPosY = evt.clientY;
+    this._canvas.isDragging = true;
+    this._canvas.selection = false;
+    this._canvas.lastPosX = evt.clientX;
+    this._canvas.lastPosY = evt.clientY;
   }
 
   _onMouseMove(opt) {
     const evt = opt.e;
 
-    if (this.canvas.isDragging) {
-      this.canvas.setCursor("grabbing");
-      const zoom = this.canvas.getZoom();
-      let vpt = this.canvas.viewportTransform;
+    if (this._canvas.isDragging) {
+      this._canvas.setCursor("grabbing");
+      const zoom = this._canvas.getZoom();
+      let vpt = this._canvas.viewportTransform;
 
-      vpt[4] += evt.clientX - this.canvas.lastPosX;
-      vpt[5] += evt.clientY - this.canvas.lastPosY;
+      vpt[4] += evt.clientX - this._canvas.lastPosX;
+      vpt[5] += evt.clientY - this._canvas.lastPosY;
 
-      if (vpt[4] < this.canvas.getWidth() - CANVAS_WIDTH_LIMIT * zoom) {
-        vpt[4] = this.canvas.getWidth() - CANVAS_WIDTH_LIMIT * zoom;
-      } else if (vpt[4] > CANVAS_WIDTH_LIMIT * zoom - this.canvas.getWidth()) {
-        vpt[4] = CANVAS_WIDTH_LIMIT * zoom - this.canvas.getWidth();
+      if (vpt[4] < this._canvas.getWidth() - CANVAS_WIDTH_LIMIT * zoom) {
+        vpt[4] = this._canvas.getWidth() - CANVAS_WIDTH_LIMIT * zoom;
+      } else if (vpt[4] > CANVAS_WIDTH_LIMIT * zoom - this._canvas.getWidth()) {
+        vpt[4] = CANVAS_WIDTH_LIMIT * zoom - this._canvas.getWidth();
       }
 
-      if (vpt[5] < this.canvas.getHeight() - CANVAS_HEIGHT_LIMIT * zoom) {
-        vpt[5] = this.canvas.getHeight() - CANVAS_HEIGHT_LIMIT * zoom;
-      } else if (vpt[5] > CANVAS_HEIGHT_LIMIT * zoom - this.canvas.getHeight()) {
-        vpt[5] = CANVAS_HEIGHT_LIMIT * zoom - this.canvas.getHeight();
+      if (vpt[5] < this._canvas.getHeight() - CANVAS_HEIGHT_LIMIT * zoom) {
+        vpt[5] = this._canvas.getHeight() - CANVAS_HEIGHT_LIMIT * zoom;
+      } else if (vpt[5] > CANVAS_HEIGHT_LIMIT * zoom - this._canvas.getHeight()) {
+        vpt[5] = CANVAS_HEIGHT_LIMIT * zoom - this._canvas.getHeight();
       }
 
-      this.canvas.requestRenderAll();
-      this.canvas.lastPosX = evt.clientX;
-      this.canvas.lastPosY = evt.clientY;
+      this._canvas.requestRenderAll();
+      this._canvas.lastPosX = evt.clientX;
+      this._canvas.lastPosY = evt.clientY;
     }
   }
 
   _onMouseUp(opt) {
-    if (this.canvas.isDragging) {
-      this.canvas.setViewportTransform(this.canvas.viewportTransform);
-      this.canvas.isDragging = false;
+    if (this._canvas.isDragging) {
+      this._canvas.setViewportTransform(this._canvas.viewportTransform);
+      this._canvas.isDragging = false;
       this.selection = true;
     }
-    this.canvas.setCursor("default");
+    this._canvas.setCursor("default");
   }
 
   _onObjMouseDown(opt) {
@@ -117,32 +115,35 @@ class Map {
     }
 
     const obj = opt.subTargets[0];
-    this.log("Selected: " + obj.get("metadata").name);
+    switch (this._currentMap) {
+      case MapType.REGION:
+        this.log("Selected: " + obj.get("metadata").name);
+        break;
+      default:
+    }
   }
 
   _setupEvents() {
-    this.canvas.on("mouse:wheel", opt => {
+    this._canvas.on("mouse:wheel", opt => {
       this._onMouseWheel(opt)
     });
 
-    this.canvas.on("mouse:down", opt => {
+    this._canvas.on("mouse:down", opt => {
       this._onMouseDown(opt);
     })
 
-    this.canvas.on("mouse:move", opt => {
+    this._canvas.on("mouse:move", opt => {
       this._onMouseMove(opt)
     });
 
-    this.canvas.on("mouse:up", opt => {
+    this._canvas.on("mouse:up", opt => {
       this._onMouseUp(opt)
     });
 
-    const objs = this.regionGroup.getObjects("rect");
-    objs.forEach(obj => {
-      obj.on("mousedown", opt => {
-        this._onObjMouseDown(opt);
-      })
-    })
+    this._regionCollection.on("mousedown", opt => {
+      this._onObjMouseDown(opt);
+    }, "rect");
+
     return this;
   }
 
@@ -159,14 +160,6 @@ class Map {
     return this;
   }
 
-  get canvas() {
-    return this._canvas;
-  }
-
-  get regionGroup() {
-    return this._regions;
-  }
-
   get log() {
     return this._logger;
   }
@@ -177,7 +170,7 @@ class Map {
   }
 
   updateDimensions(w, h) {
-    this.canvas.setDimensions({
+    this._canvas.setDimensions({
       width: w,
       height: h
     })
@@ -185,44 +178,67 @@ class Map {
   }
 
   updateRegionSize(fontSize) {
-    const objs = this.regionGroup.getObjects("textbox");
+    const objs = this._regionGroup.getObjects("textbox");
     objs.forEach(obj => {
       obj.set({ fontSize })
     })
   }
 
-  fillRegions() {
-    let regions = [];
+  fill(type, ...args) {
+    this.clear();
 
-    for (let data of this._maps) {
-      const rd = new RegionData(data);
-      const region = new Region(this.canvas, rd);
-      const ok = region.render();
-      if (ok) {
-        regions.push(...region.fabricObjs);
-      } else {
-        this.log(`WARN: Skipping region '${region.name}'`, "warn")
-      }
+    switch (type) {
+      case MapType.REGION:
+        this.fillRegions.apply(this, args);
+        break;
+      case MapType.SYSTEM:
+        this.fillSystem.apply(this, args);
+        break;
+      default:
+        this.log("ERR: Couldn't fill map. Bad type of map type.", "error");
+        this._currentMap = null;
+
+        // stop here
+        return this;
     }
 
-    this._regions = new fabric.Group(regions, {
-      selectable: false,
-      hasControls: false,
-      subTargetCheck: true,
-    });
+    this._currentMap = type;
 
-    this.canvas.add(this.regionGroup);
-    this.regionGroup.bringToFront();
-    this.centerRegions();
-
-    this._rendered = ObjectType.REGION;
     return this;
   }
 
-  centerRegions() {
-    this.regionGroup.center();
+  fillSystem(sysData) {
+  }
+
+  fillRegions() {
+    const { errors } = this._regionCollection.render(this._maps);
+    if (errors.length > 0) {
+      for (let err of errors) {
+        this.log(err.message, err.type);
+      }
+    }
+
+    this._canvas.add(this._regionCollection.group);
+    this._regionCollection
+      .center()
+      .bringToFront();
+
+    return this;
+  }
+
+  clear() {
+    // clear the corresponding rendered section
+    switch (this._currentMap) {
+      case MapType.REGION:
+        this._regionCollection.clear();
+        break;
+      default:
+    }
+    // clear the canvas (but keep the canvas event listeners)
+    this._canvas.clear();
+
     return this;
   }
 }
 
-export default Map
+export default Map;

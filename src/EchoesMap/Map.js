@@ -7,6 +7,7 @@ import "./Map.css";
 import useFabric from "./useFabric";
 import { RootDispatch } from "../context";
 import { addStdoutLine } from "../actions";
+import { MapType } from "./canvas/consts";
 
 const MARGIN = 20;
 
@@ -50,17 +51,18 @@ function EchoesMap() {
           return;
         }
 
-        log(":: Filling with regions");
-        start = performance.now();
-        map.fillRegions();
-        end = performance.now();
-        log(`Finished task: Rendering. Took ${(end - start).toFixed(3)}ms.`);
-
         log(":: Setting up map");
         start = performance.now();
         await map.setup();
         end = performance.now();
         log(`Finished task: Setup. Took ${(end - start).toFixed(3)}ms.`);
+
+        log(":: Rendering regions");
+        start = performance.now();
+        map.fill(MapType.REGION);
+        end = performance.now();
+        log(`Finished task: Rendering. Took ${(end - start).toFixed(3)}ms.`);
+
       } catch (err) {
         log("ERR: " + err.message, "error");
         console.error(err);

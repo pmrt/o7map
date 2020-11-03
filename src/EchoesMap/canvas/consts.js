@@ -9,7 +9,7 @@ export const FONTSIZE = 8;
 export const MAX_FONTSIZE = 8;
 export const MIN_FONTSIZE = 5.2;
 
-export const ObjectType = {
+export const MapType = {
   REGION: "region",
   SYSTEM: "system",
 }
