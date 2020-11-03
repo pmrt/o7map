@@ -59,7 +59,7 @@ function Console({ stdout }) {
       <StdoutList stdout={stdout}/>
       <div className="input-wrapper">
         <input type="text"></input>
-        <span class="input-placeholder"></span>
+        <span className="input-placeholder"></span>
       </div>
     </div>
   )
