@@ -1,11 +1,17 @@
 import { fabric } from "fabric";
 import Region, { RegionData } from "./region";
 
-const MAX_ZOOM = 2;
-const MIN_ZOOM = 1;
-const STEP_FACTOR = .970;
-const CANVAS_WIDTH_LIMIT = 2000;
-const CANVAS_HEIGHT_LIMIT = 1200;
+import {
+  MAX_ZOOM,
+  MIN_ZOOM,
+  STEP_FACTOR,
+  CANVAS_WIDTH_LIMIT,
+  CANVAS_HEIGHT_LIMIT,
+  FONTSIZE,
+  MAX_FONTSIZE,
+  MIN_FONTSIZE,
+  ObjectType,
+} from "./consts";
 
 /*
 * Map manages all the logic and map UI of the Eve Echoes Map.
@@ -19,6 +25,7 @@ class Map {
     this._maps = null;
     this._regions = null;
     this._logger = logger;
+    this._rendered = null;
   }
 
   _onMouseWheel(opt) {
@@ -31,6 +38,17 @@ class Map {
     newZoom = Math.max(newZoom, MIN_ZOOM);
 
     this.canvas.zoomToPoint({ x: evt.offsetX, y: evt.offsetY }, newZoom);
+
+    switch (this._rendered) {
+      case ObjectType.REGION:
+        console.log(FONTSIZE, newZoom)
+        let newFontSize = FONTSIZE / newZoom;
+        newFontSize = Math.min(newFontSize, MAX_FONTSIZE);
+        newFontSize = Math.max(newFontSize, MIN_FONTSIZE);
+        this.updateRegionSize(newFontSize);
+        break;
+      default:
+    }
 
     evt.preventDefault();
     evt.stopPropagation();
@@ -166,6 +184,13 @@ class Map {
     return this;
   }
 
+  updateRegionSize(fontSize) {
+    const objs = this.regionGroup.getObjects("textbox");
+    objs.forEach(obj => {
+      obj.set({ fontSize })
+    })
+  }
+
   fillRegions() {
     let regions = [];
 
@@ -187,9 +212,10 @@ class Map {
     });
 
     this.canvas.add(this.regionGroup);
-    console.log(this.regionGroup)
     this.regionGroup.bringToFront();
     this.centerRegions();
+
+    this._rendered = ObjectType.REGION;
     return this;
   }
 

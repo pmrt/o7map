@@ -2,6 +2,8 @@ import { fabric } from "fabric";
 import { wrapText } from "../helpers";
 import theme from "./theme";
 
+import { FONTSIZE } from "./consts";
+
 export class RegionData {
   constructor(regionData) {
     const {
@@ -111,7 +113,6 @@ class Region {
       top: this.coords.y + region.getScaledWidth() / 2 + 8,
       fontFamily: "Roboto Mono",
       fill: theme.primary,
-      fontSize: "8",
       textAlign: "center",
     })
   }
@@ -134,7 +135,7 @@ class Region {
         new fabric.Rect(),
         new fabric.Textbox(wrapText(this.name, 20), {
           width: 50,
-          fontSize: "8",
+          fontSize: FONTSIZE,
         })
       );
       this.update();
