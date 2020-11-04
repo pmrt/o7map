@@ -5,44 +5,54 @@ import theme from "./theme";
 import { FONTSIZE } from "./consts";
 import MapCollection from "./collection";
 
-class RegionData {
-  constructor(regionData) {
+class SystemData {
+  constructor(sysData) {
     const {
-      mapID, mapName, ee_gates, avgSec, maxSec, minSec, x1, y1, systems
-    } = regionData;
+      sid, sn, cid, cn, rn, sec, x1, y2
+    } = sysData;
 
-    this.id = mapID;
-    this.name = mapName;
-    this.gates = ee_gates;
-    this.sec = {
-      avg: avgSec,
-      max: maxSec,
-      min: minSec,
-    };
+    this.ID = sid;
+    this.name = sn;
+    this.constellationName = cn;
+    this.constellationID = cid;
+    this.regionName = rn;
+    this.sec = sec;
     this.coords = {
       x: x1,
-      y: y1,
+      y: y2,
     }
-    this.systems = systems;
+
   }
 }
 
-class Region {
-  constructor(regionData) {
-    this._regionData = regionData;
-    this._objs = [];
+class System {
+  constructor(systemData) {
+    this._systemData = systemData;
+    this._objs = []
   }
 
   get coords() {
-    return this._regionData.coords;
-  }
-
-  get systems() {
-    return this._regionData.systems;
+    return this._systemData.coords;
   }
 
   get name() {
-    return this._regionData.name;
+    return this._systemData.name;
+  }
+
+  get sec() {
+    return this._systemData.sec;
+  }
+
+  get constellationName() {
+    return this._systemData.constellationName;
+  }
+
+  get constellationID() {
+    return this._systemData.constellationID;
+  }
+
+  get regionName() {
+    return this._systemData.regionName;
   }
 
   get fabricObjs() {
@@ -51,6 +61,10 @@ class Region {
 
   render() {
     if (this.coords.x === null || this.coords.y === null) {
+      return null;
+    }
+
+    if (!this.name) {
       return null;
     }
 
@@ -77,7 +91,10 @@ class Region {
       metadata: {
         name: this.name,
         coords: this.coords,
-        systems: this.systems,
+        sec: this.sec,
+        constellationID: this.constellationID,
+        constellationName: this.constellationName,
+        regionName: this.regionName,
       },
     });
 
@@ -102,14 +119,14 @@ class Region {
   }
 }
 
-export class RegionCollection extends MapCollection {
+export class SystemCollection extends MapCollection {
   get MapDataClass() {
-    return RegionData;
+    return SystemData;
   }
 
   get MapTypeClass() {
-    return Region;
+    return System;
   }
 }
 
-export default RegionCollection;
+export default SystemCollection;

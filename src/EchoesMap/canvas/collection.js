@@ -110,7 +110,6 @@ class MapCollection {
     return this;
   }
 
-
   render(maps) {
     let mapObjects = [];
     let errors = [];

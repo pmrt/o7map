@@ -1,4 +1,5 @@
-import { RegionCollection } from "./region";
+import RegionCollection from "./region";
+import SystemCollection from "./system";
 
 import {
   MAX_ZOOM,
@@ -23,6 +24,7 @@ class Map {
     this._canvas = fabricCanvas;
     this._maps = null;
     this._regionCollection = new RegionCollection();
+    this._sysCollection = new SystemCollection();
     this._logger = logger;
     this._currentMap = null;
   }
@@ -117,7 +119,8 @@ class Map {
     const obj = opt.subTargets[0];
     switch (this._currentMap) {
       case MapType.REGION:
-        this.log("Selected: " + obj.get("metadata").name);
+        const sysData = obj.get("metadata").systems;
+        this.fill(MapType.SYSTEM, sysData);
         break;
       default:
     }
@@ -177,14 +180,9 @@ class Map {
     return this;
   }
 
-  updateRegionSize(fontSize) {
-    const objs = this._regionGroup.getObjects("textbox");
-    objs.forEach(obj => {
-      obj.set({ fontSize })
-    })
-  }
-
   fill(type, ...args) {
+    this.clear();
+    
     switch (type) {
       case MapType.REGION:
         this.fillRegions.apply(this, args);
@@ -206,6 +204,19 @@ class Map {
   }
 
   fillSystem(sysData) {
+    const { errors } = this._sysCollection.render(sysData);
+    if (errors.length > 0) {
+      for (let err of errors) {
+        this.log(err.message, err.type);
+      }
+    }
+    
+    this._canvas.add(this._sysCollection.group);
+    this._sysCollection
+      .center()
+      .bringToFront();
+
+    return this;
   }
 
   fillRegions() {
@@ -234,6 +245,9 @@ class Map {
     switch (this._currentMap) {
       case MapType.REGION:
         this._regionCollection.clear();
+        break;
+      case MapType.SYSTEM:
+        this._sysCollection.clear();
         break;
       default:
     }
