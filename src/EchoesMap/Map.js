@@ -88,7 +88,7 @@ function EchoesMap() {
         try {
           log(":: Repositioning regions");
           const start = performance.now();
-          map.centerRegions();
+          map.center();
           const end = performance.now();
           log(`Finished task: Rendering. Took ${Math.ceil(end - start)}ms.`);
         } catch (err) {
