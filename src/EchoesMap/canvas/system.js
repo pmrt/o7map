@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { wrapText } from "../helpers";
+import { getSecColor, wrapText } from "../helpers";
 import theme from "./theme";
 
 import { FONTSIZE, LINK_WIDTH } from "./consts";
@@ -115,10 +115,17 @@ class System {
 
     const gates = this.findGates();
 
+    let sec = this.sec.toFixed(1);
+    if (sec === "0.0") {
+      sec = "-0.0";
+    }
+
+    const color = getSecColor(sec);
+
     const regionRect = new fabric.Rect({
       left: this.coords.x,
       top: this.coords.y,
-      fill: theme.secondary,
+      fill: color || theme.secondary,
       width: 10,
       height: 10,
       angle: 45,
@@ -165,12 +172,12 @@ class System {
       const opts = sameRegion
         ? {
           ...defaultOpts,
-          stroke: theme.primary,
+          stroke: color || theme.primary,
         }
         : {
           ...defaultOpts,
           stroke: theme.lightGrey,
-          strokeDashArray: [4, 4],
+          strokeDashArray: [5, 5],
         }
 
       const line = new fabric.Line([x2, y2, x1, y1], opts);

@@ -9,7 +9,7 @@ export const FONTSIZE = 8;
 export const MAX_FONTSIZE = 8;
 export const MIN_FONTSIZE = 5.2;
 
-export const LINK_WIDTH = 0.1;
+export const LINK_WIDTH = 0.3;
 
 export const MapType = {
   REGION: "region",

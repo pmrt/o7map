@@ -1,3 +1,5 @@
+import { secColors } from "./canvas/theme";
+
 export function debounce(fn, wait, ctx=this) {
   let timer;
 
@@ -42,4 +44,8 @@ export function wrapText(text, maxChars) {
   }
 
   return ret.join("\n");
+}
+
+export function getSecColor(sec) {
+  return secColors[sec.toString()];
 }
