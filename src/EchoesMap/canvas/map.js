@@ -40,12 +40,15 @@ class Map {
 
     this._canvas.zoomToPoint({ x: evt.offsetX, y: evt.offsetY }, newZoom);
 
+    let newFontSize = FONTSIZE / newZoom;
+    newFontSize = Math.min(newFontSize, MAX_FONTSIZE);
+    newFontSize = Math.max(newFontSize, MIN_FONTSIZE);
     switch (this._currentMap) {
       case MapType.REGION:
-        let newFontSize = FONTSIZE / newZoom;
-        newFontSize = Math.min(newFontSize, MAX_FONTSIZE);
-        newFontSize = Math.max(newFontSize, MIN_FONTSIZE);
         this._regionCollection.updateFontSize(newFontSize);
+        break;
+      case MapType.SYSTEM:
+        this._sysCollection.updateFontSize(newFontSize);
         break;
       default:
     }
@@ -182,7 +185,7 @@ class Map {
 
   fill(type, ...args) {
     this.clear();
-    
+
     switch (type) {
       case MapType.REGION:
         this.fillRegions.apply(this, args);
@@ -210,7 +213,7 @@ class Map {
         this.log(err.message, err.type);
       }
     }
-    
+
     this._canvas.add(this._sysCollection.group);
     this._sysCollection
       .center()
@@ -235,12 +238,31 @@ class Map {
     return this;
   }
 
+  center() {
+    if (!this._currentMap) {
+      // skip if nothing is rendered
+      return;
+    }
+
+    switch (this._currentMap) {
+      case MapType.REGION:
+        this._regionCollection.center();
+        break;
+      case MapType.SYSTEM:
+        this._sysCollection.center();
+        break;
+      default:
+    }
+
+    return this;
+  }
+
   clear() {
     if (!this._currentMap) {
       // skip if nothing is rendered
       return;
     }
-    
+
     // clear the corresponding rendered section
     switch (this._currentMap) {
       case MapType.REGION:

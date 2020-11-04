@@ -2,11 +2,11 @@ import { fabric } from "fabric";
 import { wrapText } from "../helpers";
 import theme from "./theme";
 
-import { FONTSIZE } from "./consts";
+import { FONTSIZE, LINK_WIDTH } from "./consts";
 import MapCollection from "./collection";
 
 class SystemData {
-  constructor(sysData) {
+  constructor(sysData, all) {
     const {
       sid, sn, cid, cn, rn, sec, x1, y2
     } = sysData;
@@ -21,14 +21,19 @@ class SystemData {
       x: x1,
       y: y2,
     }
-
+    this.near = all;
   }
 }
 
 class System {
   constructor(systemData) {
     this._systemData = systemData;
-    this._objs = []
+    this._objs = [];
+    this._gates = null;
+  }
+
+  get ID() {
+    return this._systemData.ID;
   }
 
   get coords() {
@@ -55,8 +60,40 @@ class System {
     return this._systemData.regionName;
   }
 
+  get near() {
+    return this._systemData.near;
+  }
+
   get fabricObjs() {
     return this._objs;
+  }
+
+  findGates() {
+    if (Array.isArray(this._gates)) {
+      return this._gates;
+    }
+
+    let gates = [];
+    for (let system of this.near) {
+      const edges = system.ee_links;
+      if (!edges) {
+        continue;
+      }
+
+      const edgeID = parseInt(this.ID.toString().substr(-4));
+      if (edges.indexOf(edgeID) >= 0) {
+        gates.push({
+          x2: system.x1,
+          y2: system.y1,
+          x1: this.coords.x,
+          y1: this.coords.y,
+          sameRegion: system.rn === this.regionName,
+        })
+      }
+    }
+
+    this._gates = gates;
+    return gates;
   }
 
   render() {
@@ -75,6 +112,8 @@ class System {
     if (Number.isNaN(this.coords.x) || Number.isNaN(this.coords.y)) {
       return null;
     }
+
+    const gates = this.findGates();
 
     const regionRect = new fabric.Rect({
       left: this.coords.x,
@@ -114,6 +153,31 @@ class System {
     this._objs.push(
       regionRect, nameTextbox,
     );
+
+    for (let gate of gates) {
+      const { x2, y2, x1, y1, sameRegion } = gate;
+
+      const defaultOpts = {
+        strokeWidth: LINK_WIDTH,
+        selectable: false,
+      }
+
+      const opts = sameRegion
+        ? {
+          ...defaultOpts,
+          stroke: theme.primary,
+        }
+        : {
+          ...defaultOpts,
+          stroke: theme.lightGrey,
+          strokeDashArray: [4, 4],
+        }
+
+      const line = new fabric.Line([x2, y2, x1, y1], opts);
+      this._objs.push(
+        line,
+      )
+    }
 
     return true;
   }

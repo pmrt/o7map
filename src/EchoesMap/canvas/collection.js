@@ -110,12 +110,12 @@ class MapCollection {
     return this;
   }
 
-  render(maps) {
+  render(all) {
     let mapObjects = [];
     let errors = [];
 
-    for (let data of maps) {
-      const d = new this.MapDataClass(data);
+    for (let data of all) {
+      const d = new this.MapDataClass(data, all);
       const map = new this.MapTypeClass(d);
       const ok = map.render();
       if (ok) {
