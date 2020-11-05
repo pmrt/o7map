@@ -7,3 +7,26 @@
   z-index: 9;
   opacity: .95;
 }
+
+.sidebar {
+  text-align: center;
+}
+
+.sidebar-icon {
+  position: relative;
+  margin: 15px 0;
+}
+
+.sidebar-icon:hover::after {
+  content: attr(alt);
+  background: var(--theme-background-grey);
+  position: absolute;
+  text-align: center;
+  padding: 5px 15px;
+  left: 44px;
+  white-space: nowrap;
+}
+
+.sidebar-icon img {
+  width: 15px;
+}
