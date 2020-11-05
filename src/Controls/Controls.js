@@ -24,6 +24,7 @@ function Panel({ defaultPanel, selectedPanelName, tabTitles, children }) {
 
   return (
     <Draggable
+      bounds="parent"
       axis="both"
       handle=".draggable"
       defaultPosition={{x: 50, y: 20}}
