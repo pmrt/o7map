@@ -25,7 +25,9 @@ function App() {
       <RootDispatch.Provider value={dispatch}>
         <Sidebar />
         <Controls stdout={state.stdout} selectedPanelName={state.selectedPanelName}/>
-        <EchoesMap />
+        <EchoesMap
+          fontSize={state.fontSize}
+        />
       </RootDispatch.Provider>
     </div>
   );

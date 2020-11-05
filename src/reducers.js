@@ -1,10 +1,12 @@
 import { ActionTypes } from "./actions"
 import { MAX_CONSOLE_LINES } from "./constants";
+import { FONTSIZE } from "./EchoesMap/canvas/consts";
 import Storage from "./storage";
 
 export const initialState = {
   stdout: [],
   selectedPanelName: null,
+  fontSize: FONTSIZE,
 }
 
 // defaultState overwrites initialState before being persisted. So
@@ -45,6 +47,17 @@ function rootReducer(state, action) {
         ...state,
         selectedPanelName: action.name,
       }
+    case ActionTypes.SET_FONT_SIZE:
+      return {
+        ...state,
+        fontSize: action.fontSize,
+      }
+    case ActionTypes.RESET_STATE:
+      return {
+        ...initialState,
+        // Reset everything except the console
+        stdout: state.stdout,
+      }
     default:
       return initialState;
   }
@@ -54,6 +67,8 @@ function persistentReducer(state, action) {
   switch (action.type) {
     case ActionTypes.SELECT_PANEL_NAME:
     case ActionTypes.ADD_STDOUT_LINE:
+    case ActionTypes.SET_FONT_SIZE:
+    case ActionTypes.RESET_STATE:
       const newState = rootReducer(state, action);
       const clean = {...newState, ...defaultState}
       new Storage().save(clean);

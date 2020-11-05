@@ -1,4 +1,4 @@
-import { useRef, useEffect, useContext } from "react";
+import { useRef, useEffect, useContext, useCallback } from "react";
 
 import { debounce } from "./helpers";
 import Map from "./canvas/map";
@@ -11,11 +11,12 @@ import { MapType } from "./canvas/consts";
 
 const MARGIN = 20;
 
-function EchoesMap() {
+function EchoesMap({ fontSize }) {
   const dispatch = useContext(RootDispatch);
-  const log = (str, lvl="info") => {
+  const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const mapRef = useRef(null);
   const fabricRef = useRef(null);
@@ -36,7 +37,9 @@ function EchoesMap() {
     let didCancel = false;
     const createMap = async() => {
       log(":: Initiating map generation");
-      const map = new Map(fabricRef.current, log);
+      const map = new Map(fabricRef.current, log, {
+        fontSize,
+      });
 
       try {
         let start, end;
@@ -108,6 +111,17 @@ function EchoesMap() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (!mapRef.current) {
+      return;
+    }
+
+    const map = mapRef.current;
+    log(":: Setting fontSize");
+    map.setFontSize(fontSize);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fontSize]);
 
   return (
     <div className="echoes-map">

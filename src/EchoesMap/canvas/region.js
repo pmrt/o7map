@@ -2,7 +2,6 @@ import { fabric } from "fabric";
 import { wrapText } from "../helpers";
 import theme from "./theme";
 
-import { FONTSIZE } from "./consts";
 import MapCollection from "./collection";
 
 class RegionData {
@@ -28,9 +27,10 @@ class RegionData {
 }
 
 class Region {
-  constructor(regionData) {
+  constructor(regionData, opts) {
     this._regionData = regionData;
     this._objs = [];
+    this.opts = opts;
   }
 
   get coords() {
@@ -83,7 +83,7 @@ class Region {
 
     const nameTextbox = new fabric.Textbox(wrapText(this.name, 20), {
       width: 50,
-      fontSize: FONTSIZE,
+      fontSize: this.opts.fontSize,
       fontFamily: "Roboto Mono",
       fill: theme.primary,
       textAlign: "center",

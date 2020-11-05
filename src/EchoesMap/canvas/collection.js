@@ -1,9 +1,10 @@
 import { fabric } from "fabric";
 
 class MapCollection {
-  constructor() {
+  constructor(opts) {
     this._group = null;
     this._eventQueue = [];
+    this.opts = opts;
 
     if (!this.MapDataClass || !this.MapTypeClass) {
       throw new TypeError("Collection class has abstract properties which have not been implemented. Collection needs to be called from a class extending it and this class must implement getters for MapDataClass and MapTypeClass");
@@ -104,7 +105,7 @@ class MapCollection {
   updateFontSize(fontSize) {
     const objs = this._group.getObjects("textbox");
     objs.forEach(obj => {
-      obj.set({ fontSize })
+      obj.set({ fontSize });
     })
 
     return this;
@@ -116,7 +117,7 @@ class MapCollection {
 
     for (let data of all) {
       const d = new this.MapDataClass(data, all);
-      const map = new this.MapTypeClass(d);
+      const map = new this.MapTypeClass(d, this.opts);
       const ok = map.render();
       if (ok) {
         mapObjects.push(...map.fabricObjs);

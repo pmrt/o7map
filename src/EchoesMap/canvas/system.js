@@ -2,7 +2,6 @@ import { fabric } from "fabric";
 import { getSecColor, wrapText } from "../helpers";
 import theme from "./theme";
 
-import { FONTSIZE, LINK_WIDTH } from "./consts";
 import MapCollection from "./collection";
 
 class SystemData {
@@ -26,10 +25,11 @@ class SystemData {
 }
 
 class System {
-  constructor(systemData) {
+  constructor(systemData, opts) {
     this._systemData = systemData;
     this._objs = [];
     this._gates = null;
+    this.opts = opts;
   }
 
   get ID() {
@@ -153,7 +153,7 @@ class System {
 
     const nameTextbox = new fabric.Textbox(wrapText(this.name, 20), {
       width: 50,
-      fontSize: FONTSIZE,
+      fontSize: this.opts.fontSize,
       fontFamily: "Roboto Mono",
       fill: theme.primary,
       textAlign: "center",
@@ -172,7 +172,7 @@ class System {
       const { x2, y2, x1, y1, sameRegion } = gate;
 
       const defaultOpts = {
-        strokeWidth: LINK_WIDTH,
+        strokeWidth: this.opts.linkWidth,
         selectable: false,
       }
 

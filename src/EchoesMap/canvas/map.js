@@ -8,9 +8,9 @@ import {
   CANVAS_WIDTH_LIMIT,
   CANVAS_HEIGHT_LIMIT,
   FONTSIZE,
-  MAX_FONTSIZE,
   MIN_FONTSIZE,
   MapType,
+  LINK_WIDTH,
 } from "./consts";
 
 /*
@@ -20,11 +20,17 @@ import {
 * written in vanilla javascript so React is interchangeable
 */
 class Map {
-  constructor(fabricCanvas, logger) {
+  constructor(fabricCanvas, logger, opts={}) {
+    this.opts = {
+      fontSize: FONTSIZE,
+      linkWidth: LINK_WIDTH,
+      ...opts,
+    };
+
     this._canvas = fabricCanvas;
     this._maps = null;
-    this._regionCollection = new RegionCollection();
-    this._sysCollection = new SystemCollection();
+    this._regionCollection = new RegionCollection(this.opts);
+    this._sysCollection = new SystemCollection(this.opts);
     this._logger = logger;
     this._currentMap = null;
   }
@@ -40,18 +46,10 @@ class Map {
 
     this._canvas.zoomToPoint({ x: evt.offsetX, y: evt.offsetY }, newZoom);
 
-    let newFontSize = FONTSIZE / newZoom;
-    newFontSize = Math.min(newFontSize, MAX_FONTSIZE);
+    let newFontSize = this.opts.fontSize / newZoom;
+    newFontSize = Math.min(newFontSize, this.opts.fontSize);
     newFontSize = Math.max(newFontSize, MIN_FONTSIZE);
-    switch (this._currentMap) {
-      case MapType.REGION:
-        this._regionCollection.updateFontSize(newFontSize);
-        break;
-      case MapType.SYSTEM:
-        this._sysCollection.updateFontSize(newFontSize);
-        break;
-      default:
-    }
+    this.updateFontSize(newFontSize);
 
     evt.preventDefault();
     evt.stopPropagation();
@@ -122,8 +120,16 @@ class Map {
     const obj = opt.subTargets[0];
     switch (this._currentMap) {
       case MapType.REGION:
+        const name = obj.get("metadata").name;
         const sysData = obj.get("metadata").systems;
+
+        this.log(`:: Rendering systems in '${name}'`);
+        const start = performance.now();
+
         this.fill(MapType.SYSTEM, sysData);
+
+        const end = performance.now();
+        this.log(`Finished task: rendering '${name}'. Took ${Math.ceil(end - start)}ms.`);
         break;
       default:
     }
@@ -238,6 +244,39 @@ class Map {
     return this;
   }
 
+  /* */
+  updateFontSize(newFontSize) {
+    switch (this._currentMap) {
+      case MapType.REGION:
+        this._regionCollection.updateFontSize(newFontSize);
+        break;
+      case MapType.SYSTEM:
+        this._sysCollection.updateFontSize(newFontSize);
+        break;
+      default:
+        this.log(`Cannot update fontSize. Incorrect MapType: ${this._currentMap}`, "error");
+        return;
+    }
+  }
+
+
+  setFontSize(newFontSize) {
+    switch (this._currentMap) {
+      case MapType.REGION:
+        this._regionCollection.updateFontSize(newFontSize);
+        break;
+      case MapType.SYSTEM:
+        this._sysCollection.updateFontSize(newFontSize);
+        break;
+      default:
+        this.log(`Cannot set fontSize. Incorrect MapType: ${this._currentMap}`, "error");
+        return;
+    }
+
+    this.opts.fontSize = newFontSize;
+    this._canvas.requestRenderAll();
+  }
+
   center() {
     if (!this._currentMap) {
       // skip if nothing is rendered
@@ -252,6 +291,8 @@ class Map {
         this._sysCollection.center();
         break;
       default:
+        this.log(`Cannot center map. Incorrect MapType: ${this._currentMap}`, "error");
+        return;
     }
 
     return this;
@@ -272,6 +313,8 @@ class Map {
         this._sysCollection.clear();
         break;
       default:
+        this.log(`Cannot clear map. Incorrect MapType: ${this._currentMap}`, "error");
+        return;
     }
     // clear the canvas (but keep the canvas event listeners)
     this._canvas.clear();
