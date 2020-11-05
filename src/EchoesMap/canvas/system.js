@@ -40,12 +40,24 @@ class System {
     return this._systemData.coords;
   }
 
-  get name() {
-    return this._systemData.name;
+  get sec() {
+    if (!this._systemData.sec) {
+      return null;
+    }
+
+    let sec = this._systemData.sec.toFixed(1);
+    if (sec === "0.0") {
+      sec = "-0.0";
+    }
+    return sec;
   }
 
-  get sec() {
-    return this._systemData.sec;
+  get name() {
+    return `${this._systemData.name} ${this.sec}`;
+  }
+
+  hasName() {
+    return !!this._systemData.name;
   }
 
   get constellationName() {
@@ -101,7 +113,7 @@ class System {
       return null;
     }
 
-    if (!this.name) {
+    if (!this.hasName()) {
       return null;
     }
 
@@ -115,12 +127,7 @@ class System {
 
     const gates = this.findGates();
 
-    let sec = this.sec.toFixed(1);
-    if (sec === "0.0") {
-      sec = "-0.0";
-    }
-
-    const color = getSecColor(sec);
+    const color = getSecColor(this.sec);
 
     const regionRect = new fabric.Rect({
       left: this.coords.x,
@@ -177,7 +184,7 @@ class System {
         : {
           ...defaultOpts,
           stroke: theme.lightGrey,
-          strokeDashArray: [5, 5],
+          strokeDashArray: [3, 3],
         }
 
       const line = new fabric.Line([x2, y2, x1, y1], opts);
