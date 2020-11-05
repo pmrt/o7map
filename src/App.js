@@ -4,11 +4,11 @@ import './App.css';
 import EchoesMap from "./EchoesMap"
 import { RootDispatch } from "./context";
 import rootReducer, { getInitialState } from "./reducers";
-import Controls from "./Controls/Controls";
 import Sidebar from "./Sidebar";
 import { addStdoutLine } from "./actions";
 
 import { version } from "../package.json";
+import Tools from "./Tools";
 
 let firstTime = true;
 function App() {
@@ -23,8 +23,14 @@ function App() {
   return (
     <div className="App">
       <RootDispatch.Provider value={dispatch}>
-        <Sidebar />
-        <Controls stdout={state.stdout} selectedPanelName={state.selectedPanelName}/>
+        <Sidebar
+          activeTools={state.activeTools}
+        />
+        <Tools
+          activeTools={state.activeTools}
+          stdout={state.stdout}
+          activeTabsNames={state.activeTabsNames}
+        />
         <EchoesMap
           fontSize={state.fontSize}
         />

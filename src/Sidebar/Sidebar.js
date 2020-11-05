@@ -1,3 +1,5 @@
+import { useCallback, useContext } from "react";
+
 import "./Sidebar.css"
 
 import addWebp from "../img/add.webp";
@@ -15,8 +17,20 @@ import searchPng from "../img/search.png";
 import settingsWebp from "../img/settings.webp";
 import settingsPng from "../img/settings.png";
 
+import { RootDispatch } from "../context";
+import { setPanelVisibility } from "../actions";
+import { Tools } from "../constants";
 
-function Sidebar() {
+function Sidebar({ activeTools }) {
+  const dispatch = useContext(RootDispatch);
+
+  const isSettingsVisible = activeTools[Tools.SETTINGS];
+
+  const onSettingsClick = useCallback(() => {
+    dispatch(setPanelVisibility(Tools.SETTINGS, !isSettingsVisible))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSettingsVisible]);
+
   return (
     <div className="sidebar">
       <div className="sidebar-icon" alt="Creation tool">
@@ -55,7 +69,7 @@ function Sidebar() {
         </img>
       </div>
 
-      <div className="sidebar-icon" alt="Terminal and Settings">
+      <div className={`sidebar-icon ${isSettingsVisible ? "active": ""}`} alt="Terminal and Settings" onClick={onSettingsClick}>
         <img
         alt="Terminal and Settings"
         src={settingsWebp}

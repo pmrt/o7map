@@ -19,6 +19,7 @@
   font-size: .9rem;
   cursor: move;
   display: flex;
+  align-items: center;
 }
 
 .topbar h3 {
@@ -29,4 +30,25 @@
 
 .topbar h3.active {
   background: var(--theme-background);
+}
+
+.close-btn {
+  padding: 15px 30px;
+  position: absolute;
+  right: 0px;
+  cursor: pointer;
+}
+
+.close-btn:after {
+  content: "";
+  background: var(--theme-light-grey);
+  box-shadow: 0px 3px 3px 1px #0000003d;
+  position: absolute;
+  top: 12px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  width: 20px;
+  margin: 0 auto;
 }

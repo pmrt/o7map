@@ -1,11 +1,24 @@
 import { ActionTypes } from "./actions"
-import { MAX_CONSOLE_LINES } from "./constants";
+import { MAX_CONSOLE_LINES, Tools } from "./constants";
 import { FONTSIZE } from "./EchoesMap/canvas/consts";
 import Storage from "./storage";
 
 export const initialState = {
   stdout: [],
-  selectedPanelName: null,
+  activeTools: {
+    [Tools.CREATION]: 0,
+    [Tools.SEARCH]: 0,
+    [Tools.FILTER]: 0,
+    [Tools.PLANET]: 0,
+    [Tools.SETTINGS]: 1,
+  },
+  activeTabsNames: {
+    [Tools.CREATION]: null,
+    [Tools.SEARCH]: null,
+    [Tools.FILTER]: null,
+    [Tools.PLANET]: null,
+    [Tools.SETTINGS]: null,
+  },
   fontSize: FONTSIZE,
 }
 
@@ -16,7 +29,14 @@ export const defaultState = {
 }
 
 export function getInitialState() {
-  return new Storage().get() || initialState;
+  const fromStorage = new Storage().get();
+
+  // Merge initialState with storage for max. compatibility when it
+  // gets updated
+  return {
+    ...initialState,
+    ...fromStorage,
+  }
 }
 
 function shiftOldFromArray(arr, max) {
@@ -45,7 +65,18 @@ function rootReducer(state, action) {
     case ActionTypes.SELECT_PANEL_NAME:
       return {
         ...state,
-        selectedPanelName: action.name,
+        activeTabsNames: {
+          ...state.activeTabsNames,
+          [action.tool]: action.selected,
+        }
+      }
+    case ActionTypes.SET_PANEL_VISIBILITY:
+      return {
+        ...state,
+        activeTools: {
+          ...state.activeTools,
+          [action.tool]: action.visible,
+        }
       }
     case ActionTypes.SET_FONT_SIZE:
       return {
@@ -66,6 +97,7 @@ function rootReducer(state, action) {
 function persistentReducer(state, action) {
   switch (action.type) {
     case ActionTypes.SELECT_PANEL_NAME:
+    case ActionTypes.SET_PANEL_VISIBILITY:
     case ActionTypes.ADD_STDOUT_LINE:
     case ActionTypes.SET_FONT_SIZE:
     case ActionTypes.RESET_STATE:

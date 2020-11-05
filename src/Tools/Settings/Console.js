@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useReducer, useRef } from "react";
 import { FixedSizeList as List } from "react-window";
-import { addStdoutLine } from "../../actions";
+
+import { addStdoutLine } from "../../actions"
 import exec, { extractCmd, UnkownCommandError, UnkownParameterError } from "../../cmd";
 import { RootDispatch } from "../../context";
 import "./Console.css";

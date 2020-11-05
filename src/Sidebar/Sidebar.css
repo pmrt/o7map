@@ -3,7 +3,7 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 35px;
+  width: 40px;
   z-index: 9;
   opacity: .95;
 }
@@ -14,8 +14,14 @@
 
 .sidebar-icon {
   position: relative;
-  margin: 22px 0;
   cursor: pointer;
+  padding: 15px 0;
+  background: transparent;
+  transition: background 100ms ease-in-out;
+}
+
+.sidebar-icon.active {
+  background: var(--theme-background-grey);
 }
 
 .sidebar-icon:hover::after {

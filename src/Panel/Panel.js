@@ -1,16 +1,8 @@
 import Draggable from 'react-draggable';
 
-import { cloneElement, useContext } from 'react';
+import { cloneElement } from 'react';
 
-import Console from "./panels/Console";
-import Settings from './panels/Settings';
-import "./Controls.css";
-import { RootDispatch } from '../context';
-import { selectPanelName } from '../actions';
-
-function Panel({ defaultPanel, selectedPanelName, tabTitles, children }) {
-  const dispatch = useContext(RootDispatch);
-
+function Panel({ defaultPanel, selectedPanelName, onTabClick, onCloseClick, tabTitles, children }) {
   let selected;
   if (!selectedPanelName) {
     selected = defaultPanel.name;
@@ -40,10 +32,11 @@ function Panel({ defaultPanel, selectedPanelName, tabTitles, children }) {
               <h3
               key={title}
               className={isActive ? "active" : ""}
-              onClick={() => dispatch(selectPanelName(title))}
+              onClick={() => onTabClick(title)}
               >{title}</h3>
             )
           })}
+          <span className="close-btn" onClick={onCloseClick}></span>
         </div>
         <div className="panel-wrapper">
           {cloneElement(Comp)}
@@ -53,17 +46,4 @@ function Panel({ defaultPanel, selectedPanelName, tabTitles, children }) {
   )
 }
 
-function Controls({ stdout, selectedPanelName }) {
-  return (
-    <Panel
-      defaultPanel={Console}
-      selectedPanelName={selectedPanelName}
-      tabTitles={{ "Console": Console, "Settings": Settings }}
-    >
-      <Console stdout={stdout}/>
-      <Settings />
-    </Panel>
-  )
-}
-
-export default Controls;
+export default Panel;
