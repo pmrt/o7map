@@ -22,7 +22,7 @@ function Sidebar() {
       <div className="sidebar-icon" alt="Creation tool">
         <img
         alt="Creation tool"
-        src={addPng}
+        src={addWebp}
         onError={(e) => { e.target.onerror = null; e.target.src = addPng }}
         >
         </img>
