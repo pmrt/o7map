@@ -1,0 +1,25 @@
+.contextual {
+  background: var(--theme-transparent-black);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 5px 10px;
+  margin: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.contextual h1 {
+  font-size: 11px;
+}
+
+.contextual ul {
+  list-style: none;
+  font-size: 9px;
+  display: flex;
+  margin-left: 10px;
+}
+
+.contextual li {
+  margin-right: 7px;
+}

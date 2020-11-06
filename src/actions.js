@@ -3,6 +3,7 @@ export const ActionTypes = {
   SELECT_PANEL_NAME: "select_panel_name",
   SET_PANEL_VISIBILITY: "set_panel_visibility",
   SET_FONT_SIZE: "set_font_size",
+  SET_CURRENT_MAP: "set_current_map",
   RESET_STATE: "reset_state",
 }
 
@@ -35,6 +36,13 @@ export function setFontSize(fontSize) {
   return {
     fontSize,
     type: ActionTypes.SET_FONT_SIZE,
+  }
+}
+
+export function setCurrentMap(id, name, sec) {
+  return {
+    id, name, sec,
+    type: ActionTypes.SET_CURRENT_MAP,
   }
 }
 

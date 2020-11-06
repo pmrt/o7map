@@ -1,13 +1,15 @@
 import { useReducer } from "react";
 
 import './App.css';
-import EchoesMap from "./EchoesMap"
 import { RootDispatch } from "./context";
 import rootReducer, { getInitialState } from "./reducers";
-import Sidebar from "./Sidebar";
 import { addStdoutLine } from "./actions";
 
 import { version } from "../package.json";
+
+import Sidebar from "./Sidebar";
+import EchoesMap from "./EchoesMap";
+import MapInfo from "./MapInfo";
 import Tools from "./Tools";
 
 let firstTime = true;
@@ -33,6 +35,11 @@ function App() {
         />
         <EchoesMap
           fontSize={state.fontSize}
+        />
+        <MapInfo
+          mapID={state.currentMap.mapID}
+          mapName={state.currentMap.mapName}
+          mapSec={state.currentMap.mapSec}
         />
       </RootDispatch.Provider>
     </div>

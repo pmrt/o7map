@@ -19,13 +19,22 @@ export const initialState = {
     [Tools.PLANET]: null,
     [Tools.SETTINGS]: null,
   },
+  currentMap: {
+    mapID: "",
+    mapName: "",
+    mapSec: "",
+  },
   fontSize: FONTSIZE,
 }
 
 // defaultState overwrites initialState before being persisted. So
 // properties here won't be persisted, they have defaults instead.
 export const defaultState = {
-
+  currentMap: {
+    mapID: "",
+    mapName: "",
+    mapSec: "",
+  },
 }
 
 export function getInitialState() {
@@ -61,6 +70,15 @@ function rootReducer(state, action) {
       return {
         ...state,
         stdout: limitedAppend(state.stdout, newLine, MAX_CONSOLE_LINES),
+      }
+    case ActionTypes.SET_CURRENT_MAP:
+      return {
+        ...state,
+        currentMap: {
+          mapID: action.id+"",
+          mapName: action.name,
+          mapSec: action.sec,
+        },
       }
     case ActionTypes.SELECT_PANEL_NAME:
       return {

@@ -6,7 +6,7 @@ import theme from "./canvas/theme";
 import "./Map.css";
 import useFabric from "./useFabric";
 import { RootDispatch } from "../context";
-import { addStdoutLine } from "../actions";
+import { addStdoutLine, setCurrentMap } from "../actions";
 
 const MARGIN = 20;
 
@@ -62,7 +62,8 @@ function EchoesMap({ fontSize }) {
         log(":: Setting up additional event listeners");
         start = performance.now();
         map.on("render:region", (data) => {
-          console.log(data);
+          const { rid, rn, avgSec } = data;
+          dispatch(setCurrentMap(rid, rn, avgSec))
         });
         end = performance.now();
         log(`Finished task: Additional setup. Took ${Math.ceil(end - start)}ms.`);
