@@ -6,7 +6,7 @@ import theme from "./canvas/theme";
 import "./Map.css";
 import useFabric from "./useFabric";
 import { RootDispatch } from "../context";
-import { addStdoutLine, setCurrentMap } from "../actions";
+import { addStdoutLine, setCurrentMap, setIsLoading } from "../actions";
 
 const MARGIN = 20;
 
@@ -14,6 +14,11 @@ function EchoesMap({ fontSize }) {
   const dispatch = useContext(RootDispatch);
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onSetIsLoading = useCallback((isLoading) => {
+    dispatch(setIsLoading(isLoading));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -36,7 +41,7 @@ function EchoesMap({ fontSize }) {
     let didCancel = false;
     const createMap = async() => {
       log(":: Initiating map generation");
-      const map = new Map(fabricRef.current, log, {
+      const map = new Map(fabricRef.current, log, onSetIsLoading, {
         fontSize,
       });
 

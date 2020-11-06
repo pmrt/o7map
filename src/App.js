@@ -37,9 +37,8 @@ function App() {
           fontSize={state.fontSize}
         />
         <MapInfo
-          mapID={state.currentMap.mapID}
-          mapName={state.currentMap.mapName}
-          mapSec={state.currentMap.mapSec}
+          currentMap={state.currentMap}
+          isLoading={state.isLoading}
         />
       </RootDispatch.Provider>
     </div>

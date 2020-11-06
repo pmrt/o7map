@@ -33,7 +33,7 @@ function defer(fn) {
 * - clicked:system:external. Triggered when a system outside of current rendered region is clicked.
 */
 class Map extends EventEmitter {
-  constructor(fabricCanvas, logger, opts={}) {
+  constructor(fabricCanvas, logger, setIsLoading, opts={}) {
     super();
 
     this.opts = {
@@ -47,6 +47,7 @@ class Map extends EventEmitter {
     this._regionCollection = new RegionCollection(this.opts);
     this._sysCollection = new SystemCollection(this.opts);
     this._logger = logger;
+    this._setIsLoading = setIsLoading;
     this._currentMap = null;
     this._currentRegionName = "";
   }
@@ -202,6 +203,7 @@ class Map extends EventEmitter {
 
   drawRegion(region) {
     const { ID, name, systems, avgSec } = region;
+    this.setIsLoading(true);
     this.log(`:: Rendering region '${name}'`);
 
     defer(() => {
@@ -211,12 +213,12 @@ class Map extends EventEmitter {
 
       const end = performance.now();
       this.log(`Finished task: Rendering '${name}'. Took ${Math.ceil(end - start)}ms.`);
-
       this.emit("render:region", {
         rid: ID,
         rn: name,
         avgSec,
       });
+      this.setIsLoading(false);
     })
 
 
@@ -224,6 +226,7 @@ class Map extends EventEmitter {
   }
 
   drawUniverse() {
+    this.setIsLoading(true);
     this.log(":: Rendering universe");
 
     defer(() => {
@@ -231,9 +234,10 @@ class Map extends EventEmitter {
       this._fill(MapType.UNIVERSE);
       const end = performance.now();
       this.log(`Finished task: Rendering universe. Took ${Math.ceil(end - start)}ms.`);
-    })
 
-    this.emit("render:universe");
+      this.emit("render:universe");
+      this.setIsLoading(false);
+    })
 
     this._currentRegionName = null;
   }
@@ -253,6 +257,10 @@ class Map extends EventEmitter {
 
   get log() {
     return this._logger;
+  }
+
+  get setIsLoading() {
+    return this._setIsLoading;
   }
 
   setup() {

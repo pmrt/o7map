@@ -1,12 +1,20 @@
-.contextual {
-  background: var(--theme-transparent-black);
+.contextual-wrapper {
   position: absolute;
   bottom: 0;
   right: 0;
-  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.contextual {
   margin: 6px;
   display: flex;
   align-items: center;
+}
+
+.contextual, .loader-wrapper {
+  background: var(--theme-transparent-black);
+  padding: 5px 10px;
 }
 
 .contextual h1 {
@@ -22,4 +30,46 @@
 
 .contextual li {
   margin-right: 7px;
+}
+
+.loader-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--theme-transparent-black);
+  padding: 5px 10px;
+  font-size: 10px;
+}
+
+/* animation by loading.io */
+.loader {
+  display: inline-block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.loader:after {
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  width: 0;
+  height: 0;
+  box-sizing: border-box;
+  border: 8px solid;
+  border-color: var(--theme-primary) transparent var(--theme-primary) transparent;
+  animation: spinning 1.2s infinite;
+}
+@keyframes spinning {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  100% {
+    transform: rotate(1800deg);
+  }
 }

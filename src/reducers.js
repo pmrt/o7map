@@ -24,6 +24,7 @@ export const initialState = {
     mapName: "",
     mapSec: "",
   },
+  isLoading: 0,
   fontSize: FONTSIZE,
 }
 
@@ -35,6 +36,7 @@ export const defaultState = {
     mapName: "",
     mapSec: "",
   },
+  isLoading: false,
 }
 
 export function getInitialState() {
@@ -79,6 +81,11 @@ function rootReducer(state, action) {
           mapName: action.name,
           mapSec: action.sec,
         },
+      }
+    case ActionTypes.SET_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.isLoading,
       }
     case ActionTypes.SELECT_PANEL_NAME:
       return {

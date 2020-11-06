@@ -4,6 +4,7 @@ export const ActionTypes = {
   SET_PANEL_VISIBILITY: "set_panel_visibility",
   SET_FONT_SIZE: "set_font_size",
   SET_CURRENT_MAP: "set_current_map",
+  SET_IS_LOADING: "set_is_loading",
   RESET_STATE: "reset_state",
 }
 
@@ -28,7 +29,14 @@ export function setPanelVisibility(tool, visible) {
   return {
     tool,
     visible: visible,
-    type: ActionTypes.SET_PANEL_VISIBILITY
+    type: ActionTypes.SET_PANEL_VISIBILITY,
+  }
+}
+
+export function setIsLoading(isLoading) {
+  return {
+    isLoading,
+    type: ActionTypes.SET_IS_LOADING,
   }
 }
 
