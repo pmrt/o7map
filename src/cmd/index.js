@@ -1,5 +1,6 @@
 import set from "./set";
 import render from "./render";
+import help from "./help";
 import { addStdoutLine } from "../actions";
 
 export class CommandError extends Error {
@@ -26,6 +27,7 @@ export class UnkownParameterError extends CommandError {
 
 const commands = {
   "set": set,
+  "help": help,
   "render": render,
 }
 
