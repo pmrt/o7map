@@ -19,7 +19,7 @@ function Panel({ defaultPanel, selectedPanelName, onTabClick, onCloseClick, tabT
       bounds="parent"
       axis="both"
       handle=".draggable"
-      defaultPosition={{x: 50, y: 20}}
+      defaultPosition={{x: 60, y: 20}}
       grid={[25, 25]}
       scale={1}
     >

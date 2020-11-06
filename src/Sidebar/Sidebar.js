@@ -69,7 +69,7 @@ function Sidebar({ activeTools }) {
         </img>
       </div>
 
-      <div className={`sidebar-icon ${isSettingsVisible ? "active": ""}`} alt="Terminal and Settings" onClick={onSettingsClick}>
+      <div className={`sidebar-icon ${isSettingsVisible ? "active": ""}`} alt="Console and Settings" onClick={onSettingsClick}>
         <img
         alt="Terminal and Settings"
         src={settingsWebp}
