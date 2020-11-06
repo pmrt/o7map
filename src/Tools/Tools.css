@@ -1,7 +1,7 @@
 .controls {
   background: var(--theme-background-secondary);
   position: absolute;
-  width: 600px;
+  width: 500px;
   height: 350px;
   box-shadow: 1px 1px 9px #000;
   z-index: 8;
