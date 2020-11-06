@@ -13,8 +13,8 @@ function Contextual({ currentMap, isLoading }) {
 
   const Loader = isLoading
     ? (
-      <div class="loader-wrapper">
-        <div class="loader"></div>
+      <div className="loader-wrapper">
+        <div className="loader"></div>
         <p>Loading...</p>
       </div>
     )
