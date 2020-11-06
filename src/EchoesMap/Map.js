@@ -59,7 +59,15 @@ function EchoesMap({ fontSize }) {
         end = performance.now();
         log(`Finished task: Setup. Took ${Math.ceil(end - start)}ms.`);
 
-        map.drawRegions();
+        log(":: Setting up additional event listeners");
+        start = performance.now();
+        map.on("render:region", (data) => {
+          console.log(data);
+        });
+        end = performance.now();
+        log(`Finished task: Additional setup. Took ${Math.ceil(end - start)}ms.`);
+
+        map.drawUniverse();
       } catch (err) {
         log("ERR: " + err.message, "error");
         console.error(err);
@@ -70,7 +78,14 @@ function EchoesMap({ fontSize }) {
     }
     createMap();
 
-    return () => didCancel = true;
+    return () => {
+      didCancel = true;
+
+      if (mapRef.current) {
+        // Remove all event listeners
+        mapRef.current.off();
+      }
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

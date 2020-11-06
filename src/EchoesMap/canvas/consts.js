@@ -11,6 +11,6 @@ export const MIN_FONTSIZE = 5.2;
 export const LINK_WIDTH = 0.3;
 
 export const MapType = {
-  REGION: "region",
-  SYSTEM: "system",
+  UNIVERSE: "region",
+  REGION: "system",
 }

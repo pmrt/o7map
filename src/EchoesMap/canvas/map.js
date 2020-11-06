@@ -1,4 +1,6 @@
-import RegionCollection from "./region";
+import EventEmitter from "./event";
+
+import RegionCollection, { Region, RegionData } from "./region";
 import SystemCollection from "./system";
 
 import {
@@ -22,9 +24,18 @@ function defer(fn) {
 *
 * Map is agnostic to the UI layer which contains it, e.g. React. It's
 * written in vanilla javascript so React is interchangeable
+*
+* Events:
+* - render:universe. After regions render.
+* - render:region. After a specific region render.
+* - clicked:region. Triggered when a region is clicked.
+* - clicked:system. Triggered when a system is clicked.
+* - clicked:system:external. Triggered when a system outside of current rendered region is clicked.
 */
-class Map {
+class Map extends EventEmitter {
   constructor(fabricCanvas, logger, opts={}) {
+    super();
+
     this.opts = {
       fontSize: FONTSIZE,
       linkWidth: LINK_WIDTH,
@@ -124,22 +135,28 @@ class Map {
 
     const obj = opt.subTargets[0];
     switch (this._currentMap) {
-      case MapType.REGION:
-        const name = obj.get("metadata").name;
-        const sysData = obj.get("metadata").systems;
+      case MapType.UNIVERSE:
+        const region = obj.get("metadata").data;
+        this.emit("clicked:region", region);
 
-        this.drawSystem(name, sysData);
+        this.drawRegion(region);
         break;
-      case MapType.SYSTEM:
-        const rn = obj.get("metadata").regionName;
-        if (this._currentRegionName !== rn) {
-          const region = this.findRegionByName(rn);
 
-          if (!region) {
+      case MapType.REGION:
+        const system = obj.get("metadata").data;
+
+        const rn = system.regionName;
+        if (this._currentRegionName !== rn) {
+          this.emit("clicked:system:external", system);
+          const regionData = this.findRegionByName(rn);
+
+          if (!regionData) {
             this.log(`WARN: Couldn't find region '${rn}'`, "warn");
           }
 
-          this.drawSystem(rn, region.systems);
+          this.drawRegion(regionData);
+        } else {
+          this.emit("clicked:system", system);
         }
         break;
       default:
@@ -177,33 +194,46 @@ class Map {
   findRegionByName(name) {
     for (let region of this._maps) {
       if (region.mapName === name) {
-        return region;
+        const rd = new RegionData(region);
+        return new Region(rd, this.opts);
       }
     }
   }
 
-  drawSystem(regionName, sysData) {
-    this.log(`:: Rendering systems in '${regionName}'`);
+  drawRegion(region) {
+    const { ID, name, systems, avgSec } = region;
+    this.log(`:: Rendering region '${name}'`);
 
     defer(() => {
       const start = performance.now();
-      this._fill(MapType.SYSTEM, sysData);
+
+      this._fill(MapType.REGION, systems);
+
       const end = performance.now();
-      this.log(`Finished task: Rendering '${regionName}'. Took ${Math.ceil(end - start)}ms.`);
+      this.log(`Finished task: Rendering '${name}'. Took ${Math.ceil(end - start)}ms.`);
+
+      this.emit("render:region", {
+        rid: ID,
+        rn: name,
+        avgSec,
+      });
     })
 
-    this._currentRegionName = regionName;
+
+    this._currentRegionName = name;
   }
 
-  drawRegions() {
-    this.log(":: Rendering regions");
+  drawUniverse() {
+    this.log(":: Rendering universe");
 
     defer(() => {
       const start = performance.now();
-      this._fill(MapType.REGION);
+      this._fill(MapType.UNIVERSE);
       const end = performance.now();
-      this.log(`Finished task: Rendering regions. Took ${Math.ceil(end - start)}ms.`);
+      this.log(`Finished task: Rendering universe. Took ${Math.ceil(end - start)}ms.`);
     })
+
+    this.emit("render:universe");
 
     this._currentRegionName = null;
   }
@@ -242,10 +272,10 @@ class Map {
     this.clear();
 
     switch (type) {
-      case MapType.REGION:
+      case MapType.UNIVERSE:
           this.fillRegions.apply(this, args);
         break;
-      case MapType.SYSTEM:
+      case MapType.REGION:
           this.fillSystem.apply(this, args);
         break;
       default:
@@ -301,10 +331,10 @@ class Map {
   /* */
   updateFontSize(newFontSize) {
     switch (this._currentMap) {
-      case MapType.REGION:
+      case MapType.UNIVERSE:
         this._regionCollection.updateFontSize(newFontSize);
         break;
-      case MapType.SYSTEM:
+      case MapType.REGION:
         this._sysCollection.updateFontSize(newFontSize);
         break;
       default:
@@ -316,10 +346,10 @@ class Map {
 
   setFontSize(newFontSize) {
     switch (this._currentMap) {
-      case MapType.REGION:
+      case MapType.UNIVERSE:
         this._regionCollection.updateFontSize(newFontSize);
         break;
-      case MapType.SYSTEM:
+      case MapType.REGION:
         this._sysCollection.updateFontSize(newFontSize);
         break;
       default:
@@ -338,10 +368,10 @@ class Map {
     }
 
     switch (this._currentMap) {
-      case MapType.REGION:
+      case MapType.UNIVERSE:
         this._regionCollection.center();
         break;
-      case MapType.SYSTEM:
+      case MapType.REGION:
         this._sysCollection.center();
         break;
       default:
@@ -360,10 +390,10 @@ class Map {
 
     // clear the corresponding rendered section
     switch (this._currentMap) {
-      case MapType.REGION:
+      case MapType.UNIVERSE:
         this._regionCollection.clear();
         break;
-      case MapType.SYSTEM:
+      case MapType.REGION:
         this._sysCollection.clear();
         break;
       default:

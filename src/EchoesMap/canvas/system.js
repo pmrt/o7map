@@ -4,7 +4,7 @@ import theme from "./theme";
 
 import MapCollection from "./collection";
 
-class SystemData {
+export class SystemData {
   constructor(sysData, all) {
     const {
       sid, sn, cid, cn, rn, sec, x1, y2
@@ -24,7 +24,7 @@ class SystemData {
   }
 }
 
-class System {
+export class System {
   constructor(systemData, opts) {
     this._systemData = systemData;
     this._objs = [];
@@ -149,12 +149,7 @@ class System {
       originX: 'center',
       originY: 'center',
       metadata: {
-        name: this.name,
-        coords: this.coords,
-        sec: this.sec,
-        constellationID: this.constellationID,
-        constellationName: this.constellationName,
-        regionName: this.regionName,
+        data: this,
       },
     });
 

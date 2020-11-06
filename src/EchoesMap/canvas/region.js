@@ -1,16 +1,16 @@
 import { fabric } from "fabric";
-import { wrapText } from "../helpers";
+import { getSecColor, wrapText } from "../helpers";
 import theme from "./theme";
 
 import MapCollection from "./collection";
 
-class RegionData {
+export class RegionData {
   constructor(regionData) {
     const {
       mapID, mapName, ee_gates, avgSec, maxSec, minSec, x1, y1, systems
     } = regionData;
 
-    this.id = mapID;
+    this.ID = mapID;
     this.name = mapName;
     this.gates = ee_gates;
     this.sec = {
@@ -26,11 +26,31 @@ class RegionData {
   }
 }
 
-class Region {
+export class Region {
   constructor(regionData, opts) {
     this._regionData = regionData;
     this._objs = [];
     this.opts = opts;
+  }
+
+  get ID() {
+    return this._regionData.ID;
+  }
+
+  get sec() {
+    return this._regionData.sec;
+  }
+
+  get avgSec() {
+    if (!this._regionData.sec && !this._regionData.sec.avg) {
+      return null;
+    }
+
+    let sec = this._regionData.sec.avg.toFixed(1);
+    if (sec === "0.0") {
+      sec = "-0.0";
+    }
+    return sec;
   }
 
   get coords() {
@@ -62,10 +82,12 @@ class Region {
       return null;
     }
 
+    const color = getSecColor(this.avgSec);
+
     const regionRect = new fabric.Rect({
       left: this.coords.x,
       top: this.coords.y,
-      fill: theme.secondary,
+      fill: color || theme.secondary,
       width: 10,
       height: 10,
       angle: 45,
@@ -75,9 +97,7 @@ class Region {
       originX: 'center',
       originY: 'center',
       metadata: {
-        name: this.name,
-        coords: this.coords,
-        systems: this.systems,
+        data: this,
       },
     });
 
