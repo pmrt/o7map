@@ -47,5 +47,5 @@ export function wrapText(text, maxChars) {
 }
 
 export function getSecColor(sec) {
-  return secColors[sec.toString()];
+  return sec && secColors[sec.toString()];
 }
