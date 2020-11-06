@@ -5,7 +5,7 @@ import "./MapInfo.css";
 
 function MapInfo({ currentMap, isLoading, cmdRef }) {
   return (
-    <div class="map-info">
+    <div className="map-info">
       <Mapbar
         cmdRef={cmdRef}
       />
