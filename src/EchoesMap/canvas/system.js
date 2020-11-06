@@ -29,6 +29,9 @@ class System {
     this._systemData = systemData;
     this._objs = [];
     this._gates = null;
+    this._fullName = this._systemData.sec
+      ? `${this._systemData.name} ${this.sec}`
+      : this._systemData.name;
     this.opts = opts;
   }
 
@@ -53,11 +56,15 @@ class System {
   }
 
   get name() {
-    return `${this._systemData.name} ${this.sec}`;
+    return this._fullName;
   }
 
   hasName() {
     return !!this._systemData.name;
+  }
+
+  hasRegion() {
+    return !!this._systemData.regionName;
   }
 
   get constellationName() {
@@ -113,7 +120,7 @@ class System {
       return null;
     }
 
-    if (!this.hasName()) {
+    if (!this.hasName() || !this.hasRegion()) {
       return null;
     }
 
@@ -204,6 +211,10 @@ export class SystemCollection extends MapCollection {
 
   get MapTypeClass() {
     return System;
+  }
+
+  getLinks() {
+    return this._group.getObjects("line");
   }
 }
 

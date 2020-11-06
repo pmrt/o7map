@@ -13,6 +13,10 @@ import {
   LINK_WIDTH,
 } from "./consts";
 
+function defer(fn) {
+  setTimeout(fn, 0);
+}
+
 /*
 * Map manages all the logic and map UI of the Eve Echoes Map.
 *
@@ -33,6 +37,7 @@ class Map {
     this._sysCollection = new SystemCollection(this.opts);
     this._logger = logger;
     this._currentMap = null;
+    this._currentRegionName = "";
   }
 
   _onMouseWheel(opt) {
@@ -123,13 +128,19 @@ class Map {
         const name = obj.get("metadata").name;
         const sysData = obj.get("metadata").systems;
 
-        this.log(`:: Rendering systems in '${name}'`);
-        const start = performance.now();
+        this.drawSystem(name, sysData);
+        break;
+      case MapType.SYSTEM:
+        const rn = obj.get("metadata").regionName;
+        if (this._currentRegionName !== rn) {
+          const region = this.findRegionByName(rn);
 
-        this.fill(MapType.SYSTEM, sysData);
+          if (!region) {
+            this.log(`WARN: Couldn't find region '${rn}'`, "warn");
+          }
 
-        const end = performance.now();
-        this.log(`Finished task: rendering '${name}'. Took ${Math.ceil(end - start)}ms.`);
+          this.drawSystem(rn, region.systems);
+        }
         break;
       default:
     }
@@ -156,7 +167,45 @@ class Map {
       this._onObjMouseDown(opt);
     }, "rect");
 
+    this._sysCollection.on("mousedown", opt => {
+      this._onObjMouseDown(opt);
+    }, "rect");
+
     return this;
+  }
+
+  findRegionByName(name) {
+    for (let region of this._maps) {
+      if (region.mapName === name) {
+        return region;
+      }
+    }
+  }
+
+  drawSystem(regionName, sysData) {
+    this.log(`:: Rendering systems in '${regionName}'`);
+
+    defer(() => {
+      const start = performance.now();
+      this._fill(MapType.SYSTEM, sysData);
+      const end = performance.now();
+      this.log(`Finished task: Rendering '${regionName}'. Took ${Math.ceil(end - start)}ms.`);
+    })
+
+    this._currentRegionName = regionName;
+  }
+
+  drawRegions() {
+    this.log(":: Rendering regions");
+
+    defer(() => {
+      const start = performance.now();
+      this._fill(MapType.REGION);
+      const end = performance.now();
+      this.log(`Finished task: Rendering regions. Took ${Math.ceil(end - start)}ms.`);
+    })
+
+    this._currentRegionName = null;
   }
 
   async fetchMaps() {
@@ -189,15 +238,15 @@ class Map {
     return this;
   }
 
-  fill(type, ...args) {
+  _fill(type, ...args) {
     this.clear();
 
     switch (type) {
       case MapType.REGION:
-        this.fillRegions.apply(this, args);
+          this.fillRegions.apply(this, args);
         break;
       case MapType.SYSTEM:
-        this.fillSystem.apply(this, args);
+          this.fillSystem.apply(this, args);
         break;
       default:
         this.log("ERR: Couldn't fill map. Bad type of map type.", "error");
@@ -224,6 +273,11 @@ class Map {
     this._sysCollection
       .center()
       .bringToFront();
+
+    const links = this._sysCollection.getLinks();
+    links.forEach(obj => {
+      this._canvas.sendBackwards(obj);
+    })
 
     return this;
   }

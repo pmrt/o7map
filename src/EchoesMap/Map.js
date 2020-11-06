@@ -7,7 +7,6 @@ import "./Map.css";
 import useFabric from "./useFabric";
 import { RootDispatch } from "../context";
 import { addStdoutLine } from "../actions";
-import { MapType } from "./canvas/consts";
 
 const MARGIN = 20;
 
@@ -60,12 +59,7 @@ function EchoesMap({ fontSize }) {
         end = performance.now();
         log(`Finished task: Setup. Took ${Math.ceil(end - start)}ms.`);
 
-        log(":: Rendering regions");
-        start = performance.now();
-        map.fill(MapType.REGION);
-        end = performance.now();
-        log(`Finished task: Rendering. Took ${Math.ceil(end - start)}ms.`);
-
+        map.drawRegions();
       } catch (err) {
         log("ERR: " + err.message, "error");
         console.error(err);

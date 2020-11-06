@@ -4,6 +4,7 @@ class MapCollection {
   constructor(opts) {
     this._group = null;
     this._eventQueue = [];
+    this._objsWithEvents = [];
     this.opts = opts;
 
     if (!this.MapDataClass || !this.MapTypeClass) {
@@ -50,6 +51,7 @@ class MapCollection {
     const objs = this._group.getObjects(objType);
     objs.forEach(obj => {
       obj.on(eventName, handler);
+      this._objsWithEvents.push(obj);
     })
 
     return this;
@@ -78,10 +80,10 @@ class MapCollection {
 
   clear() {
     if (this._group) {
-      const objs = this._group.getObjects();
-      objs.forEach(obj => {
+      const objs = this._objsWithEvents;
+      for (let obj of objs) {
         obj.off();
-      })
+      }
       this._group.off();
       this._group.destroy();
       this._group = null;
