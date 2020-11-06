@@ -46,6 +46,7 @@ function App() {
         <MapInfo
           currentMap={state.currentMap}
           isLoading={state.isLoading}
+          cmdRef={cmdRef}
         />
       </RootDispatch.Provider>
     </div>

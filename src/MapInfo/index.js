@@ -1,11 +1,19 @@
 import Contextual from "./Contextual";
+import Mapbar from "./Mapbar";
 
-function MapInfo({ currentMap, isLoading }) {
+import "./MapInfo.css";
+
+function MapInfo({ currentMap, isLoading, cmdRef }) {
   return (
-    <Contextual
-      isLoading={isLoading}
-      currentMap={currentMap}
-    />
+    <div class="map-info">
+      <Mapbar
+        cmdRef={cmdRef}
+      />
+      <Contextual
+        isLoading={isLoading}
+        currentMap={currentMap}
+      />
+    </div>
   )
 }
 
