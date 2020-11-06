@@ -1,5 +1,11 @@
 {
   "1.0.0-alpha": [
     "Basic map with basic controls"
+  ],
+  "1.1.0-alpha": [
+    "Draw region of systems with different regions than the rendered one, on system click",
+    "Improve performance and measuring",
+    "Terminal can now take commands",
+    "set font_size option"
   ]
 }
