@@ -9,7 +9,7 @@ import Settings from "./Settings";
 
 import { Tools } from '../../constants';
 
-function SettingsPanel({ stdout, activeTab }) {
+function SettingsPanel({ stdout, activeTab, cmdRef }) {
   const dispatch = useContext(RootDispatch);
 
   const onTabClick = useCallback((title) => {
@@ -30,7 +30,7 @@ function SettingsPanel({ stdout, activeTab }) {
       onCloseClick={onCloseClick}
       tabTitles={{ "Console": Console, "Settings": Settings }}
     >
-      <Console stdout={stdout}/>
+      <Console stdout={stdout} cmdRef={cmdRef}/>
       <Settings />
     </Panel>
   )

@@ -1,6 +1,8 @@
 import set from "./set";
+import render from "./render";
+import { addStdoutLine } from "../actions";
 
-class CommandError extends Error {
+export class CommandError extends Error {
   constructor(message="", code) {
     super(message);
     this.code = code;
@@ -24,20 +26,45 @@ export class UnkownParameterError extends CommandError {
 
 const commands = {
   "set": set,
+  "render": render,
 }
 
-function exec(dispatcher, cmd) {
-  const cmdName = cmd.shift();
-  const handler = commands[cmdName];
-  if (!handler) {
-    throw new UnkownCommandError(`Command not found: ${cmdName}`);
-  }
-
-  handler.call(this, dispatcher, cmd);
-}
-
-export function extractCmd(str) {
+function extractCmd(str) {
   return str.split(/\s+/);
 }
 
-export default exec;
+class Commander {
+  constructor(dispatcher, mapRef) {
+    this._mapRef = mapRef;
+    this._dispatcher = dispatcher;
+  }
+
+  parseAndExec(str) {
+    return this.exec(extractCmd(str));
+  }
+
+  stringifyCmd(cmd) {
+    return cmd.join(" ");
+  }
+
+  exec(cmd) {
+    const strCmd = this.stringifyCmd(cmd);
+    this._dispatcher(addStdoutLine("$ > " + strCmd));
+
+    const cmdName = cmd.shift();
+    const handler = commands[cmdName];
+    if (!handler) {
+      throw new UnkownCommandError(`Command not found: ${cmdName}`);
+    }
+
+    const ctx = {
+      dispatcher: this._dispatcher,
+      mapRef: this._mapRef,
+    }
+    handler.call(this, ctx, cmd);
+
+    return this;
+  }
+}
+
+export default Commander;

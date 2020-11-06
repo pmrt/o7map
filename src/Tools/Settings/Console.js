@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useReducer, useRef } from "react";
 import { FixedSizeList as List } from "react-window";
 
 import { addStdoutLine } from "../../actions"
-import exec, { extractCmd, UnkownCommandError, UnkownParameterError } from "../../cmd";
+import { UnkownCommandError, UnkownParameterError } from "../../cmd";
 import { RootDispatch } from "../../context";
 import "./Console.css";
 
@@ -86,7 +86,7 @@ function commandReducer(state, action) {
   }
 }
 
-function Console({ stdout }) {
+function Console({ stdout, cmdRef }) {
   const [cmdState, dispatchCmd] = useReducer(commandReducer, initialCommandState);
 
   const dispatch = useContext(RootDispatch);
@@ -102,8 +102,12 @@ function Console({ stdout }) {
     switch(evt.code) {
       case "Enter":
         try {
-          const cmd = extractCmd(val);
-          exec(dispatch, cmd);
+          const cmd = cmdRef.current;
+          if (!cmd) {
+            return;
+          }
+
+          cmd.parseAndExec(val);
         } catch(err) {
           if (err instanceof UnkownCommandError) {
             log(`ERR: ${err.message}`, "error")

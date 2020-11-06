@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useRef } from "react";
 
 import './App.css';
 import { RootDispatch } from "./context";
@@ -6,6 +6,8 @@ import rootReducer, { getInitialState } from "./reducers";
 import { addStdoutLine } from "./actions";
 
 import { version } from "../package.json";
+
+import Commander from "./cmd";
 
 import Sidebar from "./Sidebar";
 import EchoesMap from "./EchoesMap";
@@ -22,6 +24,9 @@ function App() {
     firstTime = false;
   }
 
+  const mapRef = useRef(null);
+  const cmdRef = useRef(new Commander(dispatch, mapRef));
+
   return (
     <div className="App">
       <RootDispatch.Provider value={dispatch}>
@@ -32,8 +37,10 @@ function App() {
           activeTools={state.activeTools}
           stdout={state.stdout}
           activeTabsNames={state.activeTabsNames}
+          cmdRef={cmdRef}
         />
         <EchoesMap
+          mapRef={mapRef}
           fontSize={state.fontSize}
         />
         <MapInfo

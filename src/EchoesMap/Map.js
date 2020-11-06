@@ -10,7 +10,7 @@ import { addStdoutLine, setCurrentMap, setIsLoading } from "../actions";
 
 const MARGIN = 20;
 
-function EchoesMap({ fontSize }) {
+function EchoesMap({ fontSize, mapRef }) {
   const dispatch = useContext(RootDispatch);
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
@@ -22,7 +22,6 @@ function EchoesMap({ fontSize }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const mapRef = useRef(null);
   const fabricRef = useRef(null);
   const fabricCbRef = useFabric(fabricRef, {
     width: window.innerWidth - MARGIN,
@@ -69,6 +68,9 @@ function EchoesMap({ fontSize }) {
         map.on("render:region", (data) => {
           const { rid, rn, avgSec } = data;
           dispatch(setCurrentMap(rid, rn, avgSec))
+        });
+        map.on("render:universe", () => {
+          dispatch(setCurrentMap("", "", ""))
         });
         end = performance.now();
         log(`Finished task: Additional setup. Took ${Math.ceil(end - start)}ms.`);

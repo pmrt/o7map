@@ -3,12 +3,13 @@ import { Tools as ToolTypes } from "../constants";
 import SettingsPanel from "./Settings";
 import "./Tools.css"
 
-function Tools({ stdout, activeTabsNames, activeTools }) {
+function Tools({ stdout, activeTabsNames, activeTools, cmdRef }) {
   return (
     activeTools[ToolTypes.SETTINGS] === true &&
     <SettingsPanel
       stdout={stdout}
       activeTab={activeTabsNames[ToolTypes.SETTINGS]}
+      cmdRef={cmdRef}
     />
   )
 }
