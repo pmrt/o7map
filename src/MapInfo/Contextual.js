@@ -20,8 +20,6 @@ function Contextual({ currentMap, isLoading }) {
     )
     : null;
 
-  console.log(Loader);
-
   if (!mapID || !mapName || !mapSec) {
     return (
       <div className="contextual-wrapper">
