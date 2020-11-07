@@ -398,6 +398,34 @@ class Map extends EventEmitter {
     this._canvas.requestRenderAll();
   }
 
+  centerInViewPort() {
+    if (!this._currentMap) {
+      // skip if nothing is rendered
+      return;
+    }
+
+    let group;
+    switch (this._currentMap) {
+      case MapType.UNIVERSE:
+        group = this._regionCollection.group;
+        break;
+      case MapType.REGION:
+        group = this._sysCollection.group;
+        break;
+      default:
+        this.log(`Cannot center map. Incorrect MapType: ${this._currentMap}`, "error");
+        return;
+    }
+
+    const c = this._canvas;
+    const zoom = c.getZoom();
+    const panX = ((c.getWidth() / zoom / 2) - (group.aCoords.tl.x) - (group.getScaledWidth() / 2)) * zoom;
+    const panY = ((c.getHeight() / zoom / 2) - (group.aCoords.tl.y) - (group.getScaledHeight() / 2)) * zoom;
+    c.setViewportTransform([zoom, 0, 0, zoom, panX, panY]);
+
+    return this;
+  }
+
   center() {
     if (!this._currentMap) {
       // skip if nothing is rendered

@@ -8,6 +8,7 @@ function MapInfo({ currentMap, isLoading, cmdRef, isDevMode, clickedCoords }) {
     <div className="map-info">
       <Mapbar
         cmdRef={cmdRef}
+        currentMap={currentMap}
       />
       <Contextual
         clickedCoords={clickedCoords}

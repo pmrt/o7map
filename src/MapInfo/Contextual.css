@@ -1,13 +1,9 @@
 .contextual-wrapper {
-  position: absolute;
-  bottom: 0;
-  right: 0;
   display: flex;
   align-items: center;
 }
 
 .contextual {
-  margin: 6px 0;
   display: flex;
   align-items: baseline;
 }
@@ -26,6 +22,7 @@
   font-size: 9px;
   display: flex;
   margin-left: 10px;
+  color: var(--theme-light-grey);
 }
 
 .contextual li {

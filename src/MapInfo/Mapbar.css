@@ -1,7 +1,65 @@
 .mapbar {
-  margin: 0 15px;
+  display: flex;
+  align-items: center;
 }
 
 .mapbar-btn {
+  position: relative;
+  margin-right: 15px;
   cursor: pointer;
+  display: inline-block;
+  border: 1px solid var(--theme-transparent-light-grey);
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  color: var(--theme-primary);
+  background: transparent;
+  transition: background 150ms ease-in, color 150ms ease-in;
+}
+
+.mapbar-btn::after {
+  content: '';
+  opacity: 0;
+  border: 1px solid var(--theme-primary);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.mapbar-img-btn::after {
+  border-radius: 100%;
+}
+
+.mapbar-img-btn {
+  padding: 4px;
+  border-radius: 100%;
+}
+
+.mapbar-btn img {
+  width: 16px;
+  display: block;
+}
+
+.mapbar-btn:hover {
+  background: var(--theme-light-grey);
+  color: var(--theme-background);
+}
+
+
+.mapbar-btn:active::after {
+  animation: pulse 200ms;
+}
+
+@keyframes pulse {
+	0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+	100% {
+    transform: scale(1.8);
+    opacity: 0;
+	}
 }

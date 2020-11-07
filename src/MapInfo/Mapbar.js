@@ -1,20 +1,43 @@
 import { useCallback } from "react";
 
+import centerWebp from "../img/center.webp";
+import centerPng from "../img/center.png";
+
 import "./Mapbar.css";
 
-function Mapbar({ cmdRef }) {
+function Mapbar({ cmdRef, currentMap }) {
   const onUniverseClick = useCallback(() => {
     const cmd = cmdRef.current;
     if (!cmd) {
       return null;
     }
 
-    cmd.exec(["render", "universe"]);
+    cmd.exec(["map", "render", "universe"]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onCenterClick = useCallback(() => {
+    const cmd = cmdRef.current;
+    if (!cmd) {
+      return null;
+    }
+
+    cmd.exec(["map", "center"]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="mapbar">
-      <div className="mapbar-btn" onClick={onUniverseClick}>🌍</div>
+      { !!currentMap.mapName && <div className="mapbar-btn" onClick={onUniverseClick}>&lt; Universe</div>}
+      <div className="mapbar-btn mapbar-img-btn"
+        onClick={onCenterClick}
+      >
+        <img
+          alt="Center map"
+          src={centerWebp}
+          onError={(e) => { e.target.onerror = null; e.target.src = centerPng }}
+        />
+      </div>
     </div>
   )
 }
