@@ -12,7 +12,7 @@ function setFontSize(ctx, args) {
 function setDefaults(ctx, args) {
   const { dispatcher } = ctx;
   dispatcher(resetState());
-  dispatcher(addStdoutLine(`-> Settings restored to defaults. You may should refresh the page.`));
+  dispatcher(addStdoutLine(`-> Settings restored to defaults`));
 }
 
 function setDevMode(ctx, args) {

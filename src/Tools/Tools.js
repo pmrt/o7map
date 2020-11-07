@@ -5,7 +5,7 @@ import "./Tools.css"
 
 function Tools({ stdout, activeTabsNames, activeTools, cmdRef }) {
   return (
-    activeTools[ToolTypes.SETTINGS] === true &&
+    !!activeTools[ToolTypes.SETTINGS] &&
     <SettingsPanel
       stdout={stdout}
       activeTab={activeTabsNames[ToolTypes.SETTINGS]}
