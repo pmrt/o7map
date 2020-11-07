@@ -7,5 +7,16 @@
     "Improve performance and measuring",
     "Terminal can now take commands",
     "set font_size option"
+  ],
+  "1.2.0-alpha": [
+    "Add a button to go back to universe",
+    "Show info of current region",
+    "Add command 'render' to console",
+    "Add command 'help' to console",
+    "Add feedback animation when clicking system and region",
+    "Increment clickable area in systems and regions",
+    "Add hover cursor for systems with different region and regions",
+    "Add dev_mode",
+    "Add center button"
   ]
 }
