@@ -122,6 +122,21 @@ class Map extends EventEmitter {
     this._canvas.setCursor("default");
   }
 
+  _onObjMouseOver(opt) {
+    const obj = opt.target;
+    switch (this._currentMap) {
+      case MapType.REGION:
+        const system = obj.get("metadata").data;
+
+        const rn = system.regionName;
+        if (this._currentRegionName !== rn) {
+          obj.hoverCursor = "pointer";
+        }
+        break;
+      default:
+    }
+  }
+
   _onObjMouseDown(opt) {
     if (!opt.subTargets || opt.subTargets.length === 0) {
       this.log("ERR: User selected an object but not targets were found. Aborting...", "error");
@@ -164,7 +179,7 @@ class Map extends EventEmitter {
         } else {
           this.emit("clicked:system", system);
         }
-        
+
         break;
       default:
     }
@@ -193,6 +208,10 @@ class Map extends EventEmitter {
 
     this._sysCollection.on("mousedown", opt => {
       this._onObjMouseDown(opt);
+    }, "rect");
+
+    this._sysCollection.on("mouseover", opt => {
+      this._onObjMouseOver(opt);
     }, "rect");
 
     return this;
@@ -243,7 +262,7 @@ class Map extends EventEmitter {
 
       this.emit("render:universe");
       this.setIsLoading(false);
-    })
+    });
 
     this._currentRegionName = null;
   }
@@ -300,6 +319,7 @@ class Map extends EventEmitter {
         return this;
     }
 
+    this._canvas.setZoom(1)
     this._currentMap = type;
 
     return this;

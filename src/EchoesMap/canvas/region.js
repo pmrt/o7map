@@ -140,7 +140,7 @@ export class Region {
       strokeWidth: 40,
       selectable: false,
       hasControls: false,
-      hoverCursor: 'default',
+      hoverCursor: 'pointer',
       originX: 'center',
       originY: 'center',
       metadata: {
