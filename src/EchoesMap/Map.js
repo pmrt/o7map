@@ -6,11 +6,11 @@ import theme from "./canvas/theme";
 import "./Map.css";
 import useFabric from "./useFabric";
 import { RootDispatch } from "../context";
-import { addStdoutLine, setCurrentMap, setIsLoading } from "../actions";
+import { addStdoutLine, setClickedCoords, setCurrentMap, setIsLoading } from "../actions";
 
 const MARGIN = 20;
 
-function EchoesMap({ fontSize, mapRef }) {
+function EchoesMap({ fontSize, mapRef, isDevMode }) {
   const dispatch = useContext(RootDispatch);
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
@@ -130,15 +130,32 @@ function EchoesMap({ fontSize, mapRef }) {
   }, [])
 
   useEffect(() => {
-    if (!mapRef.current) {
+    const map = mapRef.current;
+    if (!map) {
       return;
     }
 
-    const map = mapRef.current;
     log(":: Setting fontSize");
     map.setFontSize(fontSize);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fontSize]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) {
+      return;
+    }
+
+    const onReceiveCoords = coords => {
+      dispatch(setClickedCoords(coords));
+    }
+
+    map.on("mousedown:pointer", onReceiveCoords);
+    return () => {
+      map.off("mousedown:pointer", onReceiveCoords);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDevMode]);
 
   return (
     <div className="echoes-map">

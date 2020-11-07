@@ -25,6 +25,11 @@ export const initialState = {
     mapSec: "",
   },
   isLoading: 0,
+  isDevMode: 0,
+  clickedCoords: {
+    x: 0,
+    y: 0,
+  },
   fontSize: FONTSIZE,
 }
 
@@ -35,6 +40,10 @@ export const defaultState = {
     mapID: "",
     mapName: "",
     mapSec: "",
+  },
+  clickedCoords: {
+    x: 0,
+    y: 0,
   },
   isLoading: false,
 }
@@ -108,6 +117,16 @@ function rootReducer(state, action) {
         ...state,
         fontSize: action.fontSize,
       }
+    case ActionTypes.SET_IS_DEV_MODE:
+      return {
+        ...state,
+        isDevMode: action.isDevMode,
+      }
+    case ActionTypes.SET_CLICKED_COORDS:
+      return {
+        ...state,
+        clickedCoords: action.coords,
+      }
     case ActionTypes.RESET_STATE:
       return {
         ...initialState,
@@ -126,6 +145,7 @@ function persistentReducer(state, action) {
     case ActionTypes.ADD_STDOUT_LINE:
     case ActionTypes.SET_FONT_SIZE:
     case ActionTypes.RESET_STATE:
+    case ActionTypes.SET_IS_DEV_MODE:
       const newState = rootReducer(state, action);
       const clean = {...newState, ...defaultState}
       new Storage().save(clean);

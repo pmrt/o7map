@@ -1,6 +1,6 @@
 
 import { UnkownParameterError } from "./index";
-import { addStdoutLine, resetState, setFontSize as setFontSizeAction } from "../actions";
+import { addStdoutLine, resetState, setIsDevMode, setFontSize as setFontSizeAction } from "../actions";
 
 function setFontSize(ctx, args) {
   const { dispatcher } = ctx;
@@ -15,8 +15,16 @@ function setDefaults(ctx, args) {
   dispatcher(addStdoutLine(`-> Settings restored to defaults. You may should refresh the page.`));
 }
 
+function setDevMode(ctx, args) {
+  const { dispatcher } = ctx;
+  const v = !!parseInt(args[0]);
+  dispatcher(setIsDevMode(v));
+  dispatcher(addStdoutLine(`-> dev_mode set to ${v}`));
+}
+
 const props = {
   "font_size": setFontSize,
+  "dev_mode": setDevMode,
   "defaults": setDefaults,
 }
 

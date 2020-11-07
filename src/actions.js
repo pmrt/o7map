@@ -5,6 +5,8 @@ export const ActionTypes = {
   SET_FONT_SIZE: "set_font_size",
   SET_CURRENT_MAP: "set_current_map",
   SET_IS_LOADING: "set_is_loading",
+  SET_IS_DEV_MODE: "set_is_dev_mode",
+  SET_CLICKED_COORDS: "set_clicked_coords",
   RESET_STATE: "reset_state",
 }
 
@@ -51,6 +53,20 @@ export function setCurrentMap(id, name, sec) {
   return {
     id, name, sec,
     type: ActionTypes.SET_CURRENT_MAP,
+  }
+}
+
+export function setIsDevMode(isDevMode) {
+  return {
+    isDevMode,
+    type: ActionTypes.SET_IS_DEV_MODE,
+  }
+}
+
+export function setClickedCoords(coords) {
+  return {
+    coords,
+    type: ActionTypes.SET_CLICKED_COORDS,
   }
 }
 

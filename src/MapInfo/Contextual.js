@@ -1,14 +1,6 @@
 import "./Contextual.css";
 
-function NoMap() {
-  return (
-    <div className="contextual">
-      <h1>Universe</h1>
-    </div>
-  )
-}
-
-function Contextual({ currentMap, isLoading }) {
+function Contextual({ currentMap, isLoading, isDevMode, clickedCoords }) {
   const { mapID, mapName, mapSec } = currentMap;
 
   const Loader = isLoading
@@ -20,23 +12,15 @@ function Contextual({ currentMap, isLoading }) {
     )
     : null;
 
-  if (!mapID || !mapName || !mapSec) {
-    return (
-      <div className="contextual-wrapper">
-        {Loader}
-        <NoMap />
-      </div>
-    );
-  }
-
   return (
     <div className="contextual-wrapper">
       {Loader}
       <div className="contextual">
-        <h1>{ mapName }</h1>
+        <h1>{ mapName || "Universe" }</h1>
         <ul>
-          <li>id: {mapID}</li>
-          <li>sec: {mapSec}</li>
+          { !!isDevMode && !!mapID && <li>id: {mapID}</li> }
+          { !!mapSec && <li>sec: {mapSec}</li> }
+          { !!isDevMode && <li>click_coord x:{clickedCoords.x} y:{clickedCoords.y}</li> }
         </ul>
       </div>
     </div>
