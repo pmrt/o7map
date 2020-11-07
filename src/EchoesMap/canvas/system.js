@@ -189,8 +189,10 @@ export class System {
       width: 10,
       height: 10,
       angle: 45,
-      selectable: true,
-      hasControls: true,
+      strokeWidth: 40,
+      transparentCorners: false,
+      selectable: false,
+      hasControls: false,
       hoverCursor: 'default',
       originX: 'center',
       originY: 'center',
@@ -209,7 +211,7 @@ export class System {
 
     nameTextbox.set({
       left: this.coords.x - nameTextbox.getScaledWidth() / 2,
-      top: this.coords.y + regionRect.getScaledWidth() / 2 + 8,
+      top: this.coords.y + regionRect.getScaledWidth() / 2 - 12,
     })
 
     this._objs.push(
