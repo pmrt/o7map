@@ -25,8 +25,9 @@ export class SystemData {
 }
 
 export class System {
-  constructor(systemData, opts) {
+  constructor(systemData, canvas, opts) {
     this._systemData = systemData;
+    this._canvas = canvas;
     this._objs = [];
     this._gates = null;
     this._fullName = this._systemData.sec
@@ -85,6 +86,51 @@ export class System {
 
   get fabricObjs() {
     return this._objs;
+  }
+
+  calcCoords() {
+    const rect = this._objs[0];
+    const group = rect.group;
+    return {
+      x: rect.left + group.left + group.width/2,
+      y: rect.top + group.top + group.height/2,
+    }
+  }
+
+  clicked() {
+    const { x, y } = this.calcCoords();
+
+    return new Promise(resolve => {
+        const pulse = new fabric.Circle({
+            left: x,
+            top: y,
+            fill: theme.secondary,
+            strokeWidth: 10,
+            radius: 5,
+            selectable: false,
+            hasControls: false,
+            hasBorders: false,
+            opacity: 1,
+            originX: "center",
+            originY: "center",
+          })
+
+          this._canvas.add(pulse);
+
+          pulse.animate({
+            radius: 20,
+            opacity: 0,
+          }, {
+            onChange: this._canvas.renderAll.bind(this._canvas),
+            duration: 150,
+            onComplete: () => {
+              this._canvas.remove(pulse);
+              this._canvas.renderAll();
+              resolve();
+            }
+          })
+      }
+    )
   }
 
   findGates() {

@@ -44,8 +44,8 @@ class Map extends EventEmitter {
 
     this._canvas = fabricCanvas;
     this._maps = null;
-    this._regionCollection = new RegionCollection(this.opts);
-    this._sysCollection = new SystemCollection(this.opts);
+    this._regionCollection = new RegionCollection(fabricCanvas, this.opts);
+    this._sysCollection = new SystemCollection(fabricCanvas, this.opts);
     this._logger = logger;
     this._setIsLoading = setIsLoading;
     this._currentMap = null;
@@ -74,7 +74,6 @@ class Map extends EventEmitter {
 
   _onMouseDown(opt) {
     const evt = opt.e;
-
     if (opt.subTargets && opt.subTargets.length > 0) {
       return;
     }
@@ -138,9 +137,12 @@ class Map extends EventEmitter {
     switch (this._currentMap) {
       case MapType.UNIVERSE:
         const region = obj.get("metadata").data;
-        this.emit("clicked:region", region);
 
-        this.drawRegion(region);
+        region.clicked().then(() => {
+          this.emit("clicked:region", region);
+
+          this.drawRegion(region);
+        });
         break;
 
       case MapType.REGION:
@@ -148,17 +150,21 @@ class Map extends EventEmitter {
 
         const rn = system.regionName;
         if (this._currentRegionName !== rn) {
-          this.emit("clicked:system:external", system);
-          const regionData = this.findRegionByName(rn);
+          system.clicked().then(() => {
+            this.emit("clicked:system:external", system);
+            const regionData = this.findRegionByName(rn);
 
-          if (!regionData) {
-            this.log(`WARN: Couldn't find region '${rn}'`, "warn");
-          }
+            if (!regionData) {
+              this.log(`WARN: Couldn't find region '${rn}'`, "warn");
+            }
 
-          this.drawRegion(regionData);
+            this.drawRegion(regionData);
+          });
+
         } else {
           this.emit("clicked:system", system);
         }
+        
         break;
       default:
     }
@@ -196,7 +202,7 @@ class Map extends EventEmitter {
     for (let region of this._maps) {
       if (region.mapName === name) {
         const rd = new RegionData(region);
-        return new Region(rd, this.opts);
+        return new Region(rd, this._canvas, this.opts);
       }
     }
   }

@@ -1,7 +1,8 @@
 import { fabric } from "fabric";
 
 class MapCollection {
-  constructor(opts) {
+  constructor(canvas, opts) {
+    this._canvas = canvas;
     this._group = null;
     this._eventQueue = [];
     this._objsWithEvents = [];
@@ -119,7 +120,7 @@ class MapCollection {
 
     for (let data of all) {
       const d = new this.MapDataClass(data, all);
-      const map = new this.MapTypeClass(d, this.opts);
+      const map = new this.MapTypeClass(d, this._canvas, this.opts);
       const ok = map.render();
       if (ok) {
         mapObjects.push(...map.fabricObjs);
