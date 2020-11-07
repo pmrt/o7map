@@ -33,7 +33,7 @@ function Sidebar({ activeTools }) {
 
   return (
     <div className="sidebar">
-      <div className="sidebar-icon" alt="Creation tool">
+      <div className="sidebar-icon" alt="Creation tool (Coming soon)">
         <img
         alt="Creation tool"
         src={addWebp}
@@ -42,7 +42,7 @@ function Sidebar({ activeTools }) {
         </img>
       </div>
 
-      <div className="sidebar-icon" alt="Search tool">
+      <div className="sidebar-icon" alt="Search tool (Coming soon)">
         <img
         alt="Search tool"
         src={searchWebp}
@@ -51,7 +51,7 @@ function Sidebar({ activeTools }) {
         </img>
       </div>
 
-      <div className="sidebar-icon" alt="Filter tool">
+      <div className="sidebar-icon" alt="Filter tool (Coming soon)">
         <img
         alt="Filter tool"
         src={filterWebp}
@@ -60,7 +60,7 @@ function Sidebar({ activeTools }) {
         </img>
       </div>
 
-      <div className="sidebar-icon" alt="Planet tool">
+      <div className="sidebar-icon" alt="Planet tool (Coming soon)">
         <img
         alt="Planet tool"
         src={planetWebp}
