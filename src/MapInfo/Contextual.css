@@ -9,7 +9,7 @@
 .contextual {
   margin: 6px 0;
   display: flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 .contextual, .loader-wrapper {
@@ -30,6 +30,10 @@
 
 .contextual li {
   margin-right: 7px;
+}
+
+.contextual > ul > li:not(:last-child)::after {
+  content: ';';
 }
 
 .loader-wrapper {
@@ -60,6 +64,7 @@
   border-color: var(--theme-primary) transparent var(--theme-primary) transparent;
   animation: spinning 1.2s infinite;
 }
+
 @keyframes spinning {
   0% {
     transform: rotate(0);

@@ -40,12 +40,15 @@ function App() {
           cmdRef={cmdRef}
         />
         <EchoesMap
+          isDevMode={state.isDevMode}
           mapRef={mapRef}
           fontSize={state.fontSize}
         />
         <MapInfo
           currentMap={state.currentMap}
           isLoading={state.isLoading}
+          isDevMode={state.isDevMode}
+          clickedCoords={state.clickedCoords}
           cmdRef={cmdRef}
         />
       </RootDispatch.Provider>

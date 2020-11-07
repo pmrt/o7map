@@ -31,6 +31,7 @@ function defer(fn) {
 * - clicked:region. Triggered when a region is clicked.
 * - clicked:system. Triggered when a system is clicked.
 * - clicked:system:external. Triggered when a system outside of current rendered region is clicked.
+* - mousedown:pointer. Triggered on mouse down. Contains canvas coordinates.
 */
 class Map extends EventEmitter {
   constructor(fabricCanvas, logger, setIsLoading, opts={}) {
@@ -73,6 +74,8 @@ class Map extends EventEmitter {
   }
 
   _onMouseDown(opt) {
+    this.emit("mousedown:pointer", opt.pointer);
+
     const evt = opt.e;
     if (opt.subTargets && opt.subTargets.length > 0) {
       return;
