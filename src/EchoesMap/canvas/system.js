@@ -25,9 +25,10 @@ export class SystemData {
 }
 
 export class System {
-  constructor(systemData, canvas, opts) {
+  constructor(systemData, canvas, db, opts) {
     this._systemData = systemData;
     this._canvas = canvas;
+    this._db = db;
     this._objs = [];
     this._gates = null;
     this._fullName = this._systemData.sec

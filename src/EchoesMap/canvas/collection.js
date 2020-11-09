@@ -1,8 +1,9 @@
 import { fabric } from "fabric";
 
 class MapCollection {
-  constructor(canvas, opts) {
+  constructor(canvas, db, opts) {
     this._canvas = canvas;
+    this._db = db;
     this._group = null;
     this._eventQueue = [];
     this._objsWithEvents = [];

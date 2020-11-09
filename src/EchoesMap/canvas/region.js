@@ -27,9 +27,10 @@ export class RegionData {
 }
 
 export class Region {
-  constructor(regionData, canvas, opts) {
+  constructor(regionData, canvas, db, opts) {
     this._regionData = regionData;
     this._canvas = canvas;
+    this._db = db;
     this._objs = [];
     this.opts = opts;
   }

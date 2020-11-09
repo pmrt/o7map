@@ -1,3 +1,5 @@
+import Dexie from "dexie";
+
 import EventEmitter from "./event";
 
 import RegionCollection, { Region, RegionData } from "./region";
@@ -13,6 +15,7 @@ import {
   MIN_FONTSIZE,
   MapType,
   LINK_WIDTH,
+  DATABASE_NAME,
 } from "./consts";
 
 function defer(fn) {
@@ -43,14 +46,61 @@ class Map extends EventEmitter {
       ...opts,
     };
 
+    this._db = null;
+    this._setupDatabase();
     this._canvas = fabricCanvas;
     this._maps = null;
-    this._regionCollection = new RegionCollection(fabricCanvas, this.opts);
-    this._sysCollection = new SystemCollection(fabricCanvas, this.opts);
+    this._regionCollection = new RegionCollection(fabricCanvas, this._db, this.opts);
+    this._sysCollection = new SystemCollection(fabricCanvas, this._db, this.opts);
     this._logger = logger;
     this._setIsLoading = setIsLoading;
     this._currentMap = null;
     this._currentRegionName = "";
+  }
+
+  _setupDatabase() {
+    this._db = new Dexie(DATABASE_NAME);
+    this._db.version(1).stores({
+      regions: "id, &name, sec.avg",
+      systems: "id, &name, sec.sec, region.id, region.name, [region.name+x], stations, constellation.id, constellation.name",
+      edges: "++, sourceId",
+    });
+
+    this._db.on("ready", () => {
+      // Only execute this op if database is not already populated
+      return this._db.regions.count(count => {
+        if (count > 0) {
+          this.log(":: Local database already populated. Map data fetch skipped.")
+          return;
+        }
+
+        let start, end;
+
+        this.log(":: Fetching map data..")
+        start = performance.now();
+        return fetch("/map/universe.json")
+          .then(resp => {
+            end = performance.now();
+            this.log(`Finished task: fetching. Took ${Math.ceil(end - start)}ms.`);
+            return resp.json()
+          })
+          .then(universe => {
+            this.log(":: Inserting map data to local database..")
+            start = performance.now();
+            return Promise.all([
+              this._db.regions.bulkAdd(universe.regions),
+              this._db.systems.bulkAdd(universe.systems),
+              this._db.edges.bulkAdd(universe.edges),
+            ]);
+          }).then(() => {
+            end = performance.now();
+            this.log(`Finished task: Inserting. Took ${Math.ceil(end - start)}ms.`);
+          }).catch(err => {
+            this.log(`ERR: Error when trying to insert data to local db`, "error");
+            console.error(err);
+          });
+      })
+    });
   }
 
   _onMouseWheel(opt) {
@@ -469,6 +519,11 @@ class Map extends EventEmitter {
     this._canvas.clear();
 
     return this;
+  }
+
+  cleanup() {
+    this.off();
+    this._db.close();
   }
 }
 

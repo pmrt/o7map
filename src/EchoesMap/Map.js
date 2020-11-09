@@ -91,7 +91,7 @@ function EchoesMap({ fontSize, mapRef, isDevMode }) {
 
       if (mapRef.current) {
         // Remove all event listeners
-        mapRef.current.off();
+        mapRef.current.cleanup();
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

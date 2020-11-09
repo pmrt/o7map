@@ -10,6 +10,8 @@ export const MIN_FONTSIZE = 5.2;
 
 export const LINK_WIDTH = 0.3;
 
+export const DATABASE_NAME = "echoes_atlas_map_db";
+
 export const MapType = {
   UNIVERSE: "universe",
   REGION: "region",
