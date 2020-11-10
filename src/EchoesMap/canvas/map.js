@@ -55,7 +55,7 @@ class Map extends EventEmitter {
     this._logger = logger;
     this._setIsLoading = setIsLoading;
     this._currentMap = null;
-    this._currentRegionName = "";
+    this._currentRegionId = null;
   }
 
   _setupDatabase() {
@@ -63,14 +63,13 @@ class Map extends EventEmitter {
     this._db.version(1).stores({
       regions: "id, &name, sec.avg",
       systems: "id, &name, sec.sec, region.id, region.name, [region.name+x], stations, constellation.id, constellation.name",
-      edges: "++, sourceId",
     });
 
     this._db.on("ready", () => {
       // Only execute this op if database is not already populated
       return this._db.regions.count(count => {
         if (count > 0) {
-          this.log(":: Local database already populated. Map data fetch skipped.")
+          this.log(":: Local database already populated.")
           return;
         }
 
@@ -88,9 +87,8 @@ class Map extends EventEmitter {
             this.log(":: Inserting map data to local database..")
             start = performance.now();
             return Promise.all([
-              this._db.regions.bulkAdd(universe.regions),
-              this._db.systems.bulkAdd(universe.systems),
-              this._db.edges.bulkAdd(universe.edges),
+              this._db.regions.bulkAdd(universe.r),
+              this._db.systems.bulkAdd(universe.s),
             ]);
           }).then(() => {
             end = performance.now();
@@ -181,8 +179,8 @@ class Map extends EventEmitter {
       case MapType.REGION:
         const system = obj.get("metadata").data;
 
-        const rn = system.regionName;
-        if (this._currentRegionName !== rn) {
+        const id = system.region.id;
+        if (this._currentRegionId !== id) {
           obj.hoverCursor = "pointer";
         }
         break;
@@ -216,18 +214,21 @@ class Map extends EventEmitter {
       case MapType.REGION:
         const system = obj.get("metadata").data;
 
-        const rn = system.regionName;
-        if (this._currentRegionName !== rn) {
-          system.clicked().then(() => {
-            this.emit("clicked:system:external", system);
-            const regionData = this.findRegionByName(rn);
+        const id = system.region.id;
+        if (this._currentRegionId !== id) {
+          system.clicked()
+            .then(() => {
+              this.emit("clicked:system:external", system);
+              return this._regionCollection.findRegionById(id);
+            })
+            .then(region => {
+              if (!region) {
+                this.log(`WARN: Couldn't find region id:'${id}'`, "warn");
+                return;
+              }
 
-            if (!regionData) {
-              this.log(`WARN: Couldn't find region '${rn}'`, "warn");
-            }
-
-            this.drawRegion(regionData);
-          });
+              this.drawRegion(region);
+            })
 
         } else {
           this.emit("clicked:system", system);
@@ -274,33 +275,31 @@ class Map extends EventEmitter {
     for (let region of this._maps) {
       if (region.mapName === name) {
         const rd = new RegionData(region);
-        return new Region(rd, this._canvas, this.opts);
+        return new Region(rd, this._canvas, this._db, this.opts);
       }
     }
   }
 
   drawRegion(region) {
-    const { ID, name, systems, avgSec } = region;
+    const { ID, name, systems, sec } = region;
     this.setIsLoading(true);
     this.log(`:: Rendering region '${name}'`);
 
-    defer(() => {
+    defer(async () => {
       const start = performance.now();
 
-      this._fill(MapType.REGION, systems);
+      await this._fill(MapType.REGION, systems);
 
       const end = performance.now();
       this.log(`Finished task: Rendering '${name}'. Took ${Math.ceil(end - start)}ms.`);
       this.emit("render:region", {
         rid: ID,
         rn: name,
-        avgSec,
+        avgSec: sec.avg,
       });
       this.setIsLoading(false);
+      this._currentRegionId = ID;
     })
-
-
-    this._currentRegionName = name;
   }
 
   drawUniverse() {
@@ -317,20 +316,7 @@ class Map extends EventEmitter {
       this.setIsLoading(false);
     });
 
-    this._currentRegionName = null;
-  }
-
-  async fetchMaps() {
-    const maps = await fetch("maps.json");
-    const resp = await maps.json()
-
-    this._maps = resp.maps;
-
-    if (!this._maps) {
-      throw new Error("Map: failed to create map. Missing map data");
-    }
-
-    return this;
+    this._currentRegionId = null;
   }
 
   get log() {
@@ -354,15 +340,15 @@ class Map extends EventEmitter {
     return this;
   }
 
-  _fill(type, ...args) {
+  async _fill(type, ...args) {
     this.clear();
 
     switch (type) {
       case MapType.UNIVERSE:
-          this.fillRegions.apply(this, args);
+          await this.fillUniverse.apply(this, args);
         break;
       case MapType.REGION:
-          this.fillSystem.apply(this, args);
+          this.fillRegion.apply(this, args);
         break;
       default:
         this.log("ERR: Couldn't fill map. Bad type of map type.", "error");
@@ -378,7 +364,7 @@ class Map extends EventEmitter {
     return this;
   }
 
-  fillSystem(sysData) {
+  fillRegion(sysData) {
     const { errors } = this._sysCollection.render(sysData);
     if (errors.length > 0) {
       for (let err of errors) {
@@ -390,17 +376,12 @@ class Map extends EventEmitter {
     this._sysCollection
       .center()
       .bringToFront();
-
-    const links = this._sysCollection.getLinks();
-    links.forEach(obj => {
-      this._canvas.sendBackwards(obj);
-    })
-
     return this;
   }
 
-  fillRegions() {
-    const { errors } = this._regionCollection.render(this._maps);
+  async fillUniverse() {
+    const regions = await this._regionCollection.getRegions();
+    const { errors } = this._regionCollection.render(regions);
     if (errors.length > 0) {
       for (let err of errors) {
         this.log(err.message, err.type);

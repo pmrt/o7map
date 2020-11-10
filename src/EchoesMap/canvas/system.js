@@ -5,34 +5,39 @@ import theme from "./theme";
 import MapCollection from "./collection";
 
 export class SystemData {
-  constructor(sysData, all) {
+  constructor(sysData) {
     const {
-      sid, sn, cid, cn, rn, sec, x1, y2
+      id, n, sec, x, y, rg, st, pl, cn, ed,
     } = sysData;
 
-    this.ID = sid;
-    this.name = sn;
-    this.constellationName = cn;
-    this.constellationID = cid;
-    this.regionName = rn;
+    this.ID = id;
+    this.name = n;
+    this.constellation = {
+      id: cn.id,
+      name: cn.n,
+    };
+    this.region = {
+      id: rg.id,
+      name: rg.name,
+    };
     this.sec = sec;
-    this.coords = {
-      x: x1,
-      y: y2,
-    }
-    this.near = all;
+    this.stations = st;
+    this.planets = pl;
+    this.edges = ed || [];
+    this.coords = { x, y};
   }
 }
 
 export class System {
-  constructor(systemData, canvas, db, opts) {
-    this._systemData = systemData;
+  constructor(sysData, canvas, db, opts) {
+    this._systemData = sysData;
     this._canvas = canvas;
     this._db = db;
     this._objs = [];
-    this._gates = null;
+    this._rect = null;
+    this._gates = [];
     this._fullName = this._systemData.sec
-      ? `${this._systemData.name} ${this.sec}`
+      ? `${this._systemData.name} ${this.sec.str}`
       : this._systemData.name;
     this.opts = opts;
   }
@@ -41,48 +46,31 @@ export class System {
     return this._systemData.ID;
   }
 
-  get coords() {
-    return this._systemData.coords;
-  }
-
-  get sec() {
-    if (!this._systemData.sec) {
-      return null;
-    }
-
-    let sec = this._systemData.sec.toFixed(1);
-    if (sec === "0.0") {
-      sec = "-0.0";
-    }
-    return sec;
-  }
-
   get name() {
     return this._fullName;
   }
 
-  hasName() {
-    return !!this._systemData.name;
+  get sec() {
+    return this._systemData.sec || {
+      sec: null,
+      str: null,
+    };
   }
 
-  hasRegion() {
-    return !!this._systemData.regionName;
+  get coords() {
+    return this._systemData.coords;
   }
 
-  get constellationName() {
-    return this._systemData.constellationName;
+  get constellation() {
+    return this._systemData.constellation;
   }
 
-  get constellationID() {
-    return this._systemData.constellationID;
+  get region() {
+    return this._systemData.region;
   }
 
-  get regionName() {
-    return this._systemData.regionName;
-  }
-
-  get near() {
-    return this._systemData.near;
+  get edges() {
+    return this._systemData.edges;
   }
 
   get fabricObjs() {
@@ -90,7 +78,7 @@ export class System {
   }
 
   calcCoords() {
-    const rect = this._objs[0];
+    const rect = this._rect;
     const group = rect.group;
     return {
       x: rect.left + group.left + group.width/2,
@@ -134,59 +122,13 @@ export class System {
     )
   }
 
-  findGates() {
-    if (Array.isArray(this._gates)) {
-      return this._gates;
-    }
-
-    let gates = [];
-    for (let system of this.near) {
-      const edges = system.ee_links;
-      if (!edges) {
-        continue;
-      }
-
-      const edgeID = parseInt(this.ID.toString().substr(-4));
-      if (edges.indexOf(edgeID) >= 0) {
-        gates.push({
-          x2: system.x1,
-          y2: system.y1,
-          x1: this.coords.x,
-          y1: this.coords.y,
-          sameRegion: system.rn === this.regionName,
-        })
-      }
-    }
-
-    this._gates = gates;
-    return gates;
-  }
-
   render() {
-    if (this.coords.x === null || this.coords.y === null) {
-      return null;
-    }
-
-    if (!this.hasName() || !this.hasRegion()) {
-      return null;
-    }
-
-    if (this.coords.x === undefined || this.coords.y === undefined) {
-      return null;
-    }
-
-    if (Number.isNaN(this.coords.x) || Number.isNaN(this.coords.y)) {
-      return null;
-    }
-
-    const gates = this.findGates();
-
-    const color = getSecColor(this.sec);
+    const color = getSecColor(this.sec.str) || theme.secondary;
 
     const regionRect = new fabric.Rect({
       left: this.coords.x,
       top: this.coords.y,
-      fill: color || theme.secondary,
+      fill: color,
       width: 10,
       height: 10,
       angle: 45,
@@ -201,6 +143,7 @@ export class System {
         data: this,
       },
     });
+    this._rect = regionRect;
 
     const nameTextbox = new fabric.Textbox(wrapText(this.name, 20), {
       width: 50,
@@ -215,12 +158,8 @@ export class System {
       top: this.coords.y + regionRect.getScaledWidth() / 2 - 12,
     })
 
-    this._objs.push(
-      regionRect, nameTextbox,
-    );
-
-    for (let gate of gates) {
-      const { x2, y2, x1, y1, sameRegion } = gate;
+    for (let gate of this.edges) {
+      const { x, y, sr: sameRegion } = gate;
 
       const defaultOpts = {
         strokeWidth: this.opts.linkWidth,
@@ -238,11 +177,15 @@ export class System {
           strokeDashArray: [3, 3],
         }
 
-      const line = new fabric.Line([x2, y2, x1, y1], opts);
+      const line = new fabric.Line([x, y, this.coords.x, this.coords.y], opts);
       this._objs.push(
         line,
       )
     }
+
+    this._objs.push(
+      regionRect, nameTextbox,
+    );
 
     return true;
   }

@@ -51,10 +51,11 @@ class MapCollection {
 
   _addObjsEventListener(eventName, handler, objType) {
     const objs = this._group.getObjects(objType);
-    objs.forEach(obj => {
+    for (let i = 0, len = objs.length; i < len; i++) {
+      const obj = objs[i];
       obj.on(eventName, handler);
       this._objsWithEvents.push(obj);
-    })
+    }
 
     return this;
   }
@@ -120,8 +121,8 @@ class MapCollection {
     let errors = [];
 
     for (let data of all) {
-      const d = new this.MapDataClass(data, all);
-      const map = new this.MapTypeClass(d, this._canvas, this.opts);
+      const d = new this.MapDataClass(data);
+      const map = new this.MapTypeClass(d, this._canvas, this._db, this.opts);
       const ok = map.render();
       if (ok) {
         mapObjects.push(...map.fabricObjs);

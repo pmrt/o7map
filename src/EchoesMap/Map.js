@@ -45,18 +45,12 @@ function EchoesMap({ fontSize, mapRef, isDevMode }) {
       });
 
       try {
-        let start, end;
-
-        log(":: Fetching map data");
-        start = performance.now();
-        await map.fetchMaps();
-        end = performance.now();
-        log(`Finished task: map data. Took ${Math.ceil(end - start)}ms.`);
 
         if (didCancel) {
           return;
         }
 
+        let start, end;
         log(":: Setting up map");
         start = performance.now();
         await map.setup();

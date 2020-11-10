@@ -18,5 +18,8 @@
     "Add hover cursor for systems with different region and regions",
     "Add dev_mode",
     "Add center button"
+  ],
+  "2.0.0-alpha": [
+    "Optimized map data, resulting in an overall performance boost"
   ]
 }

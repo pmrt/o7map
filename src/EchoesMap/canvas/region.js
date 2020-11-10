@@ -7,22 +7,15 @@ import MapCollection from "./collection";
 export class RegionData {
   constructor(regionData) {
     const {
-      mapID, mapName, ee_gates, avgSec, maxSec, minSec, x1, y1, systems
+      id, n, sc, sec, sys, x, y
     } = regionData;
 
-    this.ID = mapID;
-    this.name = mapName;
-    this.gates = ee_gates;
-    this.sec = {
-      avg: avgSec,
-      max: maxSec,
-      min: minSec,
-    };
-    this.coords = {
-      x: x1,
-      y: y1,
-    }
-    this.systems = systems;
+    this.ID = id;
+    this.name = n;
+    this.sec = sec;
+    this.coords = { x, y };
+    this.systems = sys;
+    this.scale = sc;
   }
 }
 
@@ -39,20 +32,17 @@ export class Region {
     return this._regionData.ID;
   }
 
-  get sec() {
-    return this._regionData.sec;
+  get name() {
+    return this._regionData.name;
   }
 
-  get avgSec() {
-    if (!this._regionData.sec && !this._regionData.sec.avg) {
-      return null;
-    }
-
-    let sec = this._regionData.sec.avg.toFixed(1);
-    if (sec === "0.0") {
-      sec = "-0.0";
-    }
-    return sec;
+  get sec() {
+    return this._regionData.sec || {
+      sec: null,
+      max: null,
+      avg: null,
+      str: null,
+    };
   }
 
   get coords() {
@@ -61,10 +51,6 @@ export class Region {
 
   get systems() {
     return this._regionData.systems;
-  }
-
-  get name() {
-    return this._regionData.name;
   }
 
   get fabricObjs() {
@@ -117,24 +103,12 @@ export class Region {
   }
 
   render() {
-    if (this.coords.x === null || this.coords.y === null) {
-      return null;
-    }
-
-    if (this.coords.x === undefined || this.coords.y === undefined) {
-      return null;
-    }
-
-    if (Number.isNaN(this.coords.x) || Number.isNaN(this.coords.y)) {
-      return null;
-    }
-
-    const color = getSecColor(this.avgSec);
+    const color = getSecColor(this.sec.str) || theme.secondary;
 
     const regionRect = new fabric.Rect({
       left: this.coords.x,
       top: this.coords.y,
-      fill: color || theme.secondary,
+      fill: color,
       width: 10,
       height: 10,
       angle: 45,
@@ -171,6 +145,19 @@ export class Region {
 }
 
 export class RegionCollection extends MapCollection {
+  async getRegions() {
+    return await this._db.regions.toArray();
+  }
+
+  async findRegionById(regionId) {
+    const region = await this._db.regions.get(regionId);
+    if (region) {
+      const rd = new RegionData(region);
+      return new Region(rd, this._canvas, this._db, this.opts);
+    }
+    return;
+  }
+
   get MapDataClass() {
     return RegionData;
   }
