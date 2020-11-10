@@ -24,7 +24,7 @@ export const initialState = {
     mapName: "",
     mapSec: "",
   },
-  isLoading: 0,
+  isLoading: 1,
   isDevMode: 0,
   clickedCoords: {
     x: 0,
@@ -45,7 +45,7 @@ export const defaultState = {
     x: 0,
     y: 0,
   },
-  isLoading: false,
+  isLoading: 1,
 }
 
 export function getInitialState() {

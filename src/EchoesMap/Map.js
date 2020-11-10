@@ -199,7 +199,7 @@ function LoadingOverlay({ isLoading }) {
   //   )
 
   return (
-    <div className="map-loading-overlay" style={{ opacity: isLoading ? "1" : "0"}}>
+    <div className="map-loading-overlay" style={{ opacity: isLoading ? "1" : "0", marginLeft: areQuotesVisible ? "0" : "40px" }}>
       <div className="map-loading-message">
        {!!areQuotesVisible && ( <div className="quote">
           <p className="loading-quote">&lt;&lt; {quote.str} &gt;&gt;</p>
