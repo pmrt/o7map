@@ -2,11 +2,11 @@ import { useCallback, useContext } from "react";
 
 import "./Sidebar.css"
 
-import addWebp from "../img/add.webp";
-import addPng from "../img/add.png";
+// import addWebp from "../img/add.webp";
+// import addPng from "../img/add.png";
 
-import filterWebp from "../img/filter.webp";
-import filterPng from "../img/filter.png";
+// import filterWebp from "../img/filter.webp";
+// import filterPng from "../img/filter.png";
 
 import planetWebp from "../img/planet.webp";
 import planetPng from "../img/planet.png";
@@ -33,29 +33,11 @@ function Sidebar({ activeTools }) {
 
   return (
     <div className="sidebar">
-      <div className="sidebar-icon" alt="Creation tool (Coming soon)">
-        <img
-        alt="Creation tool"
-        src={addWebp}
-        onError={(e) => { e.target.onerror = null; e.target.src = addPng }}
-        >
-        </img>
-      </div>
-
       <div className="sidebar-icon" alt="Search tool (Coming soon)">
         <img
         alt="Search tool"
         src={searchWebp}
         onError={(e) => { e.target.onerror = null; e.target.src = searchPng }}
-        >
-        </img>
-      </div>
-
-      <div className="sidebar-icon" alt="Filter tool (Coming soon)">
-        <img
-        alt="Filter tool"
-        src={filterWebp}
-        onError={(e) => { e.target.onerror = null; e.target.src = filterPng }}
         >
         </img>
       </div>
