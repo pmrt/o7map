@@ -41,6 +41,7 @@ function App() {
         />
         <EchoesMap
           isDevMode={state.isDevMode}
+          isLoading={state.isLoading}
           mapRef={mapRef}
           fontSize={state.fontSize}
         />

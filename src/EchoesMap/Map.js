@@ -1,4 +1,4 @@
-import { useRef, useEffect, useContext, useCallback } from "react";
+import { useRef, useEffect, useContext, useCallback, Fragment } from "react";
 
 import { debounce } from "./helpers";
 import Map from "./canvas/map";
@@ -10,7 +10,7 @@ import { addStdoutLine, setClickedCoords, setCurrentMap, setIsLoading } from "..
 
 const MARGIN = 20;
 
-function EchoesMap({ fontSize, mapRef, isDevMode }) {
+function EchoesMap({ fontSize, mapRef, isDevMode, isLoading }) {
   const dispatch = useContext(RootDispatch);
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
@@ -152,10 +152,57 @@ function EchoesMap({ fontSize, mapRef, isDevMode }) {
   }, [isDevMode]);
 
   return (
+    <Fragment>
+    <LoadingOverlay isLoading={isLoading}/>
     <div className="echoes-map">
       <canvas ref={fabricCbRef}>
         You need to enable canvas support to run this app.
       </canvas>
+    </div>
+    </Fragment>
+  )
+}
+
+const quotes = [
+  { str: "I'm leaving the game, first one to accept the contract takes all my isk", author: "A trustworthy person in Jita"},
+  { str: "You can't say bubbles angrily.", author: "Not an EVE player"},
+  { str: "Right now, someone, somewhere, is doing something stupid in a shiny ship... find them.", author: "u/Drefizzles_alt"},
+  { str: "I didn't want that ship anyway.", author: "u/Drefizzles_alt"},
+  { str: "PvP is hard, but trying to send a PM in Echoes is on a whole different level", author: "Kalad"},
+  { str: "Bluestacks is life, bluestacks is love.", author: "Unknown" },
+  { str: "Reconnecting...", author: "Eve Echoes, the game"},
+];
+
+function pick(arr) {
+  return arr[Math.random() * arr.length >> 0];
+}
+
+const quote = pick(quotes);
+
+let areQuotesVisible = true;
+function LoadingOverlay({ isLoading }) {
+  useEffect(() => {
+    setTimeout(() => {
+      areQuotesVisible = false;
+    }, 4e3);
+  }, []);
+
+  const Loader = areQuotesVisible
+    ? (
+      <div className="quote">
+        <p className="loading-quote">&lt;&lt; {quote.str} &gt;&gt;</p>
+        <p className="quote-author">— {quote.author}</p>
+      </div>
+    )
+    : (
+      <p className="loading-text">Loading...</p>
+    )
+
+  return (
+    <div className="map-loading-overlay" style={{ opacity: isLoading ? "1" : "0"}}>
+      <div className="map-loading-message">
+        { Loader }
+      </div>
     </div>
   )
 }

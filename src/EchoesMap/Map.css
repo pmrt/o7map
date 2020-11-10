@@ -2,3 +2,50 @@ canvas {
   display: block;
   margin: 10px;
 }
+
+.map-loading-overlay {
+  background: var(--theme-background);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 200ms ease-out;
+}
+
+.map-loading-message {
+  width: 400px;
+  height: 150px;
+  padding: 20px 0px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -75px 0 0 -200px;
+}
+
+p.loading-text {
+  text-align: center;
+  font-size: 13px;
+  letter-spacing: .5em;
+  text-transform: uppercase;
+}
+
+.quote {
+  margin: 0 auto;
+  width: 400px;
+  color: var(--theme-primary);
+  font-size: 14px;
+  font-style: italic;
+}
+
+p.quote-author {
+  position: relative;
+  margin-top: 20px;
+  color: var(--theme-light-grey);
+  text-align: right;
+  font-size: 12px;
+  font-style: normal;
+}

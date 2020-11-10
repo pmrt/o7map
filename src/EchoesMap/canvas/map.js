@@ -46,6 +46,8 @@ class Map extends EventEmitter {
       ...opts,
     };
 
+    this._fistRender = true;
+
     this._db = null;
     this._setupDatabase();
     this._canvas = fabricCanvas;
@@ -313,7 +315,16 @@ class Map extends EventEmitter {
       this.log(`Finished task: Rendering universe. Took ${Math.ceil(end - start)}ms.`);
 
       this.emit("render:universe");
-      this.setIsLoading(false);
+      if (this._fistRender) {
+        // Making sure that we see the quote splash screen by faking the loading
+        // screen first time
+        setTimeout(() => {
+          this.setIsLoading(false);
+        }, Math.max(2500, end - start));
+        this._fistRender = false;
+      } else {
+        this.setIsLoading(false);
+      }
     });
 
     this._currentRegionId = null;
@@ -503,6 +514,7 @@ class Map extends EventEmitter {
   }
 
   cleanup() {
+    console.log("Cleaning up...");
     this.off();
     this._db.close();
   }
