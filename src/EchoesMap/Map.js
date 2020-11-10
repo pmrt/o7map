@@ -187,21 +187,25 @@ function LoadingOverlay({ isLoading }) {
     }, 4e3);
   }, []);
 
-  const Loader = areQuotesVisible
-    ? (
-      <div className="quote">
-        <p className="loading-quote">&lt;&lt; {quote.str} &gt;&gt;</p>
-        <p className="quote-author">— {quote.author}</p>
-      </div>
-    )
-    : (
-      <p className="loading-text">Loading...</p>
-    )
+  // const Loader = areQuotesVisible
+  //   ? (
+  //     <div className="quote">
+  //       <p className="loading-quote">&lt;&lt; {quote.str} &gt;&gt;</p>
+  //       <p className="quote-author">— {quote.author}</p>
+  //     </div>
+  //   )
+  //   : (
+  //     <p className="loading-text">Loading...</p>
+  //   )
 
   return (
     <div className="map-loading-overlay" style={{ opacity: isLoading ? "1" : "0"}}>
       <div className="map-loading-message">
-        { Loader }
+       {!!areQuotesVisible && ( <div className="quote">
+          <p className="loading-quote">&lt;&lt; {quote.str} &gt;&gt;</p>
+          <p className="quote-author">— {quote.author}</p>
+        </div>)}
+      <p className="loading-text" style={{ top: areQuotesVisible ? "100px" : "0"}}>Loading</p>
       </div>
     </div>
   )

@@ -316,11 +316,13 @@ class Map extends EventEmitter {
 
       this.emit("render:universe");
       if (this._fistRender) {
+        const maxQuoteFakeTime = 3000;
+        const quoteTime = Math.max(0, maxQuoteFakeTime - (end - start));
         // Making sure that we see the quote splash screen by faking the loading
         // screen first time
         setTimeout(() => {
           this.setIsLoading(false);
-        }, Math.max(2500, end - start));
+        }, quoteTime);
         this._fistRender = false;
       } else {
         this.setIsLoading(false);

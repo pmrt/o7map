@@ -17,28 +17,35 @@ canvas {
 }
 
 .map-loading-message {
-  width: 400px;
-  height: 150px;
-  padding: 20px 0px;
   position: absolute;
   top: 50%;
   left: 50%;
-  margin: -75px 0 0 -200px;
+  transform: translate(-50%, -50%);
 }
 
 p.loading-text {
+  margin: 0px auto;
+  position: relative;
+  top: 100px;
+  display: block;
   text-align: center;
-  font-size: 13px;
+  font-size: 10px;
+  padding: 6px;
   letter-spacing: .5em;
   text-transform: uppercase;
+  border: 1px solid rgb(36, 36, 36);
+  width: 150px;
+  border-radius: 2px;
+  animation: breathing 1.2s  ease-in infinite;
 }
 
 .quote {
   margin: 0 auto;
-  width: 400px;
+  width: 500px;
   color: var(--theme-primary);
-  font-size: 14px;
+  font-size: 16px;
   font-style: italic;
+  padding: 30px;
 }
 
 p.quote-author {
@@ -46,6 +53,20 @@ p.quote-author {
   margin-top: 20px;
   color: var(--theme-light-grey);
   text-align: right;
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
+}
+
+@keyframes breathing {
+  0% {
+    color: #fff;
+  }
+
+  50% {
+    color: rgb(78, 78, 78);
+  }
+
+  100% {
+    color: #fff;
+  }
 }
