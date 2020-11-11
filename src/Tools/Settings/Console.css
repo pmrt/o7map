@@ -52,7 +52,7 @@
   width: 100%;
 }
 
-.input-placeholder:after {
+.console .input-placeholder:after {
   content: "[PRESS ENTER]";
   position: absolute;
   top: 0;
@@ -67,7 +67,7 @@
   transform: translateX(120px);
 }
 
-.input-wrapper {
+.console .input-wrapper {
   overflow: hidden;
   position: relative;
   margin: 0 15px;
