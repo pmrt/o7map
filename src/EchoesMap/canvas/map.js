@@ -2,7 +2,7 @@ import Dexie from "dexie";
 
 import EventEmitter from "./event";
 
-import RegionCollection, { Region, RegionData } from "./region";
+import RegionCollection from "./region";
 import SystemCollection from "./system";
 
 import {
@@ -63,8 +63,8 @@ class Map extends EventEmitter {
   _setupDatabase() {
     this._db = new Dexie(DATABASE_NAME);
     this._db.version(1).stores({
-      regions: "id, &name, sec.avg",
-      systems: "id, &name, sec.sec, region.id, region.name, [region.name+x], stations, constellation.id, constellation.name",
+      regions: "id, &n, sec.avg",
+      systems: "id, &n, sec.sec, rg.id, rg.n, [rg.n+x], st, cn.id, cn.n",
     });
 
     this._db.on("ready", () => {
@@ -271,15 +271,6 @@ class Map extends EventEmitter {
     }, "rect");
 
     return this;
-  }
-
-  findRegionByName(name) {
-    for (let region of this._maps) {
-      if (region.mapName === name) {
-        const rd = new RegionData(region);
-        return new Region(rd, this._canvas, this._db, this.opts);
-      }
-    }
   }
 
   drawRegion(region) {
