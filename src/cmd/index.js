@@ -1,6 +1,7 @@
 import set from "./set";
 import help from "./help";
 import map from "./map";
+import print from "./print";
 import { addStdoutLine } from "../actions";
 
 export class CommandError extends Error {
@@ -29,6 +30,7 @@ const commands = {
   "set": set,
   "help": help,
   "map": map,
+  "print": print,
 }
 
 function extractCmd(str) {
