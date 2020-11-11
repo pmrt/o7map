@@ -203,6 +203,13 @@ export class SystemCollection extends MapCollection {
   getLinks() {
     return this._group.getObjects("line");
   }
+
+  async findStartingWith(exp) {
+    return await this._db.systems
+      .where("n")
+      .startsWithIgnoreCase(exp)
+      .toArray();
+  }
 }
 
 export default SystemCollection;

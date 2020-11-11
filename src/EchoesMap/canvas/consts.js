@@ -15,4 +15,5 @@ export const DATABASE_NAME = "echoes_atlas_map_db";
 export const MapType = {
   UNIVERSE: "universe",
   REGION: "region",
+  SYSTEM: "system",
 }

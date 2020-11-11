@@ -165,6 +165,13 @@ export class RegionCollection extends MapCollection {
   get MapTypeClass() {
     return Region;
   }
+
+  async findStartingWith(exp) {
+    return await this._db.regions
+      .where("n")
+      .startsWithIgnoreCase(exp)
+      .toArray();
+  }
 }
 
 export default RegionCollection;

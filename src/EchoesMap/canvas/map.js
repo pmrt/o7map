@@ -511,6 +511,18 @@ class Map extends EventEmitter {
     this.off();
     this._db.close();
   }
+
+  async findStartingWith(mapType, exp) {
+    switch (mapType) {
+      case MapType.REGION:
+        return await this._regionCollection.findStartingWith(exp);
+      case MapType.SYSTEM:
+        return await this._sysCollection.findStartingWith(exp);
+      default:
+    }
+
+    return null;
+  }
 }
 
 export default Map;
