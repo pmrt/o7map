@@ -1,8 +1,15 @@
 import Draggable from 'react-draggable';
 
-import { cloneElement } from 'react';
+import { cloneElement, useCallback } from 'react';
 
-function Panel({ defaultPanel, selectedPanelName, onTabClick, onCloseClick, tabTitles, children }) {
+function Panel({
+  defaultPanel,
+  selectedPanelName,
+  onTabClick = null,
+  onCloseClick = null,
+  tabTitles,
+  children
+}) {
   let selected;
   if (!selectedPanelName) {
     selected = defaultPanel.name;
@@ -13,6 +20,18 @@ function Panel({ defaultPanel, selectedPanelName, onTabClick, onCloseClick, tabT
   const Comp = children.find(comp =>
     comp.type.name === selected
   ) || null;
+
+  const onTabClicked = useCallback((title) => {
+    if (!!onTabClick) {
+      onTabClick(title);
+    }
+  }, [onTabClick]);
+
+  const onCloseClicked = useCallback(() => {
+    if (!!onCloseClick) {
+      onCloseClick();
+    }
+  }, [onCloseClick]);
 
   return (
     <Draggable
@@ -32,11 +51,11 @@ function Panel({ defaultPanel, selectedPanelName, onTabClick, onCloseClick, tabT
               <h3
               key={title}
               className={isActive ? "active" : ""}
-              onClick={() => onTabClick(title)}
+              onClick={() => onTabClicked(title)}
               >{title}</h3>
             )
           })}
-          <span className="close-btn" onClick={onCloseClick}></span>
+          <span className="close-btn" onClick={onCloseClicked}></span>
         </div>
         <div className="panel-wrapper">
           {cloneElement(Comp)}
