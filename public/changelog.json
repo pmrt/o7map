@@ -24,5 +24,8 @@
   ],
   "2.1.0-alpha": [
     "First version of search tool"
+  ],
+  "2.2.0-alpha": [
+    "Search tools now has a go-to function for every result"
   ]
 }

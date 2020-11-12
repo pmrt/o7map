@@ -1,7 +1,7 @@
 {
   "name": "atlas",
   "author": "Pedro J. Martínez Martínez",
-  "version": "2.1.0-alpha",
+  "version": "2.2.0-alpha",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
