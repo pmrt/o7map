@@ -21,5 +21,8 @@
   ],
   "2.0.0-alpha": [
     "Optimized map data, resulting in an overall performance boost"
+  ],
+  "2.1.0-alpha": [
+    "First version of search tool"
   ]
 }
