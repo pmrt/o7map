@@ -201,8 +201,6 @@ function Current({ currentResults }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const results = useMemo(() => current, [searchId]);
 
-  console.log(results)
-
   if (currentResults.length === 0 || results.length === 0) {
     return (
       <EmptyResults
@@ -281,8 +279,6 @@ const searchReducer = (state, action) => {
 function Search({ mapRef, currentMap }) {
   const rootDispatch = useContext(RootDispatch);
   const [state, dispatch] = useReducer(searchReducer, initialState);
-
-  console.log(state);
 
   const inputRef = useRef(null);
   useAutofocus(inputRef);
