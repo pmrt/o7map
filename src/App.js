@@ -13,6 +13,7 @@ import Sidebar from "./Sidebar";
 import EchoesMap from "./EchoesMap";
 import MapInfo from "./MapInfo";
 import Tools from "./Tools";
+import Map from "./EchoesMap/canvas/map";
 
 let firstTime = true;
 function App() {
@@ -24,7 +25,7 @@ function App() {
     firstTime = false;
   }
 
-  const mapRef = useRef(null);
+  const mapRef = useRef(new Map());
   const cmdRef = useRef(new Commander(dispatch, mapRef));
 
   return (
@@ -33,25 +34,29 @@ function App() {
         <Sidebar
           activeTools={state.activeTools}
         />
-        <Tools
-          activeTools={state.activeTools}
-          stdout={state.stdout}
-          activeTabsNames={state.activeTabsNames}
-          cmdRef={cmdRef}
-        />
-        <EchoesMap
-          isDevMode={state.isDevMode}
-          isLoading={state.isLoading}
-          mapRef={mapRef}
-          fontSize={state.fontSize}
-        />
-        <MapInfo
-          currentMap={state.currentMap}
-          isLoading={state.isLoading}
-          isDevMode={state.isDevMode}
-          clickedCoords={state.clickedCoords}
-          cmdRef={cmdRef}
-        />
+        <div className="content">
+          <Tools
+            activeTools={state.activeTools}
+            stdout={state.stdout}
+            activeTabsNames={state.activeTabsNames}
+            cmdRef={cmdRef}
+            mapRef={mapRef}
+            currentMap={state.currentMap}
+          />
+          <EchoesMap
+            isDevMode={state.isDevMode}
+            isLoading={state.isLoading}
+            mapRef={mapRef}
+            fontSize={state.fontSize}
+          />
+          <MapInfo
+            currentMap={state.currentMap}
+            isLoading={state.isLoading}
+            isDevMode={state.isDevMode}
+            clickedCoords={state.clickedCoords}
+            cmdRef={cmdRef}
+          />
+        </div>
       </RootDispatch.Provider>
     </div>
   );

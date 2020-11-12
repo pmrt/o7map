@@ -9,6 +9,9 @@
   --theme-secondary: #c1fadb;
   --theme-background: #000;
   --theme-background-secondary: #151515;
+  --theme-grey: #777;
+  --theme-grey-2: #222;
+  --theme-grey-3: #7b7b7b;
   --theme-background-grey: #2d2d2d;
   --theme-light-red: #ff5353;
   --theme-purpled-blue: #9191ff;
@@ -31,8 +34,31 @@ html {
   letter-spacing: 0.04em;
 }
 
+input {
+  font-family: 'Roboto Mono', Courier;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #000;
+}
+
+.atlas-scroll {
+  scrollbar-width: 6px;
+  scrollbar-color: var(--theme-background-grey) transparent;
+}
+
+.atlas-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.atlas-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.atlas-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--theme-background-grey);
+  border-radius: 0px;
+  border: 3px solid transparent;
 }

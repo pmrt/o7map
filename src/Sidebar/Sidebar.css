@@ -4,7 +4,7 @@
   top: 0;
   bottom: 0;
   width: 40px;
-  z-index: 9;
+  z-index: 999;
   opacity: .95;
 }
 
@@ -15,6 +15,9 @@
 .sidebar-icon {
   position: relative;
   cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
   padding: 15px 0;
 }
 

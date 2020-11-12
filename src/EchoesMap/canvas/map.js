@@ -37,30 +37,8 @@ function defer(fn) {
 * - mousedown:pointer. Triggered on mouse down. Contains canvas coordinates.
 */
 class Map extends EventEmitter {
-  constructor(fabricCanvas, logger, setIsLoading, opts={}) {
-    super();
-
-    this.opts = {
-      fontSize: FONTSIZE,
-      linkWidth: LINK_WIDTH,
-      ...opts,
-    };
-
-    this._fistRender = true;
-
-    this._db = null;
-    this._setupDatabase();
-    this._canvas = fabricCanvas;
-    this._maps = null;
-    this._regionCollection = new RegionCollection(fabricCanvas, this._db, this.opts);
-    this._sysCollection = new SystemCollection(fabricCanvas, this._db, this.opts);
-    this._logger = logger;
-    this._setIsLoading = setIsLoading;
-    this._currentMap = null;
-    this._currentRegionId = null;
-  }
-
   _setupDatabase() {
+    this._searchId = null;
     this._db = new Dexie(DATABASE_NAME);
     this._db.version(1).stores({
       regions: "id, &n, sec.avg",
@@ -273,6 +251,29 @@ class Map extends EventEmitter {
     return this;
   }
 
+  init(fabricCanvas, logger, setIsLoading, opts) {
+    this.opts = {
+      fontSize: FONTSIZE,
+      linkWidth: LINK_WIDTH,
+      ...opts,
+    };
+
+    this._fistRender = true;
+
+    this._db = null;
+    this._setupDatabase();
+    this._canvas = fabricCanvas;
+    this._maps = null;
+    this._regionCollection = new RegionCollection(fabricCanvas, this._db, this.opts);
+    this._sysCollection = new SystemCollection(fabricCanvas, this._db, this.opts);
+    this._logger = logger;
+    this._setIsLoading = setIsLoading;
+    this._currentMap = null;
+    this._currentRegionId = null;
+
+    return this;
+  }
+
   drawRegion(region) {
     const { ID, name, systems, sec } = region;
     this.setIsLoading(true);
@@ -344,6 +345,10 @@ class Map extends EventEmitter {
     return this;
   }
 
+  getCurrentMapType() {
+    return this._currentMap;
+  }
+
   async _fill(type, ...args) {
     this.clear();
 
@@ -402,6 +407,10 @@ class Map extends EventEmitter {
 
   /* */
   updateFontSize(newFontSize) {
+    if (!this._currentMap) {
+      return null;
+    }
+
     switch (this._currentMap) {
       case MapType.UNIVERSE:
         this._regionCollection.updateFontSize(newFontSize);
@@ -417,6 +426,10 @@ class Map extends EventEmitter {
 
 
   setFontSize(newFontSize) {
+    if (!this._currentMap) {
+      return null;
+    }
+
     switch (this._currentMap) {
       case MapType.UNIVERSE:
         this._regionCollection.updateFontSize(newFontSize);
@@ -507,21 +520,36 @@ class Map extends EventEmitter {
   }
 
   cleanup() {
-    console.log("Cleaning up...");
     this.off();
     this._db.close();
   }
 
   async findStartingWith(mapType, exp) {
+    let results;
     switch (mapType) {
       case MapType.REGION:
-        return await this._regionCollection.findStartingWith(exp);
+        results = await this._regionCollection.findStartingWith(exp);
+        return [this._searchId++, results];
       case MapType.SYSTEM:
-        return await this._sysCollection.findStartingWith(exp);
+        results = await this._sysCollection.findStartingWith(exp);
+        return [this._searchId, results];
       default:
     }
 
     return null;
+  }
+
+  async getCurrentSystems() {
+    if (this._currentMap !== MapType.REGION) {
+      return;
+    }
+
+    return await this.getSystemsInRegion(this._currentRegionId);
+  }
+
+  async getSystemsInRegion(regionId) {
+    const results =  await this._regionCollection.findSystemsInRegion(regionId);
+    return [this._searchId++, results];
   }
 }
 

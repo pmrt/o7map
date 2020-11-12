@@ -19,26 +19,18 @@
   margin-right: 12px;
 }
 
-.stdout-list {
-  scrollbar-width: 6px;
-  scrollbar-color: var(--theme-background-grey) transparent;
-}
-
-.stdout-list::-webkit-scrollbar {
-  width: 6px;
-}
-
 .stdout-list.panel {
   margin-right: 0;
 }
 
-.stdout-list::-webkit-scrollbar-track {
-  background: transparent;
+.stdout-line::selection {
+  background-color: var(--theme-light-grey);
+  color: #fff;
 }
-.stdout-list::-webkit-scrollbar-thumb {
-  background-color: var(--theme-background-grey);
-  border-radius: 0px;
-  border: 3px solid transparent;
+
+.stdout-line::-moz-selection {
+  background-color: var(--theme-light-grey);
+  color: #fff;
 }
 
 .console input {

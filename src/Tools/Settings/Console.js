@@ -39,7 +39,7 @@ const StdoutList = ({ stdout }) => {
 
   return (
     <List
-      className="stdout-list panel"
+      className="stdout-list panel atlas-scroll"
       height={250}
       itemCount={stdout.length}
       itemSize={20}

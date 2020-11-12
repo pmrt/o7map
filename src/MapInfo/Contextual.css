@@ -10,7 +10,6 @@
 
 .contextual, .loader-wrapper {
   background: var(--theme-transparent-black);
-  padding: 5px 10px;
 }
 
 .contextual h1 {

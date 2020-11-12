@@ -1,16 +1,16 @@
 import { useRef, useEffect, useContext, useCallback, Fragment } from "react";
 
 import { debounce } from "./helpers";
-import Map from "./canvas/map";
 import theme from "./canvas/theme";
 import "./Map.css";
 import useFabric from "./useFabric";
 import { RootDispatch } from "../context";
 import { addStdoutLine, setClickedCoords, setCurrentMap, setIsLoading } from "../actions";
 
-const MARGIN = 20;
+const HEIGHT_MARGIN = 0;
+const WIDTH_MARGIN = 40;
 
-function EchoesMap({ fontSize, mapRef, isDevMode, isLoading }) {
+function EchoesMap({fontSize, mapRef, isDevMode, isLoading }) {
   const dispatch = useContext(RootDispatch);
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
@@ -24,8 +24,8 @@ function EchoesMap({ fontSize, mapRef, isDevMode, isLoading }) {
 
   const fabricRef = useRef(null);
   const fabricCbRef = useFabric(fabricRef, {
-    width: window.innerWidth - MARGIN,
-    height: window.innerHeight - MARGIN,
+    width: window.innerWidth - WIDTH_MARGIN,
+    height: window.innerHeight - HEIGHT_MARGIN,
     selectable: false,
     hasControls: false,
     backgroundColor: theme.background,
@@ -33,14 +33,14 @@ function EchoesMap({ fontSize, mapRef, isDevMode, isLoading }) {
   });
 
   useEffect(() => {
-    if (!fabricRef.current || mapRef.current) {
+    if (!fabricRef.current) {
       return;
     }
 
     let didCancel = false;
     const createMap = async() => {
       log(":: Initiating map generation");
-      const map = new Map(fabricRef.current, log, onSetIsLoading, {
+      const map = mapRef.current.init(fabricRef.current, log, onSetIsLoading, {
         fontSize,
       });
 
@@ -61,10 +61,14 @@ function EchoesMap({ fontSize, mapRef, isDevMode, isLoading }) {
         start = performance.now();
         map.on("render:region", (data) => {
           const { rid, rn, avgSec } = data;
-          dispatch(setCurrentMap(rid, rn, avgSec))
+          if (!didCancel) {
+            dispatch(setCurrentMap(rid, rn, avgSec))
+          }
         });
         map.on("render:universe", () => {
-          dispatch(setCurrentMap("", "", ""))
+          if (!didCancel) {
+            dispatch(setCurrentMap("", "", ""))
+          }
         });
         end = performance.now();
         log(`Finished task: Additional setup. Took ${Math.ceil(end - start)}ms.`);
@@ -83,9 +87,10 @@ function EchoesMap({ fontSize, mapRef, isDevMode, isLoading }) {
     return () => {
       didCancel = true;
 
-      if (mapRef.current) {
+      const map = mapRef.current;
+      if (map) {
         // Remove all event listeners
-        mapRef.current.cleanup();
+        map.cleanup();
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,7 +101,7 @@ function EchoesMap({ fontSize, mapRef, isDevMode, isLoading }) {
       log(":: Detected window size change");
       const map = mapRef.current;
       if (map) {
-        map.updateDimensions(window.innerWidth - MARGIN, window.innerHeight - MARGIN);
+        map.updateDimensions(window.innerWidth - WIDTH_MARGIN, window.innerHeight - HEIGHT_MARGIN);
         log("Updated dimensions.");
 
         try {
@@ -166,7 +171,7 @@ function EchoesMap({ fontSize, mapRef, isDevMode, isLoading }) {
 const quotes = [
   { str: "I'm leaving the game, first one to accept the contract takes all my isk", author: "A trustworthy person in Jita"},
   { str: "You can't say bubbles angrily.", author: "Not an EVE player"},
-  { str: "Right now, someone, somewhere, is doing something stupid in a shiny ship... find them.", author: "u/Drefizzles_alt"},
+  { str: "Right now, someone, somewhere, is doing something stupid in a shiny ship. Find them.", author: "u/Drefizzles_alt"},
   { str: "I didn't want that ship anyway.", author: "u/Drefizzles_alt"},
   { str: "PvP is hard, but trying to send a PM in Echoes is on a whole different level", author: "Kalad"},
   { str: "Bluestacks is life, bluestacks is love.", author: "Unknown" },
@@ -203,9 +208,9 @@ function LoadingOverlay({ isLoading }) {
       <div className="map-loading-message">
        {!!areQuotesVisible && ( <div className="quote">
           <p className="loading-quote">&lt;&lt; {quote.str} &gt;&gt;</p>
-          <p className="quote-author">— {quote.author}</p>
+          <p className="quote-author">{quote.author}</p>
         </div>)}
-      <p className="loading-text" style={{ top: areQuotesVisible ? "100px" : "0"}}>Loading</p>
+      <p className="loading-text">Loading</p>
       </div>
     </div>
   )

@@ -25,15 +25,24 @@ function Sidebar({ activeTools }) {
   const dispatch = useContext(RootDispatch);
 
   const isSettingsVisible = activeTools[Tools.SETTINGS];
+  const isSearchVisible = activeTools[Tools.SEARCH];
 
   const onSettingsClick = useCallback(() => {
     dispatch(setPanelVisibility(Tools.SETTINGS, !isSettingsVisible))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSettingsVisible]);
 
+  const onSearchClick = useCallback(() => {
+    dispatch(setPanelVisibility(Tools.SEARCH, !isSearchVisible))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSearchVisible]);
+
   return (
     <div className="sidebar">
-      <div className="sidebar-icon" alt="Search tool (Coming soon)">
+      <div
+      className={`sidebar-icon ${isSearchVisible ? "active": ""}`}
+      alt="Search tool"
+      onClick={onSearchClick}>
         <img
         alt="Search tool"
         src={searchWebp}
@@ -51,7 +60,10 @@ function Sidebar({ activeTools }) {
         </img>
       </div>
 
-      <div className={`sidebar-icon ${isSettingsVisible ? "active": ""}`} alt="Console and Settings" onClick={onSettingsClick}>
+      <div
+      className={`sidebar-icon ${isSettingsVisible ? "active": ""}`}
+      alt="Console and Settings"
+      onClick={onSettingsClick}>
         <img
         alt="Terminal and Settings"
         src={settingsWebp}

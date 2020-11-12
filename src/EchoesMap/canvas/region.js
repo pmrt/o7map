@@ -172,6 +172,15 @@ export class RegionCollection extends MapCollection {
       .startsWithIgnoreCase(exp)
       .toArray();
   }
+
+  async findSystemsInRegion(regionId) {
+    const r = await this.findRegionById(regionId);
+    if (!r) {
+      return;
+    }
+
+    return r.systems;
+  }
 }
 
 export default RegionCollection;

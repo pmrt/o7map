@@ -1,19 +1,26 @@
 canvas {
   display: block;
-  margin: 10px;
 }
 
 .map-loading-overlay {
   background: var(--theme-background);
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 0px;
   bottom: 0;
   right: 0;
-  left: 0;
+  left: -40px;
   z-index: 1000;
   opacity: 1;
   pointer-events: none;
   transition: opacity 200ms ease-out;
+}
+
+.map-loading-message {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .map-loading-message {
@@ -23,11 +30,14 @@ canvas {
   transform: translate(-50%, -50%);
 }
 
+.quote, p.loading-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 p.loading-text {
-  margin: 0px auto;
-  position: relative;
-  top: 100px;
-  display: block;
   text-align: center;
   font-size: 10px;
   padding: 6px;
@@ -40,21 +50,21 @@ p.loading-text {
 }
 
 .quote {
-  margin: 0 auto;
-  width: 500px;
+  top: 110%;
+  width: 400px;
   color: var(--theme-primary);
-  font-size: 16px;
+  font-size: 14px;
   font-style: italic;
-  padding: 30px;
+  padding: 20px;
+  text-align: center;
 }
 
 p.quote-author {
   position: relative;
-  margin-top: 20px;
-  color: var(--theme-light-grey);
+  margin-top: 25px;
+  color: var(--theme-primary);
   text-align: right;
-  font-size: 14px;
-  font-style: normal;
+  font-size: 11px;
 }
 
 @keyframes breathing {
