@@ -127,7 +127,7 @@ const systemCols = [
   }
 ]
 
-function SearchResultList({ columns, results }) {
+function SearchResultList({ columns, results, onRowClick }) {
   return (
     <Table
       columns={columns}
@@ -137,6 +137,7 @@ function SearchResultList({ columns, results }) {
       columnWidth={80}
       cellLimit={8}
       width={480}
+      onRowClick={onRowClick}
     />
   )
 }
@@ -154,7 +155,7 @@ const EmptyResults = ({ message = "No results found" }) => {
   )
 }
 
-function Systems({ systemResults }) {
+function Systems({ systemResults, onSystemClick }) {
   const [searchId, systems] = systemResults;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const results = useMemo(() => systems, [searchId]);
@@ -171,11 +172,12 @@ function Systems({ systemResults }) {
     <SearchResultList
       columns={systemCols}
       results={results}
+      onRowClick={onSystemClick}
     />
   );
 }
 
-function Regions({ regionResults }) {
+function Regions({ regionResults, onRegionClick }) {
   const [searchId, regions] = regionResults;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const results = useMemo(() => regions, [searchId]);
@@ -192,11 +194,12 @@ function Regions({ regionResults }) {
     <SearchResultList
       columns={regionCols}
       results={results}
+      onRowClick={onRegionClick}
     />
   );
 }
 
-function Current({ currentResults }) {
+function Current({ currentResults, onSystemClick }) {
   const [searchId, current] = currentResults;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const results = useMemo(() => current, [searchId]);
@@ -213,6 +216,7 @@ function Current({ currentResults }) {
     <SearchResultList
       columns={systemCols}
       results={results}
+      onRowClick={onSystemClick}
     />
   );
 }
@@ -313,9 +317,43 @@ function Search({ mapRef, currentMap }) {
 
     if (regionResults.length > 0 && regionResults[1].length > 0) {
       if (systemResults.length === 0 || systemResults[1].length === 0){
-        dispatch(setActiveTab("Systems"));
+        dispatch(setActiveTab("Regions"));
       }
     }
+  }
+
+  const onSystemClick = (row) => {
+    const sysName = row.original.n;
+    if (!sysName) {
+      return;
+    }
+
+    const region = row.original.rg;
+    if (!region) {
+      return;
+    }
+    const regionName = region.n;
+
+    const map = mapRef.current;
+    if (!map) {
+      return;
+    }
+
+    map.goTo(regionName, sysName);
+  }
+
+  const onRegionClick = (row) => {
+    const rgName = row.original.n;
+    if (!rgName) {
+      return;
+    }
+
+    const map = mapRef.current;
+    if (!map) {
+      return;
+    }
+
+    map.goTo(rgName);
   }
 
   const onTabClick = title => {
@@ -422,9 +460,9 @@ function Search({ mapRef, currentMap }) {
             "Current Systems": [Current, lenCur],
           }}
         >
-          <Systems systemResults={systemResults}/>
-          <Regions regionResults={regionResults}/>
-          <Current currentResults={currentResults}/>
+          <Systems systemResults={systemResults} onSystemClick={onSystemClick}/>
+          <Regions regionResults={regionResults} onRegionClick={onRegionClick}/>
+          <Current currentResults={currentResults} onSystemClick={onSystemClick}/>
         </Panel>
       </div>
     </div>

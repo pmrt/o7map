@@ -116,6 +116,20 @@ class MapCollection {
     return this;
   }
 
+  async findBy(type, index, exp) {
+    const res = await this._db[type]
+      .where(index)
+      .equals(exp)
+      .limit(1)
+      .toArray();
+
+    if (!res || res.length === 0) {
+      return;
+    }
+
+    return res[0];
+  }
+
   render(all) {
     let mapObjects = [];
     let errors = [];

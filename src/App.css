@@ -2,6 +2,10 @@
   position: absolute;
   left: 40px;
   top: 0;
-  bottom: 0;
+  /* content gives bounds to draggable panels.
+  To keep consistency and avoid weird behaviour
+  we shorten the boundaries a little bit so
+  draggable elements don't overflow */
+  bottom: 5px;
   right: 0;
 }

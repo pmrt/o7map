@@ -149,15 +149,6 @@ export class RegionCollection extends MapCollection {
     return await this._db.regions.toArray();
   }
 
-  async findRegionById(regionId) {
-    const region = await this._db.regions.get(regionId);
-    if (region) {
-      const rd = new RegionData(region);
-      return new Region(rd, this._canvas, this._db, this.opts);
-    }
-    return;
-  }
-
   get MapDataClass() {
     return RegionData;
   }
@@ -180,6 +171,24 @@ export class RegionCollection extends MapCollection {
     }
 
     return r.systems;
+  }
+
+  async findRegionById(regionId) {
+    const regionData = await this._db.regions.get(regionId);
+    if (regionData) {
+      const rd = new RegionData(regionData);
+      return new Region(rd, this._canvas, this._db, this.opts);
+    }
+    return;
+  }
+
+  async findRegionByName(name) {
+    const regionData = await this.findBy("regions", "n", name);
+    if (regionData) {
+      const rd = new RegionData(regionData);
+      return new Region(rd, this._canvas, this._db, this.opts);
+    }
+    return;
   }
 }
 

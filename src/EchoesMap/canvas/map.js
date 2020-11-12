@@ -17,6 +17,7 @@ import {
   LINK_WIDTH,
   DATABASE_NAME,
 } from "./consts";
+import { fabric } from "fabric";
 
 function defer(fn) {
   setTimeout(fn, 0);
@@ -275,53 +276,59 @@ class Map extends EventEmitter {
   }
 
   drawRegion(region) {
-    const { ID, name, systems, sec } = region;
-    this.setIsLoading(true);
-    this.log(`:: Rendering region '${name}'`);
+    return new Promise((resolve, reject) => {
+      const { ID, name, systems, sec } = region;
+      this.setIsLoading(true);
+      this.log(`:: Rendering region '${name}'`);
 
-    defer(async () => {
-      const start = performance.now();
+      defer(async () => {
+        const start = performance.now();
 
-      await this._fill(MapType.REGION, systems);
+        await this._fill(MapType.REGION, systems);
 
-      const end = performance.now();
-      this.log(`Finished task: Rendering '${name}'. Took ${Math.ceil(end - start)}ms.`);
-      this.emit("render:region", {
-        rid: ID,
-        rn: name,
-        avgSec: sec.avg,
-      });
-      this.setIsLoading(false);
-      this._currentRegionId = ID;
-    })
+        const end = performance.now();
+        this.log(`Finished task: Rendering '${name}'. Took ${Math.ceil(end - start)}ms.`);
+        this.emit("render:region", {
+          rid: ID,
+          rn: name,
+          avgSec: sec.avg,
+        });
+        this.setIsLoading(false);
+        this._currentRegionId = ID;
+        resolve(region);
+      })
+    });
   }
 
   drawUniverse() {
-    this.setIsLoading(true);
-    this.log(":: Rendering universe");
+    return new Promise((resolve, reject) => {
+      this.setIsLoading(true);
+      this.log(":: Rendering universe");
 
-    defer(() => {
-      const start = performance.now();
-      this._fill(MapType.UNIVERSE);
-      const end = performance.now();
-      this.log(`Finished task: Rendering universe. Took ${Math.ceil(end - start)}ms.`);
+      defer(() => {
+        const start = performance.now();
+        this._fill(MapType.UNIVERSE);
+        const end = performance.now();
+        this.log(`Finished task: Rendering universe. Took ${Math.ceil(end - start)}ms.`);
 
-      this.emit("render:universe");
-      if (this._fistRender) {
-        const maxQuoteFakeTime = 3000;
-        const quoteTime = Math.max(0, maxQuoteFakeTime - (end - start));
-        // Making sure that we see the quote splash screen by faking the loading
-        // screen first time
-        setTimeout(() => {
+        this.emit("render:universe");
+        if (this._fistRender) {
+          const maxQuoteFakeTime = 3000;
+          const quoteTime = Math.max(0, maxQuoteFakeTime - (end - start));
+          // Making sure that we see the quote splash screen by faking the loading
+          // screen first time
+          setTimeout(() => {
+            this.setIsLoading(false);
+          }, quoteTime);
+          this._fistRender = false;
+        } else {
           this.setIsLoading(false);
-        }, quoteTime);
-        this._fistRender = false;
-      } else {
-        this.setIsLoading(false);
-      }
-    });
+        }
+        resolve();
+      });
 
-    this._currentRegionId = null;
+      this._currentRegionId = null;
+    })
   }
 
   get log() {
@@ -424,7 +431,6 @@ class Map extends EventEmitter {
     }
   }
 
-
   setFontSize(newFontSize) {
     if (!this._currentMap) {
       return null;
@@ -444,6 +450,37 @@ class Map extends EventEmitter {
 
     this.opts.fontSize = newFontSize;
     this._canvas.requestRenderAll();
+  }
+
+  async goTo(regionName, systemName) {
+    const region = await this._regionCollection.findRegionByName(regionName);
+
+    if (!region) {
+      this.log(`ERR: Couldn't go to unknown region '${regionName}'`, "error")
+      return;
+    }
+
+    await this.drawRegion(region);
+
+    if (!systemName) {
+      return;
+    }
+
+    const c = this._canvas;
+    c.setZoom(1)
+    let w = c.getWidth();
+    let h = c.getHeight();
+
+    const obj = this._sysCollection.findRenderedSystem(systemName)._rect;
+    if (!obj) {
+      this.log(`ERR: Couldn't got to unknown system '${systemName}'`, "error")
+      return;
+    }
+    const group = obj.group;
+
+    const x = group.left + group.getScaledWidth()/2 + obj.left - w/2;
+    const y = group.top + group.getScaledHeight()/2 + obj.top - h/2;
+    c.absolutePan(new fabric.Point(x, y));
   }
 
   centerInViewPort() {
@@ -522,6 +559,10 @@ class Map extends EventEmitter {
   cleanup() {
     this.off();
     this._db.close();
+  }
+
+  async findRegionByName(name) {
+
   }
 
   async findStartingWith(mapType, exp) {

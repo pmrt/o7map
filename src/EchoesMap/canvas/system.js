@@ -46,6 +46,10 @@ export class System {
     return this._systemData.ID;
   }
 
+  get rawName() {
+    return this._systemData.name;
+  }
+
   get name() {
     return this._fullName;
   }
@@ -77,9 +81,30 @@ export class System {
     return this._objs;
   }
 
-  calcCoords() {
-    const rect = this._rect;
-    const group = rect.group;
+  /*
+    calcCoords tries to compute the absolute coordinates. Since rects are
+    part of a group and centered this is useful for getting actual system
+    coords.
+
+    If group, x and y are provided it'll use these properties for the
+    calculation. If the system is rendered, call this function without
+    params.
+  */
+  calcCoords(otherGroup, x, y) {
+    let rect, group;
+
+    if (otherGroup) {
+      rect = { left: x, top: y };
+      group = otherGroup;
+    } else {
+      rect = this._rect;
+      group = rect.group;
+    }
+
+    if (!rect) {
+      return;
+    }
+
     return {
       x: rect.left + group.left + group.width/2,
       y: rect.top + group.top + group.height/2,
@@ -87,6 +112,7 @@ export class System {
   }
 
   clicked() {
+    console.log(this._rect.group);
     const { x, y } = this.calcCoords();
 
     return new Promise(resolve => {
@@ -204,11 +230,31 @@ export class SystemCollection extends MapCollection {
     return this._group.getObjects("line");
   }
 
+  findRenderedSystem(name) {
+    const rects = this._group.getObjects("rect");
+    for (let i = 0, len = rects.length; i < len; i++) {
+      const rect = rects[i];
+      const system = rect.get("metadata").data;
+      if (system.rawName === name) {
+        return system;
+      }
+    }
+  }
+
   async findStartingWith(exp) {
     return await this._db.systems
       .where("n")
       .startsWithIgnoreCase(exp)
       .toArray();
+  }
+
+  async findSystemByName(name) {
+    const sysData = await this.findBy("systems", "n", name);
+    if (sysData) {
+      const sd = new SystemData(sysData);
+      return new System(sd, this._canvas, this._db, this.opts);
+    }
+    return;
   }
 }
 

@@ -11,6 +11,8 @@ const formatCell = (val, limit) => {
       : val;
 }
 
+const noop = () => null;
+
 function Table({
   columns,
   data,
@@ -19,6 +21,8 @@ function Table({
   rowSize = 18,
   cellLimit = 10,
   columnWidth = 100,
+  onRowClick = noop,
+  onCellClick = noop,
 }) {
   const defaultColumn = useMemo(() => {
     return {
@@ -45,14 +49,15 @@ function Table({
       prepareRow(row)
       return (
         <div
-          className="tr"
           {...row.getRowProps({
             style,
           })}
+          className="tr"
+          onClick={() => onRowClick(row, index)}
         >
-          {row.cells.map(cell => {
+          {row.cells.map((cell, i) => {
             return (
-              <div {...cell.getCellProps()} alt={cell.value} className="td">
+              <div {...cell.getCellProps()} alt={cell.value} className="td" onClick={() => onCellClick(cell, i)}>
                 {formatCell(cell.value, cellLimit)}
               </div>
             )
@@ -60,7 +65,7 @@ function Table({
         </div>
       )
     },
-    [prepareRow, rows, cellLimit]
+    [rows, prepareRow, onRowClick, onCellClick, cellLimit]
   )
 
   return (
