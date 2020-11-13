@@ -111,8 +111,7 @@ export class System {
     }
   }
 
-  clicked() {
-    console.log(this._rect.group);
+  clicked(duration = 150) {
     const { x, y } = this.calcCoords();
 
     return new Promise(resolve => {
@@ -131,13 +130,14 @@ export class System {
           })
 
           this._canvas.add(pulse);
+          this._canvas.sendToBack(pulse);
 
           pulse.animate({
             radius: 20,
             opacity: 0,
           }, {
             onChange: this._canvas.renderAll.bind(this._canvas),
-            duration: 150,
+            duration,
             onComplete: () => {
               this._canvas.remove(pulse);
               this._canvas.renderAll();

@@ -462,16 +462,19 @@ class Map extends EventEmitter {
 
     await this.drawRegion(region);
 
+    const c = this._canvas;
+
     if (!systemName) {
+      c.setViewportTransform([1, 0, 0, 1, 0, 0]);
       return;
     }
 
-    const c = this._canvas;
     c.setZoom(1)
     let w = c.getWidth();
     let h = c.getHeight();
 
-    const obj = this._sysCollection.findRenderedSystem(systemName)._rect;
+    const system = this._sysCollection.findRenderedSystem(systemName);
+    const obj = system._rect;
     if (!obj) {
       this.log(`ERR: Couldn't got to unknown system '${systemName}'`, "error")
       return;
@@ -481,6 +484,8 @@ class Map extends EventEmitter {
     const x = group.left + group.getScaledWidth()/2 + obj.left - w/2;
     const y = group.top + group.getScaledHeight()/2 + obj.top - h/2;
     c.absolutePan(new fabric.Point(x, y));
+    await system.clicked(1200);
+    await system.clicked(1200);
   }
 
   centerInViewPort() {
