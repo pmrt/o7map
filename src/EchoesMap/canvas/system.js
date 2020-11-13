@@ -18,7 +18,7 @@ export class SystemData {
     };
     this.region = {
       id: rg.id,
-      name: rg.name,
+      name: rg.n,
     };
     this.sec = sec;
     this.stations = st;
@@ -75,6 +75,14 @@ export class System {
 
   get edges() {
     return this._systemData.edges;
+  }
+
+  get stations() {
+    return this._systemData.stations;
+  }
+
+  get planets() {
+    return this._systemData.planets;
   }
 
   get fabricObjs() {
