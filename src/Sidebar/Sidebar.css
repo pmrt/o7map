@@ -6,10 +6,11 @@
   width: 40px;
   z-index: 999;
   opacity: .95;
-}
 
-.sidebar {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .sidebar-icon {
@@ -38,4 +39,9 @@
 
 .sidebar-icon img {
   width: 15px;
+}
+
+.sidebar-bottom .sidebar-icon img {
+  width: 26px;
+  border-radius: 50%;
 }

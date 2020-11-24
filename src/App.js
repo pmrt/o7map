@@ -14,6 +14,7 @@ import EchoesMap from "./EchoesMap";
 import MapInfo from "./MapInfo";
 import Tools from "./Tools";
 import Map from "./EchoesMap/canvas/map";
+import { getUser } from "./helpers";
 
 let firstTime = true;
 function App() {
@@ -25,6 +26,7 @@ function App() {
     firstTime = false;
   }
 
+  const userInfo = getUser();
   const mapRef = useRef(new Map());
   const cmdRef = useRef(new Commander(dispatch, mapRef));
   const forceReportUpdateRef = useRef(null);
@@ -34,6 +36,7 @@ function App() {
       <RootDispatch.Provider value={dispatch}>
         <Sidebar
           activeTools={state.activeTools}
+          userInfo={userInfo}
         />
         <div className="content">
           <Tools
@@ -46,6 +49,7 @@ function App() {
             currentMap={state.currentMap}
             isDevMode={state.isDevMode}
             systemDetails={state.details.system}
+            userInfo={userInfo}
           />
           <EchoesMap
             isDevMode={state.isDevMode}

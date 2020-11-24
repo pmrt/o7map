@@ -17,15 +17,15 @@ import searchPng from "../img/search.png";
 import settingsWebp from "../img/settings.webp";
 import settingsPng from "../img/settings.png";
 
+import defaultUserWebp from "../img/user.webp";
+import defaultUserPng from "../img/user.png";
+
 import { RootDispatch } from "../context";
 import { setPanelVisibility } from "../actions";
 import { Tools } from "../constants";
 
-function getUser() {
-  // const document.cookie.split("; ")
-}
 
-function Sidebar({ activeTools }) {
+function Sidebar({ activeTools, userInfo }) {
   const dispatch = useContext(RootDispatch);
 
   const isSettingsVisible = activeTools[Tools.SETTINGS];
@@ -43,38 +43,54 @@ function Sidebar({ activeTools }) {
 
   return (
     <div className="sidebar">
-      <div
-      className={`sidebar-icon ${isSearchVisible ? "active": ""}`}
-      alt="Search tool"
-      onClick={onSearchClick}>
-        <img
+      <div className="sidebar-top">
+        <div
+        className={`sidebar-icon ${isSearchVisible ? "active": ""}`}
         alt="Search tool"
-        src={searchWebp}
-        onError={(e) => { e.target.onerror = null; e.target.src = searchPng }}
-        >
-        </img>
+        onClick={onSearchClick}>
+          <img
+          alt="Search tool"
+          src={searchWebp}
+          onError={(e) => { e.target.onerror = null; e.target.src = searchPng }}
+          >
+          </img>
+        </div>
+
+        <div className="sidebar-icon" alt="Planet tool (Coming soon)">
+          <img
+          alt="Planet tool"
+          src={planetWebp}
+          onError={(e) => { e.target.onerror = null; e.target.src = planetPng }}
+          >
+          </img>
+        </div>
+
+        <div
+        className={`sidebar-icon ${isSettingsVisible ? "active": ""}`}
+        alt="Console and Settings"
+        onClick={onSettingsClick}>
+          <img
+          alt="Terminal and Settings"
+          src={settingsWebp}
+          onError={(e) => { e.target.onerror = null; e.target.src = settingsPng }}
+          >
+          </img>
+        </div>
       </div>
 
-      <div className="sidebar-icon" alt="Planet tool (Coming soon)">
-        <img
-        alt="Planet tool"
-        src={planetWebp}
-        onError={(e) => { e.target.onerror = null; e.target.src = planetPng }}
-        >
-        </img>
-      </div>
-
-      <div
-      className={`sidebar-icon ${isSettingsVisible ? "active": ""}`}
-      alt="Console and Settings"
-      onClick={onSettingsClick}>
-        <img
-        alt="Terminal and Settings"
-        src={settingsWebp}
-        onError={(e) => { e.target.onerror = null; e.target.src = settingsPng }}
-        >
-        </img>
-      </div>
+      <div className="sidebar-bottom">
+        <div
+          className={`sidebar-icon`}
+          alt={!!userInfo ? "User Profile" : "Log in"}
+          >
+            <img
+            alt={!!userInfo ? "User Profile Picture" : "Default avatar"}
+            src={!!userInfo ? userInfo.avatarURL : defaultUserWebp }
+            onError={(e) => { e.target.onerror = null; e.target.src = defaultUserPng }}
+            >
+            </img>
+          </div>
+        </div>
     </div>
   )
 }
