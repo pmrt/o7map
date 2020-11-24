@@ -9,6 +9,8 @@ import Panel from '../Panel';
 
 import "./SystemDetails.css";
 
+const delay = (fn, wait) => setTimeout(fn, wait);
+
 const selectorTheme = {
   borderRadius: 0,
   colors: {
@@ -279,7 +281,7 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
         })
 
         if (forceReportUpdateRef.current) {
-          forceReportUpdateRef.current()
+          delay(() => forceReportUpdateRef.current(), 5e3);
         }
         return
       case 429:
