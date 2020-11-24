@@ -24,14 +24,15 @@ function SettingsPanel({ stdout, activeTab, cmdRef }) {
 
   return (
     <Panel
-      defaultPanel={Console}
+      defaultPanelKey="console"
+      defaultPosition={{x: 20, y: 80}}
       selectedPanelName={activeTab}
       onTabClick={onTabClick}
       onCloseClick={onCloseClick}
-      tabTitles={{ "Console": Console, "Settings": Settings }}
+      tabTitles={{ "Console": "console", "Settings": "settings" }}
     >
-      <Console stdout={stdout} cmdRef={cmdRef}/>
-      <Settings />
+      <Console stdout={stdout} cmdRef={cmdRef} tabKey="console"/>
+      <Settings tabKey="settings"/>
     </Panel>
   )
 }

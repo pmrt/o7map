@@ -20,6 +20,7 @@
   --theme-transparent-light-grey: #a9a9a933;
   --theme-dark-purple: #0c0a11;
   --theme-transparent-black: #000000c4;
+  --theme-orange: rgb(255, 167, 96);
 }
 
 html, body {
@@ -34,8 +35,19 @@ html {
   letter-spacing: 0.04em;
 }
 
+button,
 input {
   font-family: 'Roboto Mono', Courier;
+}
+
+button {
+  background: transparent;
+  border: 1px solid var(--theme-background-grey);
+  color: var(--theme-primary);
+  padding: 5px 20px;
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
 }
 
 body {

@@ -5,15 +5,21 @@ import theme from "./canvas/theme";
 import "./Map.css";
 import useFabric from "./useFabric";
 import { RootDispatch } from "../context";
-import { addStdoutLine, setClickedCoords, setCurrentMap, setIsLoading } from "../actions";
+import { addStdoutLine, setClickedCoords, setCurrentMap, setIsLoading, setIsReceivingReports, setSystemDetailsAndOpen } from "../actions";
+import useReport from "./useReport";
 
 const HEIGHT_MARGIN = 0;
 const WIDTH_MARGIN = 40;
 
-function EchoesMap({fontSize, mapRef, isDevMode, isLoading }) {
+function EchoesMap({fontSize, mapRef, isDevMode, isLoading, currentMap, forceReportUpdateRef }) {
   const dispatch = useContext(RootDispatch);
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const setIsReceiving = useCallback((isReceiving) => {
+    dispatch(setIsReceivingReports(isReceiving));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,6 +75,10 @@ function EchoesMap({fontSize, mapRef, isDevMode, isLoading }) {
           if (!didCancel) {
             dispatch(setCurrentMap("", "", ""))
           }
+        });
+        map.on("clicked:system", async system => {
+          dispatch(setSystemDetailsAndOpen(system))
+          await system.clicked()
         });
         end = performance.now();
         log(`Finished task: Additional setup. Took ${Math.ceil(end - start)}ms.`);
@@ -127,6 +137,8 @@ function EchoesMap({fontSize, mapRef, isDevMode, isLoading }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useReport(currentMap.mapID, log, setIsReceiving, mapRef, forceReportUpdateRef, 30e3);
 
   useEffect(() => {
     const map = mapRef.current;

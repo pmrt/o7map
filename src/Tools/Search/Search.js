@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useMemo, useReducer, useRef } from "react";
 
-import { addStdoutLine } from "../../actions";
+import { addStdoutLine, setSystemDetailsAndOpen } from "../../actions";
 import { RootDispatch } from "../../context";
 import { MapType } from "../../EchoesMap/canvas/consts";
 import { debounce } from "../../EchoesMap/helpers";
@@ -12,6 +12,12 @@ import searchWebp from "../../img/search.webp";
 import searchPng from "../../img/search.png";
 
 import "./Search.css";
+
+const SearchTabsKeys = {
+  SYSTEMS: "systems",
+  REGIONS: "regions",
+  CURRENT: "current",
+}
 
 function useAutofocus(ref) {
   useEffect(() => {
@@ -58,7 +64,7 @@ function SearchTabs ({
     <Fragment>
       {titles.map(title => {
         const tabInfo = tabTitles[title];
-        const activeComp = tabInfo[0];
+        const tabKey = tabInfo[0];
         const len = tabInfo[1];
         const lenStr =
           len > 0
@@ -68,12 +74,12 @@ function SearchTabs ({
         const isActive =
           // if tabTitles has only 1 element, don't show active state
           titles.length > 1 &&
-          selected === activeComp.name;
+          selected === tabKey;
         return (
           <h3
           key={title}
           className={isActive ? customActiveTabClassName : ""}
-          onClick={() => onTabClicked(activeComp.name)}
+          onClick={() => onTabClicked(tabKey)}
         >{title}<span>{lenStr}</span></h3>
         )
       })}
@@ -242,9 +248,9 @@ function setCurrentSystems(currentResults) {
   }
 }
 
-function setActiveTab(activeTabName) {
+function setActiveTab(activeTabId) {
   return {
-    activeTabName,
+    activeTabId,
     type: SearchActions.SET_ACTIVE_TAB,
   }
 }
@@ -253,7 +259,7 @@ const initialState = {
   systemResults: [],
   regionResults: [],
   currentResults: [],
-  activeTabName: "",
+  activeTabId: "",
 }
 
 const searchReducer = (state, action) => {
@@ -272,7 +278,7 @@ const searchReducer = (state, action) => {
     case SearchActions.SET_ACTIVE_TAB:
       return {
         ...state,
-        activeTabName: action.activeTabName,
+        activeTabId: action.activeTabId,
       }
 
     default:
@@ -311,18 +317,18 @@ function Search({ mapRef, currentMap }) {
     // the other doesn't, switch to that tab.
     if (systemResults.length > 0 && systemResults[1].length > 0) {
       if (regionResults.length === 0 || regionResults[1].length === 0){
-        dispatch(setActiveTab("Systems"));
+        dispatch(setActiveTab(SearchTabsKeys.SYSTEMS));
       }
     }
 
     if (regionResults.length > 0 && regionResults[1].length > 0) {
       if (systemResults.length === 0 || systemResults[1].length === 0){
-        dispatch(setActiveTab("Regions"));
+        dispatch(setActiveTab(SearchTabsKeys.REGIONS));
       }
     }
   }
 
-  const onSystemClick = (row) => {
+  const onSystemClick = async row => {
     const sysName = row.original.n;
     if (!sysName) {
       return;
@@ -339,7 +345,13 @@ function Search({ mapRef, currentMap }) {
       return;
     }
 
-    map.goTo(regionName, sysName);
+    const system = await map.goTo(regionName, sysName);
+    if (system) {
+      rootDispatch(setSystemDetailsAndOpen(system));
+    }
+
+    await system.clicked(1200);
+    await system.clicked(1200);
   }
 
   const onRegionClick = (row) => {
@@ -411,10 +423,10 @@ function Search({ mapRef, currentMap }) {
 
   const map = mapRef.current;
 
-  const defaultPanel =
+  const defaultPanelKey =
     map && map.getCurrentMapType() === MapType.REGION
-    ? Current
-    : Systems;
+    ? SearchTabsKeys.CURRENT
+    : SearchTabsKeys.SYSTEMS;
 
   const { systemResults, regionResults, currentResults } = state;
 
@@ -445,9 +457,9 @@ function Search({ mapRef, currentMap }) {
       </div>
       <div className="search-results">
         <Panel
-          defaultPanel={defaultPanel}
+          defaultPanelKey={defaultPanelKey}
           isDraggable={false}
-          selectedPanelName={state.activeTabName}
+          selectedPanelName={state.activeTabId}
           onTabClick={onTabClick}
           customParentClassNames={"panels2"}
           customParentWrapperClassName={"search-panel"}
@@ -455,14 +467,25 @@ function Search({ mapRef, currentMap }) {
           customTopbarClassNames={"topbar2"}
           CustomTabs={SearchTabs}
           tabTitles={{
-            "All Systems": [Systems, lenSys],
-            "All Regions": [Regions, lenRg],
-            "Current Systems": [Current, lenCur],
+            "All Systems": [SearchTabsKeys.SYSTEMS, lenSys],
+            "All Regions": [SearchTabsKeys.REGIONS, lenRg],
+            "Current Systems": [SearchTabsKeys.CURRENT, lenCur],
           }}
         >
-          <Systems systemResults={systemResults} onSystemClick={onSystemClick}/>
-          <Regions regionResults={regionResults} onRegionClick={onRegionClick}/>
-          <Current currentResults={currentResults} onSystemClick={onSystemClick}/>
+          <Systems
+          tabKey={SearchTabsKeys.SYSTEMS}
+          systemResults={systemResults}
+          onSystemClick={onSystemClick}/>
+
+          <Regions
+          tabKey={SearchTabsKeys.REGIONS}
+          regionResults={regionResults}
+          onRegionClick={onRegionClick}/>
+
+          <Current
+          tabKey={SearchTabsKeys.CURRENT}
+          currentResults={currentResults}
+          onSystemClick={onSystemClick}/>
         </Panel>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { Tools as ToolTypes } from "../constants";
 
 import SearchPanel from "./Search";
 import SettingsPanel from "./Settings";
+import SystemDetailsPanel from "./SystemDetails";
 
 import "./Tools.css"
 
@@ -12,7 +13,10 @@ function Tools({
   activeTools,
   cmdRef,
   mapRef,
+  forceReportUpdateRef,
   currentMap,
+  isDevMode,
+  systemDetails,
 }) {
   return (
     <Fragment>
@@ -27,6 +31,14 @@ function Tools({
       <SearchPanel
         mapRef={mapRef}
         currentMap={currentMap}
+      />}
+
+      {!!activeTools[ToolTypes.SYSTEM_DETAILS] &&
+      <SystemDetailsPanel
+        isDevMode={isDevMode}
+        system={systemDetails}
+        mapRef={mapRef}
+        forceReportUpdateRef={forceReportUpdateRef}
       />}
     </Fragment>
   )

@@ -7,6 +7,9 @@ export const ActionTypes = {
   SET_IS_LOADING: "set_is_loading",
   SET_IS_DEV_MODE: "set_is_dev_mode",
   SET_CLICKED_COORDS: "set_clicked_coords",
+  SET_SYSTEM_DETAILS: "set_system_details",
+  SET_SYSTEM_DETAILS_AND_OPEN: "set_system_details_and_open",
+  SET_IS_RECEIVING_REPORTS: "set_is_receiving_reports",
   RESET_STATE: "reset_state",
 }
 
@@ -32,6 +35,27 @@ export function setPanelVisibility(tool, visible) {
     tool,
     visible: visible,
     type: ActionTypes.SET_PANEL_VISIBILITY,
+  }
+}
+
+export function setIsReceivingReports(isReceiving) {
+  return {
+    isReceiving,
+    type: ActionTypes.SET_IS_RECEIVING_REPORTS,
+  }
+}
+
+export function setSystemDetails(system) {
+  return {
+    system,
+    type: ActionTypes.SET_SYSTEM_DETAILS,
+  }
+}
+
+export function setSystemDetailsAndOpen(system) {
+  return {
+    system,
+    type: ActionTypes.SET_SYSTEM_DETAILS_AND_OPEN,
   }
 }
 

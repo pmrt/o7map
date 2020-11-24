@@ -5,7 +5,7 @@ import centerPng from "../img/center.png";
 
 import "./Mapbar.css";
 
-function Mapbar({ cmdRef, currentMap }) {
+function Mapbar({ cmdRef, currentMap, isReceivingReports }) {
   const onUniverseClick = useCallback(() => {
     const cmd = cmdRef.current;
     if (!cmd) {
@@ -37,6 +37,9 @@ function Mapbar({ cmdRef, currentMap }) {
           src={centerWebp}
           onError={(e) => { e.target.onerror = null; e.target.src = centerPng }}
         />
+      </div>
+      <div className={isReceivingReports ? "mapbar-btn receiving is-receiving" : "mapbar-btn receiving not-receiving"}>
+        Report system
       </div>
     </div>
   )

@@ -7,6 +7,7 @@ class MapCollection {
     this._group = null;
     this._eventQueue = [];
     this._objsWithEvents = [];
+    this._reportObjs = [];
     this.opts = opts;
 
     if (!this.MapDataClass || !this.MapTypeClass) {
@@ -26,6 +27,24 @@ class MapCollection {
   // to be implemented by childs
   get MapTypeClass() {
     return null;
+  }
+
+  addReportObj(obj) {
+    this._reportObjs.push(obj);
+
+    return this;
+  }
+
+  // clearReportObjs remove rendered elements from canvas and clear the cache.
+  // canvas.requestRenderAll may be needed after this.
+  clearReportObjs() {
+    for (let obj of this._reportObjs) {
+      this._group.remove(obj)
+      this._canvas.remove(obj)
+    }
+    this._reportObjs.length = 0;
+
+    return this;
   }
 
   /*
@@ -81,6 +100,18 @@ class MapCollection {
     return this;
   }
 
+
+  findRendered(id) {
+    const rects = this._group.getObjects("rect");
+    for (let i = 0, len = rects.length; i < len; i++) {
+      const rect = rects[i];
+      const obj = rect.get("metadata").data;
+      if (obj.ID === id) {
+        return obj;
+      }
+    }
+  }
+
   clear() {
     if (this._group) {
       const objs = this._objsWithEvents;
@@ -110,7 +141,17 @@ class MapCollection {
   updateFontSize(fontSize) {
     const objs = this._group.getObjects("textbox");
     objs.forEach(obj => {
-      obj.set({ fontSize });
+      const c = obj.get("metadata").data;
+      c.updateFontSize(fontSize);
+    })
+
+    return this;
+  }
+
+  updateRectSize(size) {
+    const objs = this._group.getObjects("rect");
+    objs.forEach(obj => {
+      obj.set({ width: size, height: size });
     })
 
     return this;
@@ -130,16 +171,30 @@ class MapCollection {
     return res[0];
   }
 
+  afterRender() {
+    for (let i = 0, len = this._rects.length; i < len; i++) {
+      const rect = this._rects[i];
+      rect.bringToFront()
+    }
+
+    // free cached rects
+    this._rects = null;
+
+    return this;
+  }
+
   render(all) {
     let mapObjects = [];
     let errors = [];
 
+    this._rects = [];
     for (let data of all) {
       const d = new this.MapDataClass(data);
       const map = new this.MapTypeClass(d, this._canvas, this._db, this.opts);
       const ok = map.render();
       if (ok) {
         mapObjects.push(...map.fabricObjs);
+        this._rects.push(map._rect);
       } else {
         errors.push({
           message: `WARN: Skipping map '${map.name}'`,

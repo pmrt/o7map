@@ -1,6 +1,6 @@
 import Draggable from 'react-draggable';
 
-import { cloneElement, Fragment, useRef } from 'react';
+import { cloneElement, Fragment, useEffect, useRef } from 'react';
 
 function Wrapper({
   isDraggable,
@@ -36,16 +36,16 @@ const TabTitles = ({
   return (
     <Fragment>
       {titles.map(title => {
-        const activeComp = tabTitles[title];
+        const tabKey = tabTitles[title];
         const isActive =
           // if tabTitles has only 1 element, don't show active state
           titles.length > 1 &&
-          selected === activeComp.name;
+          selected === tabKey;
         return (
           <h3
           key={title}
           className={isActive ? customActiveTabClassName : ""}
-          onClick={() => onTabClicked(activeComp.name)}
+          onClick={() => onTabClicked(tabKey)}
           >{title}</h3>
         )
       })}
@@ -54,7 +54,7 @@ const TabTitles = ({
 };
 
 function Panel({
-  defaultPanel,
+  defaultPanelKey,
   defaultPosition = {x: 20, y: 20},
   selectedPanelName,
   customParentClassNames = "panels",
@@ -75,18 +75,25 @@ function Panel({
       ? customTopbarClassNames + ` ${customDraggableClassName}`
       : "topbar";
 
-  let selected;
-  if (!selectedPanelName) {
-    selected = defaultPanel.name;
-  } else if (typeof selectedPanelName === "string") {
-    selected = selectedPanelName;
-  }
+  let selected = selectedPanelName || defaultPanelKey;
 
-  const Comp = Array.isArray(children)
-    ? children.find(comp =>
-      comp.type.name === selected
-    ) || null
-    : children;
+  let Comp;
+  if (Array.isArray(children)) {
+    Comp = children.find(comp =>
+      comp.props.tabKey === selected
+    );
+
+    if (!Comp) {
+      // In odd situations (e.g. changing a comp tabKey), the state
+      // will be stale and Comp will be null, so we just fallback to
+      // default, just in case.
+      Comp = children.find(comp =>
+        comp.props.tabKey === defaultPanelKey
+      )
+    }
+  } else {
+    Comp = children;
+  }
 
   const onTabClicked = (title) => {
     if (!!onTabClick) {
@@ -103,6 +110,11 @@ function Panel({
 
     panelRef.current.style.zIndex = "100";
   }
+
+  useEffect(() => {
+    // Bring to front on initial render
+    panelRef.current.style.zIndex = "100";
+  }, [])
 
   return (
     <Wrapper

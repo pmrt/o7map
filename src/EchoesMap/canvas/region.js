@@ -1,5 +1,6 @@
 import { fabric } from "fabric";
-import { getSecColor, wrapText } from "../helpers";
+import { getSecColor, lerp, lerpColor, wrapText } from "../helpers";
+import { REPORT_REGION_MIN_RADIUS, REPORT_REGION_MAX_RADIUS, TEXT_PADDING, MIN_TEXT_PADDING } from "./consts";
 import theme from "./theme";
 
 import MapCollection from "./collection";
@@ -102,6 +103,26 @@ export class Region {
     )
   }
 
+  updateFontSize(fontSize) {
+    if (fontSize === 0) {
+      this._text.set({
+        opacity: 0,
+      })
+      return;
+    }
+
+    const top = this._rect.top + this._rect.getScaledHeight()/2 - this._rect.strokeWidth/2;
+    let padding = this._canvas.getZoom() * 0.8;
+    padding = Math.min(padding, TEXT_PADDING);
+    padding = Math.max(padding, MIN_TEXT_PADDING);
+    this._text.set({
+      opacity: 1,
+      top: top + padding,
+      fontSize,
+    })
+  }
+
+
   render() {
     const color = getSecColor(this.sec.str) || theme.secondary;
 
@@ -109,8 +130,8 @@ export class Region {
       left: this.coords.x,
       top: this.coords.y,
       fill: color,
-      width: 10,
-      height: 10,
+      width: this.opts.rectSize,
+      height: this.opts.rectSize,
       angle: 45,
       strokeWidth: 40,
       selectable: false,
@@ -122,18 +143,22 @@ export class Region {
         data: this,
       },
     });
+    this._rect = regionRect;
 
-    const nameTextbox = new fabric.Textbox(wrapText(this.name, 20), {
+    const nameTextbox = this._text = new fabric.Textbox(wrapText(this.name, 20), {
       width: 50,
       fontSize: this.opts.fontSize,
       fontFamily: "Roboto Mono",
       fill: theme.primary,
       textAlign: "center",
+      metadata: {
+        data: this,
+      },
     })
 
     nameTextbox.set({
       left: this.coords.x - nameTextbox.getScaledWidth() / 2,
-      top: this.coords.y + regionRect.getScaledWidth() / 2 - 12,
+      top: this.coords.y + regionRect.getScaledHeight()/2 - regionRect.strokeWidth/2 + TEXT_PADDING,
     })
 
     this._objs.push(
@@ -143,6 +168,7 @@ export class Region {
     return true;
   }
 }
+
 
 export class RegionCollection extends MapCollection {
   async getRegions() {
@@ -189,6 +215,42 @@ export class RegionCollection extends MapCollection {
       return new Region(rd, this._canvas, this._db, this.opts);
     }
     return;
+  }
+
+  async drawReports(reports) {
+    this.clearReportObjs();
+
+    for (let report of reports) {
+      const { rid, s } = report;
+
+      const region = this.findRendered(rid);
+      const rect = region._rect;
+
+      const matrix = this._group.calcTransformMatrix();
+      const { x, y } = fabric.util.transformPoint({ x: rect.left, y: rect.top }, matrix)
+      const left = x - this._canvas.getWidth()/2;
+      const top = y - this._canvas.getHeight()/2;
+
+      const circle = new fabric.Circle({
+        left,
+        top,
+        fill: lerpColor(theme.dangerYellow, theme.dangerRed, s),
+        strokeWidth: 1,
+        radius: lerp([0, 1], [REPORT_REGION_MIN_RADIUS, REPORT_REGION_MAX_RADIUS], s),
+        selectable: false,
+        hasControls: false,
+        hasBorders: false,
+        opacity: .2,
+        originX: "center",
+        originY: "center",
+        evented: false,
+      })
+
+      this.addReportObj(circle);
+      this._group.add(circle);
+    }
+
+    this._canvas.requestRenderAll();
   }
 }
 

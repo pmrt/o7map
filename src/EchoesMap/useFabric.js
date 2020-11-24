@@ -6,6 +6,7 @@ function useFabric(fabricRef, fabricOpts) {
   return useCallback((node) => {
     // when ref changes and the node is available
     if (node) {
+      fabric.Object.prototype.objectCaching = false;
       fabricRef.current = new fabric.Canvas(node, fabricOpts);
     // when ref changes and the node isn't available but we got the old fabric canvas
     } else if (fabricRef.current) {

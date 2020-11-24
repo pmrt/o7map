@@ -7,10 +7,11 @@ export const initialState = {
   stdout: [],
   activeTools: {
     [Tools.CREATION]: 0,
-    [Tools.SEARCH]: 0,
+    [Tools.SEARCH]: 1,
+    [Tools.SYSTEM_DETAILS]: 0,
     [Tools.FILTER]: 0,
     [Tools.PLANET]: 0,
-    [Tools.SETTINGS]: 1,
+    [Tools.SETTINGS]: 0,
   },
   activeTabsNames: {
     [Tools.CREATION]: null,
@@ -24,6 +25,10 @@ export const initialState = {
     mapName: "",
     mapSec: "",
   },
+  details: {
+    system: null,
+  },
+  isReceivingReports: false,
   isLoading: 1,
   isDevMode: 0,
   clickedCoords: {
@@ -41,11 +46,15 @@ export const defaultState = {
     mapName: "",
     mapSec: "",
   },
+  details: {
+    system: null,
+  },
   clickedCoords: {
     x: 0,
     y: 0,
   },
   isLoading: 1,
+  isReceivingReports: false,
 }
 
 export function getInitialState() {
@@ -110,6 +119,31 @@ function rootReducer(state, action) {
         activeTools: {
           ...state.activeTools,
           [action.tool]: action.visible,
+        }
+      }
+    case ActionTypes.SET_SYSTEM_DETAILS_AND_OPEN:
+      return {
+        ...state,
+        activeTools: {
+          ...state.activeTools,
+          [Tools.SYSTEM_DETAILS]: 1,
+        },
+        details: {
+          ...state.details,
+          system: action.system,
+        }
+      }
+    case ActionTypes.SET_IS_RECEIVING_REPORTS:
+      return {
+        ...state,
+        isReceivingReports: action.isReceiving,
+      }
+    case ActionTypes.SET_SYSTEM_DETAILS:
+      return {
+        ...state,
+        details: {
+          ...state.details,
+          system: action.system,
         }
       }
     case ActionTypes.SET_FONT_SIZE:

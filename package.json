@@ -1,18 +1,20 @@
 {
   "name": "atlas",
   "author": "Pedro J. Martínez Martínez",
-  "version": "2.2.0-alpha",
+  "version": "3.0.0-alpha",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "d3-interpolate": "^2.0.1",
     "dexie": "^3.0.2",
     "fabric": "^4.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-draggable": "^4.4.3",
     "react-scripts": "4.0.0",
+    "react-select": "^3.1.0",
     "react-table": "^7.6.1",
     "react-window": "^1.8.6",
     "web-vitals": "^0.2.4"
@@ -40,5 +42,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "csv-parser": "^2.3.3",
+    "csv-stringify": "^5.5.1"
   }
 }

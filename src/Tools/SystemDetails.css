@@ -1,0 +1,107 @@
+.content .system-details-panel {
+  width: auto;
+  height: auto;
+}
+
+.system-details .system-buttons button {
+   background: transparent;
+   border: 1px solid var(--theme-background-grey);
+   color: var(--theme-primary);
+   padding: 10px 20px;
+   text-transform: uppercase;
+   width: 100%;
+   margin-top: 6px;
+   cursor: pointer;
+   transition: color 100ms ease-in, background 100ms ease-in;
+}
+
+.system-details .system-buttons button:hover {
+  background: var(--theme-grey-2);
+  color: var(--theme-light-yellow);
+}
+
+.system-details .system-buttons button[disabled]:hover {
+  cursor: not-allowed;
+}
+
+.system-details-title h3 {
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 15px 0 0 15px;
+  /* text-align: center; */
+}
+
+.system-details .system-info {
+  min-width: 250px;
+}
+
+.system-details .system-info-fields {
+  padding: 10px;
+}
+
+.system-details .system-info-fields {
+  display: flex;
+}
+
+.system-details .system-info-field {
+  display: flex;
+  padding: 7px;
+  border: 1px solid var(--theme-background-grey);
+}
+
+.system-details .system-info-field:not(:last-child) {
+  border-bottom: none;
+}
+
+.system-details .system-info-field > * {
+  margin-right: 10px;
+}
+
+.system-details .system-info-field label {
+  color: var(--theme-grey);
+}
+
+.system-details .system-info-field label:after {
+  content: ": ";
+}
+
+.system-actions {
+  width: 260px;
+  margin-left: 10px;
+  border: 1px solid var(--theme-background-grey);
+}
+
+.system-buttons-wrapper {
+  padding: 0px 15px;
+}
+
+.system-buttons-wrapper h1 {
+  font-size: 11px;
+  text-transform: uppercase;
+  position: relative;
+  top: -10px;
+  left: 0px;
+  background: var(--theme-background-secondary);
+  display: inline-block;
+  padding: 2px 8px;
+}
+
+.system-details .system-buttons .system-info-message {
+  font-size: 10px;
+  color: var(--theme-light-grey);
+  bottom: 20px;
+  margin: 11px 0;
+}
+
+.system-details .system-buttons .system-info-message.error {
+  color: var(--theme-light-red);
+}
+
+.system-details .system-buttons .system-info-message.success {
+  color: var(--theme-secondary);
+}
+
+.system-details .system-buttons .system-info-message p::after {
+  content: ".";
+}
+

@@ -5,6 +5,8 @@ const darkEve = {
   lightGrey: "#a9a9a9",
   lightGreen: "#00ff4d",
   lightRed: "#f00",
+  dangerRed: "#ff5f5f",
+  dangerYellow: "#ffce5f",
 }
 
 export const secColors = {

@@ -1,12 +1,17 @@
-export const MAX_ZOOM = 2;
-export const MIN_ZOOM = 1;
-export const STEP_FACTOR = .970;
+export const MAX_ZOOM = 4;
+export const MIN_ZOOM = 0.7;
+export const STEP_FACTOR = .99;
 
-export const CANVAS_WIDTH_LIMIT = 2000;
-export const CANVAS_HEIGHT_LIMIT = 1200;
+export const CANVAS_WIDTH_LIMIT = 4000;
+export const CANVAS_HEIGHT_LIMIT = 1800;
 
-export const FONTSIZE = 10;
-export const MIN_FONTSIZE = 5.2;
+export const FONTSIZE = 12;
+export const MIN_FONTSIZE = 4;
+export const TEXT_PADDING = 10;
+export const MIN_TEXT_PADDING = 4;
+
+export const RECT_SIZE = 12;
+export const MIN_RECT_SIZE = 4;
 
 export const LINK_WIDTH = 0.3;
 
@@ -17,3 +22,11 @@ export const MapType = {
   REGION: "region",
   SYSTEM: "system",
 }
+
+export const REPORT_REGION_MIN_RADIUS = 15;
+export const REPORT_REGION_MAX_RADIUS = 60;
+export const REPORT_SYSTEM_MIN_RADIUS = 10;
+export const REPORT_SYSTEM_MAX_RADIUS = 40;
+
+export const OG_GROUP_TOP = -35.35533905932738;
+export const OG_GROUP_LEFT = -35.35533905932738;

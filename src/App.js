@@ -27,6 +27,7 @@ function App() {
 
   const mapRef = useRef(new Map());
   const cmdRef = useRef(new Commander(dispatch, mapRef));
+  const forceReportUpdateRef = useRef(null);
 
   return (
     <div className="App">
@@ -41,18 +42,24 @@ function App() {
             activeTabsNames={state.activeTabsNames}
             cmdRef={cmdRef}
             mapRef={mapRef}
+            forceReportUpdateRef={forceReportUpdateRef}
             currentMap={state.currentMap}
+            isDevMode={state.isDevMode}
+            systemDetails={state.details.system}
           />
           <EchoesMap
             isDevMode={state.isDevMode}
             isLoading={state.isLoading}
             mapRef={mapRef}
+            forceReportUpdateRef={forceReportUpdateRef}
             fontSize={state.fontSize}
+            currentMap={state.currentMap}
           />
           <MapInfo
             currentMap={state.currentMap}
             isLoading={state.isLoading}
             isDevMode={state.isDevMode}
+            isReceivingReports={state.isReceivingReports}
             clickedCoords={state.clickedCoords}
             cmdRef={cmdRef}
           />

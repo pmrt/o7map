@@ -21,6 +21,10 @@ import { RootDispatch } from "../context";
 import { setPanelVisibility } from "../actions";
 import { Tools } from "../constants";
 
+function getUser() {
+  // const document.cookie.split("; ")
+}
+
 function Sidebar({ activeTools }) {
   const dispatch = useContext(RootDispatch);
 

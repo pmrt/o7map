@@ -9,6 +9,8 @@ import {
   MAX_ZOOM,
   MIN_ZOOM,
   STEP_FACTOR,
+  RECT_SIZE,
+  MIN_RECT_SIZE,
   CANVAS_WIDTH_LIMIT,
   CANVAS_HEIGHT_LIMIT,
   FONTSIZE,
@@ -93,10 +95,19 @@ class Map extends EventEmitter {
 
     this._canvas.zoomToPoint({ x: evt.offsetX, y: evt.offsetY }, newZoom);
 
-    let newFontSize = this.opts.fontSize / newZoom;
+    let newFontSize = this.opts.fontSize
+    / newZoom;
     newFontSize = Math.min(newFontSize, this.opts.fontSize);
     newFontSize = Math.max(newFontSize, MIN_FONTSIZE);
+    if (newZoom < .75) {
+      newFontSize = 0;
+    }
     this.updateFontSize(newFontSize);
+
+    let newRectSize = this.opts.rectSize / newZoom;
+    newRectSize = Math.min(newRectSize, this.opts.rectSize);
+    newRectSize = Math.max(newRectSize, MIN_RECT_SIZE);
+    this.updateRectSize(newRectSize);
 
     evt.preventDefault();
     evt.stopPropagation();
@@ -162,7 +173,7 @@ class Map extends EventEmitter {
 
         const id = system.region.id;
         if (this._currentRegionId !== id) {
-          obj.hoverCursor = "pointer";
+          obj.hoverCursor = "nw-resize";
         }
         break;
       default:
@@ -255,6 +266,7 @@ class Map extends EventEmitter {
   init(fabricCanvas, logger, setIsLoading, opts) {
     this.opts = {
       fontSize: FONTSIZE,
+      rectSize: RECT_SIZE,
       linkWidth: LINK_WIDTH,
       ...opts,
     };
@@ -275,6 +287,10 @@ class Map extends EventEmitter {
     return this;
   }
 
+  isRendered() {
+    return this._currentMap !== null;
+  }
+
   drawRegion(region) {
     return new Promise((resolve, reject) => {
       const { ID, name, systems, sec } = region;
@@ -288,13 +304,13 @@ class Map extends EventEmitter {
 
         const end = performance.now();
         this.log(`Finished task: Rendering '${name}'. Took ${Math.ceil(end - start)}ms.`);
+        this._currentRegionId = ID;
         this.emit("render:region", {
           rid: ID,
           rn: name,
           avgSec: sec.avg,
         });
         this.setIsLoading(false);
-        this._currentRegionId = ID;
         resolve(region);
       })
     });
@@ -305,15 +321,14 @@ class Map extends EventEmitter {
       this.setIsLoading(true);
       this.log(":: Rendering universe");
 
-      defer(() => {
+      defer(async () => {
         const start = performance.now();
-        this._fill(MapType.UNIVERSE);
+        await this._fill(MapType.UNIVERSE);
         const end = performance.now();
         this.log(`Finished task: Rendering universe. Took ${Math.ceil(end - start)}ms.`);
 
-        this.emit("render:universe");
         if (this._fistRender) {
-          const maxQuoteFakeTime = 3000;
+          const maxQuoteFakeTime = 2500;
           const quoteTime = Math.max(0, maxQuoteFakeTime - (end - start));
           // Making sure that we see the quote splash screen by faking the loading
           // screen first time
@@ -324,11 +339,42 @@ class Map extends EventEmitter {
         } else {
           this.setIsLoading(false);
         }
+
+        this._currentMap = MapType.UNIVERSE;
+        this._currentRegionId = null;
+        this.centerInViewPort();
+        this.emit("render:universe");
         resolve();
       });
-
-      this._currentRegionId = null;
     })
+  }
+
+  drawReports(reports) {
+    switch (this._currentMap) {
+      case MapType.UNIVERSE:
+        this._regionCollection.drawReports(reports);
+        break;
+      case MapType.REGION:
+        this._sysCollection.drawReports(reports);
+        break;
+      default:
+        this.log(`Cannot update drawReports. Wrong MapType: ${this._currentMap}`, "error");
+        return;
+    }
+  }
+
+  clearReports() {
+    switch (this._currentMap) {
+      case MapType.UNIVERSE:
+        this._regionCollection.clearReportObjs();
+        break;
+      case MapType.REGION:
+        this._sysCollection.clearReportObjs();
+        break;
+      default:
+        this.log(`Cannot clear reports. Wrong MapType: ${this._currentMap}`, "error");
+        return;
+    }
   }
 
   get log() {
@@ -390,6 +436,7 @@ class Map extends EventEmitter {
 
     this._canvas.add(this._sysCollection.group);
     this._sysCollection
+      .afterRender()
       .center()
       .bringToFront();
     return this;
@@ -426,7 +473,25 @@ class Map extends EventEmitter {
         this._sysCollection.updateFontSize(newFontSize);
         break;
       default:
-        this.log(`Cannot update fontSize. Incorrect MapType: ${this._currentMap}`, "error");
+        this.log(`Cannot update fontSize. Wrong MapType: ${this._currentMap}`, "error");
+        return;
+    }
+  }
+
+  updateRectSize(size) {
+    if (!this._currentMap) {
+      return null;
+    }
+
+    switch (this._currentMap) {
+      case MapType.UNIVERSE:
+        this._regionCollection.updateRectSize(size);
+        break;
+      case MapType.REGION:
+        this._sysCollection.updateRectSize(size);
+        break;
+      default:
+        this.log(`Cannot . Wrong MapType: ${this._currentMap}`, "error");
         return;
     }
   }
@@ -444,7 +509,7 @@ class Map extends EventEmitter {
         this._sysCollection.updateFontSize(newFontSize);
         break;
       default:
-        this.log(`Cannot set fontSize. Incorrect MapType: ${this._currentMap}`, "error");
+        this.log(`Cannot set fontSize. Wrong MapType: ${this._currentMap}`, "error");
         return;
     }
 
@@ -466,7 +531,7 @@ class Map extends EventEmitter {
 
     if (!systemName) {
       c.setViewportTransform([1, 0, 0, 1, 0, 0]);
-      return;
+      return region;
     }
 
     c.setZoom(1)
@@ -476,7 +541,7 @@ class Map extends EventEmitter {
     const system = this._sysCollection.findRenderedSystem(systemName);
     const obj = system._rect;
     if (!obj) {
-      this.log(`ERR: Couldn't got to unknown system '${systemName}'`, "error")
+      this.log(`ERR: Couldn't goTo() unknown system '${systemName}'`, "error")
       return;
     }
     const group = obj.group;
@@ -484,8 +549,7 @@ class Map extends EventEmitter {
     const x = group.left + group.getScaledWidth()/2 + obj.left - w/2;
     const y = group.top + group.getScaledHeight()/2 + obj.top - h/2;
     c.absolutePan(new fabric.Point(x, y));
-    await system.clicked(1200);
-    await system.clicked(1200);
+    return system;
   }
 
   centerInViewPort() {
@@ -566,10 +630,6 @@ class Map extends EventEmitter {
     this._db.close();
   }
 
-  async findRegionByName(name) {
-
-  }
-
   async findStartingWith(mapType, exp) {
     let results;
     switch (mapType) {
@@ -596,6 +656,10 @@ class Map extends EventEmitter {
   async getSystemsInRegion(regionId) {
     const results =  await this._regionCollection.findSystemsInRegion(regionId);
     return [this._searchId++, results];
+  }
+
+  async getSystemById(systemId) {
+    return await this._sysCollection.findSystemById(systemId);
   }
 }
 

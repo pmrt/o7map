@@ -9,7 +9,7 @@ import Panel from "../../Panel";
 import Search from "./Search";
 
 
-function SearchPanel({ mapRef, currentMap }) {
+function SearchPanel({ mapRef, currentMap, forceReportUpdateRef }) {
   const dispatch = useContext(RootDispatch);
 
   const onCloseClick = () => {
@@ -18,13 +18,16 @@ function SearchPanel({ mapRef, currentMap }) {
 
   return (
     <Panel
-      defaultPanel={Search}
-      defaultPosition={{x: 20, y: 380}}
-      tabTitles={{ "Search": Search }}
+      defaultPanelKey="search"
+      tabTitles={{ "Search": "search" }}
       onCloseClick={onCloseClick}
       customTopbarClassNames={"topbar dark-topbar"}
     >
-      <Search mapRef={mapRef} currentMap={currentMap}/>
+      <Search
+      tabKey="search"
+      mapRef={mapRef}
+      currentMap={currentMap}
+      forceReportUpdateRef={forceReportUpdateRef}/>
     </Panel>
   )
 }
