@@ -72,7 +72,7 @@ const selectorTheme = {
     /*
     * option/backgroundColor:active
     */
-    primary50: "blue",
+    primary50: "--theme-purpled-blue",
   }
 }
 
