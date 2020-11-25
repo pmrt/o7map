@@ -50,7 +50,7 @@ function useReport(regionId, logger, setIsReceiving, mapRef, forceUpdateRef, wai
       try {
         reports = await resp.json();
       } catch (err) {
-        logger("ERR: While parsing response report response", "error");
+        logger("ERR: While parsing report response", "error");
         return;
       }
 
