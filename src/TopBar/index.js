@@ -1,3 +1,5 @@
+import "./TopBar.css"
+
 import AppInfo from "./AppInfo"
 
 const TopBar = () => (

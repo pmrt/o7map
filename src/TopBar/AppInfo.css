@@ -1,6 +1,8 @@
 .app-info {
   padding: 10px;
   text-align: right;
+  position: absolute;
+  right: 0;
 }
 
 .app-info .version-disclaimer {
