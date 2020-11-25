@@ -1,4 +1,4 @@
-export const MAX_CONSOLE_LINES = 500;
+export const MAX_CONSOLE_LINES = 200;
 export const ROOT_STATE_STORAGE_KEY = "echoes_atlas_state";
 
 export const Tools = {
