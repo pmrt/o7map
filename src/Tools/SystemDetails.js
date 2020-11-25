@@ -342,7 +342,7 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
       case 401:
         setActions({
           ...actions,
-          info: { msg: "You need to be logged in", type: "error" },
+          info: { msg: resp.message, type: "error" },
         })
         return
       default:
