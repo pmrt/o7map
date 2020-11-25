@@ -144,9 +144,6 @@ class Map extends EventEmitter {
     this.emit("mousedown:pointer", opt.pointer);
 
     const evt = opt.e;
-    if (opt.subTargets && opt.subTargets.length > 0) {
-      return;
-    }
 
     this._canvas.isDragging = true;
     this._canvas.selection = false;
