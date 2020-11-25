@@ -60,7 +60,7 @@ function Panel({
   customParentClassNames = "panels",
   customParentWrapperClassName = "panel-wrapper",
   customCloseBtnClassName = "close-btn",
-  customTopbarClassNames = "topbar",
+  customTitlebarClassNames = "titlebar",
   customDraggableClassName = "draggable",
   customActiveTabClassName = "active",
   onTabClick = null,
@@ -70,10 +70,10 @@ function Panel({
   children,
   CustomTabs = null,
 }) {
-  customTopbarClassNames =
+  customTitlebarClassNames =
     isDraggable
-      ? customTopbarClassNames + ` ${customDraggableClassName}`
-      : "topbar";
+      ? customTitlebarClassNames + ` ${customDraggableClassName}`
+      : "titlebar";
 
   let selected = selectedPanelName || defaultPanelKey;
 
@@ -124,7 +124,7 @@ function Panel({
       defaultPosition={defaultPosition}
     >
       <div className={customParentClassNames} ref={panelRef}>
-        <div className={customTopbarClassNames}>
+        <div className={customTitlebarClassNames}>
           {!!CustomTabs
             ? <CustomTabs
               tabTitles={tabTitles}

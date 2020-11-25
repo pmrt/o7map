@@ -21,7 +21,7 @@ function SearchPanel({ mapRef, currentMap, forceReportUpdateRef }) {
       defaultPanelKey="search"
       tabTitles={{ "Search": "search" }}
       onCloseClick={onCloseClick}
-      customTopbarClassNames={"topbar dark-topbar"}
+      customTitlebarClassNames={"titlebar dark-titlebar"}
     >
       <Search
       tabKey="search"

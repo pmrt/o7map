@@ -464,7 +464,7 @@ function Search({ mapRef, currentMap }) {
           customParentClassNames={"panels2"}
           customParentWrapperClassName={"search-panel"}
           customCloseBtnClassName={"close-btn2"}
-          customTopbarClassNames={"topbar2"}
+          customTitlebarClassNames={"titlebar2"}
           CustomTabs={SearchTabs}
           tabTitles={{
             "All Systems": [SearchTabsKeys.SYSTEMS, lenSys],

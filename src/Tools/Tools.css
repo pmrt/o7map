@@ -12,7 +12,7 @@
   margin: 10px 15px;
 }
 
-.topbar {
+.titlebar {
   background: var(--theme-background-grey);
   padding: 6px 15px;
   text-transform: uppercase;
@@ -22,7 +22,7 @@
   align-items: center;
 }
 
-.topbar h3 {
+.titlebar h3 {
   margin-right: 10px;
   cursor: pointer;
   padding: 2px 6px;
@@ -32,15 +32,15 @@
   transition: color 120ms ease-in;
 }
 
-.topbar h3.active {
+.titlebar h3.active {
   background: var(--theme-grey-3);
 }
 
-.topbar h3:hover {
+.titlebar h3:hover {
   color: var(--theme-grey);
 }
 
-.topbar h3.active:hover {
+.titlebar h3.active:hover {
   color: var(--theme-primary);
 }
 
