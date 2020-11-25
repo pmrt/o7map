@@ -50,6 +50,11 @@ button {
   text-transform: uppercase;
 }
 
+a {
+  color: var(--theme-primary);
+  text-decoration: none;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

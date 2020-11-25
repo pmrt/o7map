@@ -199,7 +199,6 @@ async function sendReport(systemId, objId, reportType) {
       },
       body: JSON.stringify(reqData),
     });
-    resp = await resp.json();
   } catch (err) {
     throw err;
   }
@@ -273,6 +272,17 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
       return;
     }
 
+    try {
+      resp = await resp.json();
+    } catch(err) {
+      console.log(err);
+      setActions({
+        ...actions,
+        info: { msg: "Report couldn't be sent", type: "error" },
+      })
+      return;
+    }
+
     switch (resp.code) {
       case 200:
         setActions({
@@ -288,6 +298,12 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
         setActions({
           ...actions,
           info: { msg: resp.message, type: "error" },
+        })
+        return
+      case 401:
+        setActions({
+          ...actions,
+          info: { msg: "You need to be logged in", type: "error" },
         })
         return
       default:

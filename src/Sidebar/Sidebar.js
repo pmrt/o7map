@@ -17,6 +17,9 @@ import searchPng from "../img/search.png";
 import settingsWebp from "../img/settings.webp";
 import settingsPng from "../img/settings.png";
 
+import logoutWebp from "../img/logout.webp";
+import logoutPng from "../img/logout.png";
+
 import defaultUserWebp from "../img/user.webp";
 import defaultUserPng from "../img/user.png";
 
@@ -79,12 +82,25 @@ function Sidebar({ activeTools, userInfo }) {
       </div>
 
       <div className="sidebar-bottom">
+        <a
+          className="sidebar-icon"
+          alt="Logout session"
+          style={{ display: !!userInfo ? "block" : "none" }}
+          href="/logout/discord"
+          >
+            <img
+            alt="Logout button"
+            src={logoutWebp}
+            onError={(e) => { e.target.onerror = null; e.target.src = logoutPng }}
+            >
+            </img>
+        </a>
         <div
-          className={`sidebar-icon`}
+          className={`sidebar-icon login-btn`}
           alt={!!userInfo ? "User Profile" : "Log in"}
           >
             <img
-            alt={!!userInfo ? "User Profile Picture" : "Default avatar"}
+            alt={!!userInfo ? "User Avatar" : "Default avatar"}
             src={!!userInfo ? userInfo.avatarURL : defaultUserWebp }
             onError={(e) => { e.target.onerror = null; e.target.src = defaultUserPng }}
             >
