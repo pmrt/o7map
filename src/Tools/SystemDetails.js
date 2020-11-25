@@ -9,6 +9,8 @@ import Panel from '../Panel';
 
 import "./SystemDetails.css";
 
+import dcLogo from "../img/dc_logo_white.png";
+
 const delay = (fn, wait) => setTimeout(fn, wait);
 
 const selectorTheme = {
@@ -206,12 +208,44 @@ async function sendReport(systemId, objId, reportType) {
 }
 
 const initialInfo = { msg: "Select an object before sending a report", type: "info" };
+const initialNotLoggedInInfo = { msg: "Login before sending actions", type: "info" };
 const initialActions = {
   info: initialInfo,
   selectedOpt: null,
 }
+const initialNotLoggedInActions = {
+  info: initialNotLoggedInInfo,
+  selectedOpt: null,
+}
 
-function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef }) {
+const ActionButton = ({ loggedIn, onClick, disabled, children }) => {
+  if (!loggedIn) {
+    return (
+      <a
+      class="login-btn"
+      onClick={onClick}
+      href="/auth/discord"
+      rel="nofollow"
+      >
+        <img
+        alt="Discord logo"
+        src={dcLogo}
+        ></img>
+        Login with Discord
+      </a>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+    >{children}</button>
+  )
+}
+
+function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef, userInfo }) {
   const {
     ID,
     rawName,
@@ -229,7 +263,12 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
 
   useEffect(() => {
     // Reset selection when system ID changes
-    setActions(initialActions)
+    let newActions =
+      !!userInfo
+        ? initialActions
+        : initialNotLoggedInActions;
+    setActions(newActions)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ID])
 
   const sysOpts = useSystemOptions({
@@ -372,11 +411,11 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
               />
             </div>
             <div className="system-buttons">
-              <button
-                type="button"
+              <ActionButton
                 onClick={sendCampReport}
                 disabled={!selectedOpt}
-              >Report camp</button>
+                loggedIn={!!userInfo}
+              >Report camp</ActionButton>
               <div className={`system-info-message ${info.type}`}>
                 <p>{info.msg}</p>
               </div>
@@ -388,7 +427,7 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
   )
 }
 
-function SystemDetailsPanel({ isDevMode = false, system, mapRef, forceReportUpdateRef }) {
+function SystemDetailsPanel({ isDevMode = false, system, mapRef, forceReportUpdateRef, userInfo }) {
   const dispatch = useContext(RootDispatch);
 
   if (!system) {
@@ -417,6 +456,7 @@ function SystemDetailsPanel({ isDevMode = false, system, mapRef, forceReportUpda
       system={system}
       mapRef={mapRef}
       forceReportUpdateRef={forceReportUpdateRef}
+      userInfo={userInfo}
       />
   </Panel>
   )

@@ -17,6 +17,7 @@ function Tools({
   currentMap,
   isDevMode,
   systemDetails,
+  userInfo,
 }) {
   return (
     <Fragment>
@@ -39,6 +40,7 @@ function Tools({
         system={systemDetails}
         mapRef={mapRef}
         forceReportUpdateRef={forceReportUpdateRef}
+        userInfo={userInfo}
       />}
     </Fragment>
   )

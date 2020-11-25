@@ -29,7 +29,7 @@ html, body {
 }
 
 html {
-  font-family: 'Roboto Mono', Courier;
+  font-family: 'Roboto Mono', monospace;
   font-size: 11px;
   color: var(--theme-primary);
   letter-spacing: 0.04em;
@@ -37,7 +37,7 @@ html {
 
 button,
 input {
-  font-family: 'Roboto Mono', Courier;
+  font-family: 'Roboto Mono', monospace;
 }
 
 button {

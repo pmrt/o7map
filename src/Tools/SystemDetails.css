@@ -3,24 +3,52 @@
   height: auto;
 }
 
-.system-details .system-buttons button {
-   background: transparent;
-   border: 1px solid var(--theme-background-grey);
-   color: var(--theme-primary);
-   padding: 10px 20px;
-   text-transform: uppercase;
-   width: 100%;
-   margin-top: 6px;
-   cursor: pointer;
-   transition: color 100ms ease-in, background 100ms ease-in;
+.system-details .login-btn img {
+  width: 21px;
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.system-details .system-buttons button:hover {
+.system-details .login-btn {
+  user-select: none;
+  position: relative;
+  color: #fff;
+  background: #7289DA;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.system-details .login-btn:hover {
+  background:#FFFFFF;
+  color: #000;
+}
+
+.system-buttons a,
+.system-buttons button {
+  display: block;
+  text-align: center;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--theme-background-grey);
+  color: var(--theme-primary);
+  padding: 10px 20px;
+  width: 100%;
+  margin-top: 6px;
+  cursor: pointer;
+  transition: color 100ms ease-in, background 100ms ease-in;
+}
+
+.system-buttons a:hover,
+.system-buttons button:hover {
   background: var(--theme-grey-2);
   color: var(--theme-light-yellow);
 }
 
-.system-details .system-buttons button[disabled]:hover {
+.system-buttons a[disabled]:hover,
+.system-buttons button[disabled]:hover {
   cursor: not-allowed;
 }
 
@@ -31,37 +59,37 @@
   /* text-align: center; */
 }
 
-.system-details .system-info {
+.system-info {
   min-width: 250px;
 }
 
-.system-details .system-info-fields {
+.system-info-fields {
   padding: 10px;
 }
 
-.system-details .system-info-fields {
+.system-info-fields {
   display: flex;
 }
 
-.system-details .system-info-field {
+.system-info-field {
   display: flex;
   padding: 7px;
   border: 1px solid var(--theme-background-grey);
 }
 
-.system-details .system-info-field:not(:last-child) {
+.system-info-field:not(:last-child) {
   border-bottom: none;
 }
 
-.system-details .system-info-field > * {
+.system-info-field > * {
   margin-right: 10px;
 }
 
-.system-details .system-info-field label {
+.system-info-field label {
   color: var(--theme-grey);
 }
 
-.system-details .system-info-field label:after {
+.system-info-field label:after {
   content: ": ";
 }
 
@@ -86,22 +114,22 @@
   padding: 2px 8px;
 }
 
-.system-details .system-buttons .system-info-message {
+.system-buttons .system-info-message {
   font-size: 10px;
   color: var(--theme-light-grey);
   bottom: 20px;
   margin: 11px 0;
 }
 
-.system-details .system-buttons .system-info-message.error {
+.system-buttons .system-info-message.error {
   color: var(--theme-light-red);
 }
 
-.system-details .system-buttons .system-info-message.success {
+.system-buttons .system-info-message.success {
   color: var(--theme-secondary);
 }
 
-.system-details .system-buttons .system-info-message p::after {
+.system-buttons .system-info-message p::after {
   content: ".";
 }
 
