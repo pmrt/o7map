@@ -101,7 +101,10 @@ function Sidebar({ activeTools, userInfo }) {
           >
             <img
             alt={!!userInfo ? "User Avatar" : "Default avatar"}
-            src={!!userInfo ? userInfo.avatarURL : defaultUserWebp }
+            src={!!userInfo
+              ? userInfo.avatarURL || defaultUserWebp
+              : defaultUserWebp
+            }
             onError={(e) => { e.target.onerror = null; e.target.src = defaultUserPng }}
             >
             </img>

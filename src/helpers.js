@@ -38,6 +38,6 @@ export function getUser() {
   return {
     id: u.uid,
     tag: u.t,
-    avatarURL: `${DC_AVATAR_ENDPOINT}/${u.uid}/${u.aid}.jpg`,
+    avatarURL: u.aid ? `${DC_AVATAR_ENDPOINT}/${u.uid}/${u.aid}.jpg` : null,
   };
 }
