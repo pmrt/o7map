@@ -79,17 +79,20 @@ function limitedAppend(arr, el, limit) {
   return [...shiftOldFromArray(arr, limit), el]
 }
 
+function append(arr, items, limit) {
+  let newArr = arr;
+  for (let el of items) {
+    newArr = limitedAppend(newArr, el, limit)
+  }
+  return newArr;
+}
+
 function rootReducer(state, action) {
   switch (action.type) {
     case ActionTypes.ADD_STDOUT_LINE:
-      const newLine = {
-        ts: action.ts,
-        str: action.str,
-        level: action.level,
-      }
       return {
         ...state,
-        stdout: limitedAppend(state.stdout, newLine, MAX_CONSOLE_LINES),
+        stdout: append(state.stdout, action.lines, MAX_CONSOLE_LINES),
       }
     case ActionTypes.SET_CURRENT_MAP:
       return {

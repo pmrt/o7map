@@ -258,6 +258,7 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
     planets,
   } = system;
 
+  const dispatch = useContext(RootDispatch);
   const [ actions, setActions ] = useState(initialActions)
   const { info, selectedOpt } = actions;
 
@@ -273,7 +274,7 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
 
   const sysOpts = useSystemOptions({
     systemId: ID,
-    dispatch: useContext(RootDispatch),
+    dispatch,
     mapRef,
     edges,
     stations
@@ -296,6 +297,10 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
       resp = await sendReport(ID, selectedOpt.value, Reports.CAMP);
     } catch(err) {
       console.log(err);
+      dispatch(addStdoutLine([
+        "ERR: " + err,
+        "Report couldn't be sent"
+      ], "error"));
       setActions({
         ...actions,
         info: { msg: "Report couldn't be sent", type: "error" },

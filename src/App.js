@@ -22,8 +22,10 @@ function App() {
   const [state, dispatch] = useReducer(rootReducer, getInitialState());
 
   if (firstTime) {
-    dispatch(addStdoutLine(`Echoes Atlas v${version} - Created by Kalad`, "system"));
-    dispatch(addStdoutLine(`Starting system...`, "system"));
+    dispatch(addStdoutLine([
+      `Echoes Atlas v${version} - Created by Kalad`,
+      `Starting system...`
+    ], "system"));
     firstTime = false;
   }
 

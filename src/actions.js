@@ -13,12 +13,22 @@ export const ActionTypes = {
   RESET_STATE: "reset_state",
 }
 
-export function addStdoutLine(str, level="info") {
+export function addStdoutLine(strOrArray, level="info") {
+  if (!Array.isArray(strOrArray)) {
+    strOrArray = [strOrArray];
+  }
+
+  let lines = [];
+  for (let str of strOrArray) {
+    lines.push({
+      str,
+      level,
+      ts: Date.now(),
+    })
+  }
   return {
     type: ActionTypes.ADD_STDOUT_LINE,
-    ts: Date.now(),
-    str,
-    level,
+    lines,
   }
 }
 
