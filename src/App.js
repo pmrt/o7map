@@ -14,6 +14,7 @@ import EchoesMap from "./EchoesMap";
 import MapInfo from "./MapInfo";
 import Tools from "./Tools";
 import Map from "./EchoesMap/canvas/map";
+import TopBar from "./TopBar";
 import { getUser } from "./helpers";
 
 let firstTime = true;
@@ -34,6 +35,7 @@ function App() {
   return (
     <div className="App">
       <RootDispatch.Provider value={dispatch}>
+        <TopBar />
         <Sidebar
           activeTools={state.activeTools}
           userInfo={userInfo}

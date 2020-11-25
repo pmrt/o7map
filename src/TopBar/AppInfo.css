@@ -1,0 +1,11 @@
+.app-info {
+  padding: 10px;
+  text-align: right;
+}
+
+.app-info .version-disclaimer {
+  text-transform: uppercase;
+  font-size: 18px;
+  opacity: .15;
+  letter-spacing: 0.1em;
+}
