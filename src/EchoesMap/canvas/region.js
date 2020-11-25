@@ -133,7 +133,7 @@ export class Region {
       width: this.opts.rectSize,
       height: this.opts.rectSize,
       angle: 45,
-      strokeWidth: 40,
+      strokeWidth: 20,
       selectable: false,
       hasControls: false,
       hoverCursor: 'pointer',

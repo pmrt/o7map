@@ -186,7 +186,6 @@ export class System {
       width: this.opts.rectSize,
       height: this.opts.rectSize,
       angle: 45,
-      strokeWidth: 10,
       transparentCorners: false,
       selectable: false,
       hasControls: false,
