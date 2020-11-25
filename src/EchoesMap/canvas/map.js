@@ -21,6 +21,8 @@ import {
 } from "./consts";
 import { fabric } from "fabric";
 
+import theme from "./theme";
+
 function defer(fn) {
   setTimeout(fn, 0);
 }
@@ -40,6 +42,31 @@ function defer(fn) {
 * - mousedown:pointer. Triggered on mouse down. Contains canvas coordinates.
 */
 class Map extends EventEmitter {
+  init(fabricCanvas, logger, setIsLoading, opts) {
+    this.opts = {
+      fontSize: FONTSIZE,
+      rectSize: RECT_SIZE,
+      linkWidth: LINK_WIDTH,
+      ...opts,
+    };
+
+    this._fistRender = true;
+
+    this._db = null;
+    this._setupDatabase();
+    this._canvas = fabricCanvas;
+    this._maps = null;
+    this._regionCollection = new RegionCollection(fabricCanvas, this._db, this.opts);
+    this._sysCollection = new SystemCollection(fabricCanvas, this._db, this.opts);
+    this._logger = logger;
+    this._setIsLoading = setIsLoading;
+    this._currentMap = null;
+    this._currentRegionId = null;
+    this._mouseHoverSelection = [];
+
+    return this;
+  }
+
   _setupDatabase() {
     this._searchId = null;
     this._db = new Dexie(DATABASE_NAME);
@@ -178,6 +205,30 @@ class Map extends EventEmitter {
         break;
       default:
     }
+
+    this._mouseHoverSelection.push({
+      obj,
+      ogFill: obj.get("fill"),
+    });
+    obj.set({ fill: theme.active });
+    this._canvas.requestRenderAll();
+  }
+
+  _resetMouseHoverSelection() {
+    const sel = this._mouseHoverSelection;
+    for (let i=0, len = sel.length; i < len; i++) {
+      const objData = sel[i];
+      const { obj, ogFill } = objData;
+      obj.set({ fill: ogFill })
+    }
+    this._canvas.requestRenderAll();
+    this._mouseHoverSelection.length = 0;
+
+    return this;
+  }
+
+  _onObjMouseOut(opt) {
+    this._resetMouseHoverSelection();
   }
 
   _onObjMouseDown(opt) {
@@ -252,6 +303,14 @@ class Map extends EventEmitter {
       this._onObjMouseDown(opt);
     }, "rect");
 
+    this._regionCollection.on("mouseover", opt => {
+      this._onObjMouseOver(opt);
+    }, "rect");
+
+    this._regionCollection.on("mouseout", opt => {
+      this._onObjMouseOut(opt);
+    }, "rect");
+
     this._sysCollection.on("mousedown", opt => {
       this._onObjMouseDown(opt);
     }, "rect");
@@ -260,29 +319,9 @@ class Map extends EventEmitter {
       this._onObjMouseOver(opt);
     }, "rect");
 
-    return this;
-  }
-
-  init(fabricCanvas, logger, setIsLoading, opts) {
-    this.opts = {
-      fontSize: FONTSIZE,
-      rectSize: RECT_SIZE,
-      linkWidth: LINK_WIDTH,
-      ...opts,
-    };
-
-    this._fistRender = true;
-
-    this._db = null;
-    this._setupDatabase();
-    this._canvas = fabricCanvas;
-    this._maps = null;
-    this._regionCollection = new RegionCollection(fabricCanvas, this._db, this.opts);
-    this._sysCollection = new SystemCollection(fabricCanvas, this._db, this.opts);
-    this._logger = logger;
-    this._setIsLoading = setIsLoading;
-    this._currentMap = null;
-    this._currentRegionId = null;
+    this._sysCollection.on("mouseout", opt => {
+      this._onObjMouseOut(opt);
+    }, "rect");
 
     return this;
   }

@@ -1,6 +1,7 @@
 const darkEve = {
   primary: "#ffffff",
   secondary: "#c1fadb",
+  active: "rgb(191, 135, 255)",
   background: "#000000",
   lightGrey: "#a9a9a9",
   lightGreen: "#00ff4d",
