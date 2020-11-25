@@ -3,7 +3,12 @@ import "./Settings.css"
 function Settings() {
   return (
     <div className="settings panel">
-      <ul>
+     <ul>
+       <li>
+         <p>This section is a work-in-progress. What settings would you find useful being customizable? Send your feedback clicking the loudspeaker icon on the sidebar.</p>
+      </li>
+     </ul>
+      {/* <ul>
         <li>
           <p>Show region names</p>
           <input type="checkbox" />
@@ -16,7 +21,7 @@ function Settings() {
           <p>Show system security</p>
           <input type="checkbox" />
         </li>
-      </ul>
+      </ul>  */}
     </div>
   );
 }
