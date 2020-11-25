@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useReducer, useRef } from "react";
-import { FixedSizeList as List } from "react-window";
+import { VariableSizeList as List } from "react-window";
 
 import { addStdoutLine } from "../../actions"
 import { UnkownCommandError, UnkownParameterError } from "../../cmd";
@@ -14,14 +14,14 @@ function formatTime(ts) {
   });
 }
 
-const LineKey = (index, data) => index;
+const lineKey = (index, data) => index;
 
 const Line = ({ index, style, data }) => {
   const { ts, str, level } = data[index];
   return (
     <span className={`stdout-line ${level}`} style={style}>
       <small>{formatTime(ts)}</small>
-      {str.substr(0,68)}
+      <p>{str}</p>
     </span>
   )
 };
@@ -29,6 +29,8 @@ const Line = ({ index, style, data }) => {
 const ListStyle = {
   willChange: "auto"
 }
+
+const maxChars = 49;
 
 const StdoutList = ({ stdout }) => {
   let ref = useRef(null);
@@ -42,9 +44,14 @@ const StdoutList = ({ stdout }) => {
       className="stdout-list panel atlas-scroll"
       height={250}
       itemCount={stdout.length}
-      itemSize={20}
-      itemKey={LineKey}
+      itemKey={lineKey}
       itemData={stdout}
+      itemSize={(index) => {
+        const len = stdout[index].str.length;
+        const x = Math.ceil(len / maxChars) * 20;
+        console.log(x)
+        return x;
+      }}
       ref={ref}
       style={ListStyle}
     >
