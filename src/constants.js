@@ -14,8 +14,7 @@ export const Reports = {
   CAMP: 1,
 }
 
-const URL = "https://www.o7map.com";
-export const ENDPOINT = URL + "/api";
+export const ENDPOINT = "/api";
 export const STATIONS = ENDPOINT + "/stations";
 export const REPORT = ENDPOINT + "/report";
 export const REPORTS = ENDPOINT + "/reports";
