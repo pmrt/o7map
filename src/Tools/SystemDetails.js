@@ -296,7 +296,6 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
     try {
       resp = await sendReport(ID, selectedOpt.value, Reports.CAMP);
     } catch(err) {
-      console.log(err);
       dispatch(addStdoutLine([
         "ERR: " + err,
         "Report couldn't be sent"
@@ -309,6 +308,10 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
     }
 
     if (!resp) {
+      dispatch(addStdoutLine([
+        "ERR: empty response",
+        "Report couldn't be sent"
+      ], "error"));
       setActions({
         ...actions,
         info: { msg: "Report couldn't be sent", type: "error" },
@@ -319,7 +322,10 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
     try {
       resp = await resp.json();
     } catch(err) {
-      console.log(err);
+      dispatch(addStdoutLine([
+        "ERR: " + err,
+        "Report couldn't be sent"
+      ], "error"));
       setActions({
         ...actions,
         info: { msg: "Report couldn't be sent", type: "error" },
@@ -339,18 +345,30 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
         }
         return
       case 429:
+        dispatch(addStdoutLine([
+          "ERR: " + resp.message,
+          "Report couldn't be sent"
+        ], "error"));
         setActions({
           ...actions,
           info: { msg: resp.message, type: "error" },
         })
         return
       case 401:
+        dispatch(addStdoutLine([
+          "ERR: " + resp.message,
+          "Report couldn't be sent"
+        ], "error"));
         setActions({
           ...actions,
           info: { msg: resp.message, type: "error" },
         })
         return
       default:
+        dispatch(addStdoutLine([
+          "ERR: " + JSON.stringify(resp),
+          "Report couldn't be sent"
+        ], "error"));
         setActions({
           ...actions,
           info: { msg: "Report couldn't be sent", type: "error" },
