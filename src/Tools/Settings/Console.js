@@ -26,7 +26,11 @@ const StdoutList = ({ stdout }) => {
       className="stdout-list atlas-scroll"
       followOutput={true}
       item={index => {
-        const { ts, str, level } = stdout[index];
+        const row = stdout[index];
+        if (!row) {
+          return null;
+        }
+        const { ts, str, level } = row;
         return (
           <span className={`stdout-line ${level}`}>
             <small>{formatTime(ts)}</small>
