@@ -23,13 +23,15 @@ import logoutPng from "../img/logout.png";
 import defaultUserWebp from "../img/user.webp";
 import defaultUserPng from "../img/user.png";
 
-import { RootContext } from "../context";
+import { RootContext, UserContext } from "../context";
 import { setPanelVisibility } from "../actions";
 import { Tools } from "../constants";
 
 
-function Sidebar({ activeTools, userInfo }) {
-  const { dispatch } = useContext(RootContext);
+function Sidebar() {
+  const { store, dispatch } = useContext(RootContext);
+  const { userInfo } = useContext(UserContext);
+  const { activeTools } = store;
 
   const isSettingsVisible = activeTools[Tools.SETTINGS];
   const isSearchVisible = activeTools[Tools.SEARCH];

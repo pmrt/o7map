@@ -39,10 +39,7 @@ function App() {
       <UserContext.Provider value={{ userInfo }}>
         <RootContext.Provider value={{ store: state, dispatch }}>
           <TopBar />
-          <Sidebar
-            activeTools={state.activeTools}
-            userInfo={userInfo}
-          />
+          <Sidebar />
           <div className="content">
             <Tools
               activeTools={state.activeTools}
