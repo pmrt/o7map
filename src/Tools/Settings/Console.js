@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useReducer, useRef } from "react";
 import { VariableSizeList as List } from "react-window";
 
 import { addStdoutLine } from "../../actions"
-import { UnkownCommandError, UnkownParameterError } from "../../cmd";
+import { UnknownCommandError, UnknownParameterError } from "../../cmd";
 import { RootDispatch } from "../../context";
 import "./Console.css";
 
@@ -14,7 +14,10 @@ function formatTime(ts) {
   });
 }
 
-const lineKey = (index, data) => index;
+const lineKey = (index, data) => {
+  const item = data[index];
+  return item.id;
+}
 
 const Line = ({ index, style, data }) => {
   const { ts, str, level } = data[index];
@@ -48,9 +51,9 @@ const StdoutList = ({ stdout }) => {
       itemData={stdout}
       itemSize={(index) => {
         const len = stdout[index].str.length;
-        const x = Math.ceil(len / maxChars) * 20;
-        console.log(x)
-        return x;
+        const h = Math.ceil(len / maxChars) * 20
+        console.log(stdout[index])
+        return h;
       }}
       ref={ref}
       style={ListStyle}
@@ -116,10 +119,10 @@ function Console({ stdout, cmdRef }) {
 
           cmd.parseAndExec(val);
         } catch(err) {
-          if (err instanceof UnkownCommandError) {
+          if (err instanceof UnknownCommandError) {
             log(`ERR: ${err.message}`, "error")
           }
-          if (err instanceof UnkownParameterError) {
+          if (err instanceof UnknownParameterError) {
             log(`ERR: ${err.message}`, "error")
           }
           return;

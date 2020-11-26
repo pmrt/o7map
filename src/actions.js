@@ -13,6 +13,16 @@ export const ActionTypes = {
   RESET_STATE: "reset_state",
 }
 
+function id(len) {
+  let r = "";
+  const allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charsLen = allChars.length;
+  for (let i = 0; i < len; i++) {
+     r += allChars.charAt(Math.floor(Math.random() * charsLen));
+  }
+  return r;
+}
+
 export function addStdoutLine(strOrArray, level="info") {
   if (!Array.isArray(strOrArray)) {
     strOrArray = [strOrArray];
@@ -20,10 +30,12 @@ export function addStdoutLine(strOrArray, level="info") {
 
   let lines = [];
   for (let str of strOrArray) {
+    const now = Date.now();
     lines.push({
       str,
       level,
-      ts: Date.now(),
+      ts: now,
+      id: now + id(6),
     })
   }
   return {
