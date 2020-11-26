@@ -1,5 +1,5 @@
 
-import { UnkownParameterError } from "./index";
+import { UnknownParameterError } from "./index";
 import { addStdoutLine, resetState, setIsDevMode, setFontSize as setFontSizeAction } from "../actions";
 
 function setFontSize(ctx, args) {
@@ -32,7 +32,7 @@ function set(ctx, cmd) {
   const propName = cmd.shift();
   const handler = props[propName];
   if (!handler) {
-    throw new UnkownParameterError(`Cannot set unkown parameter: ${propName}`);
+    throw new UnknownParameterError(`Cannot set unknown parameter: ${propName}`);
   }
 
   handler.call(this, ctx, cmd);

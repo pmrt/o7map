@@ -2,6 +2,7 @@ import set from "./set";
 import help from "./help";
 import map from "./map";
 import print from "./print";
+import send from "./send";
 import { addStdoutLine } from "../actions";
 
 export class CommandError extends Error {
@@ -12,17 +13,17 @@ export class CommandError extends Error {
   }
 }
 
-export class UnkownCommandError extends CommandError {
+export class UnknownCommandError extends CommandError {
   constructor(message) {
     super(message);
-    this.code = "UNKOWNCMD";
+    this.code = "UNKNOWNCMD";
   }
 }
 
-export class UnkownParameterError extends CommandError {
+export class UnknownParameterError extends CommandError {
   constructor(message) {
     super(message);
-    this.code = "UNKOWNPARAM";
+    this.code = "UNKNOWNPARAM";
   }
 }
 
@@ -30,6 +31,7 @@ const commands = {
   "set": set,
   "help": help,
   "map": map,
+  "send": send,
   "print": print,
 }
 
@@ -58,7 +60,7 @@ class Commander {
     const cmdName = cmd.shift();
     const handler = commands[cmdName];
     if (!handler) {
-      throw new UnkownCommandError(`Command not found: ${cmdName}`);
+      throw new UnknownCommandError(`Command not found: ${cmdName}`);
     }
 
     const ctx = {

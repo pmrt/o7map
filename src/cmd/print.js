@@ -1,4 +1,4 @@
-import { CommandError, UnkownParameterError } from ".";
+import { CommandError, UnknownParameterError } from ".";
 import { addStdoutLine } from "../actions";
 
 function db(ctx, args) {
@@ -23,7 +23,7 @@ function print(ctx, cmd) {
   const paramName = cmd.shift();
   const handler = params[paramName];
   if (!handler) {
-    throw new UnkownParameterError(`Print: unkown parameter: ${paramName}`);
+    throw new UnknownParameterError(`Print: unknown parameter: ${paramName}`);
   }
 
   handler.call(this, ctx, cmd);

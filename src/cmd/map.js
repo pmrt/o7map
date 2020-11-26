@@ -1,4 +1,4 @@
-import { CommandError, UnkownParameterError } from ".";
+import { CommandError, UnknownParameterError } from ".";
 import { addStdoutLine } from "../actions";
 import { MapType } from "../EchoesMap/canvas/consts";
 
@@ -17,7 +17,7 @@ function render(ctx, args) {
       map.drawUniverse();
       break;
     default:
-      throw new UnkownParameterError(`MapType not found: '${mapType}'`);
+      throw new UnknownParameterError(`MapType not found: '${mapType}'`);
   }
 }
 
@@ -44,7 +44,7 @@ function map(ctx, cmd) {
   const paramName = cmd.shift();
   const handler = params[paramName];
   if (!handler) {
-    throw new UnkownParameterError(`Map: unkown parameter: ${paramName}`);
+    throw new UnknownParameterError(`Map: unknown parameter: ${paramName}`);
   }
 
   handler.call(this, ctx, cmd);

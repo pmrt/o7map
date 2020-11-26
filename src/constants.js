@@ -18,5 +18,7 @@ export const ENDPOINT = "/api";
 export const STATIONS = ENDPOINT + "/stations";
 export const REPORT = ENDPOINT + "/report";
 export const REPORTS = ENDPOINT + "/reports";
+export const FEEDBACK = ENDPOINT + "/send/feedback";
+export const ERROR = ENDPOINT + "/send/error";
 
 export const DC_AVATAR_ENDPOINT = "https://media.discordapp.net/avatars";

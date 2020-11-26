@@ -1,4 +1,4 @@
-import { CommandError, UnkownParameterError } from ".";
+import { CommandError, UnknownParameterError } from ".";
 
 const { MapType } = require("../EchoesMap/canvas/consts");
 
@@ -17,7 +17,7 @@ function render(ctx, cmd) {
       map.drawUniverse();
       break;
     default:
-      throw new UnkownParameterError(`MapType not found: '${mapType}'`);
+      throw new UnknownParameterError(`MapType not found: '${mapType}'`);
   }
 
 }
