@@ -1,7 +1,7 @@
 import { useReducer, useRef } from "react";
 
 import './App.css';
-import { RootContext } from "./context";
+import { RootContext, UserContext } from "./context";
 import rootReducer, { getInitialState } from "./reducers";
 import { addStdoutLine } from "./actions";
 
@@ -36,43 +36,45 @@ function App() {
 
   return (
     <div className="App">
-      <RootContext.Provider value={{ store: state, dispatch }}>
-        <TopBar />
-        <Sidebar
-          activeTools={state.activeTools}
-          userInfo={userInfo}
-        />
-        <div className="content">
-          <Tools
+      <UserContext.Provider value={{ userInfo }}>
+        <RootContext.Provider value={{ store: state, dispatch }}>
+          <TopBar />
+          <Sidebar
             activeTools={state.activeTools}
-            stdout={state.stdout}
-            activeTabsNames={state.activeTabsNames}
-            cmdRef={cmdRef}
-            mapRef={mapRef}
-            forceReportUpdateRef={forceReportUpdateRef}
-            currentMap={state.currentMap}
-            isDevMode={state.isDevMode}
-            systemDetails={state.details.system}
             userInfo={userInfo}
           />
-          <EchoesMap
-            isDevMode={state.isDevMode}
-            isLoading={state.isLoading}
-            mapRef={mapRef}
-            forceReportUpdateRef={forceReportUpdateRef}
-            fontSize={state.fontSize}
-            currentMap={state.currentMap}
-          />
-          <MapInfo
-            currentMap={state.currentMap}
-            isLoading={state.isLoading}
-            isDevMode={state.isDevMode}
-            isReceivingReports={state.isReceivingReports}
-            clickedCoords={state.clickedCoords}
-            cmdRef={cmdRef}
-          />
-        </div>
-      </RootContext.Provider>
+          <div className="content">
+            <Tools
+              activeTools={state.activeTools}
+              stdout={state.stdout}
+              activeTabsNames={state.activeTabsNames}
+              cmdRef={cmdRef}
+              mapRef={mapRef}
+              forceReportUpdateRef={forceReportUpdateRef}
+              currentMap={state.currentMap}
+              isDevMode={state.isDevMode}
+              systemDetails={state.details.system}
+              userInfo={userInfo}
+            />
+            <EchoesMap
+              isDevMode={state.isDevMode}
+              isLoading={state.isLoading}
+              mapRef={mapRef}
+              forceReportUpdateRef={forceReportUpdateRef}
+              fontSize={state.fontSize}
+              currentMap={state.currentMap}
+            />
+            <MapInfo
+              currentMap={state.currentMap}
+              isLoading={state.isLoading}
+              isDevMode={state.isDevMode}
+              isReceivingReports={state.isReceivingReports}
+              clickedCoords={state.clickedCoords}
+              cmdRef={cmdRef}
+            />
+          </div>
+        </RootContext.Provider>
+      </UserContext.Provider>
     </div>
   );
 }
