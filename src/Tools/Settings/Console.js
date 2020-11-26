@@ -1,5 +1,5 @@
-import { useCallback, useContext, useEffect, useReducer, useRef } from "react";
-import { VariableSizeList as List } from "react-window";
+import { useCallback, useContext, useReducer } from "react";
+import { Virtuoso as List } from "react-virtuoso";
 
 import { addStdoutLine } from "../../actions"
 import { UnknownCommandError, UnknownParameterError } from "../../cmd";
@@ -14,57 +14,27 @@ function formatTime(ts) {
   });
 }
 
-const lineKey = (index, data) => {
-  const item = data[index];
-  return item.id;
+const listStyle = {
+  width: '100%',
+  height: '250px',
 }
-
-const Line = ({ index, style, data }) => {
-  const { ts, str, level } = data[index];
-  return (
-    <span className={`stdout-line ${level}`} style={style}>
-      <small>{formatTime(ts)}</small>
-      <p>{str}</p>
-    </span>
-  )
-};
-
-const ListStyle = {
-  willChange: "auto"
-}
-
-const maxChars = 49;
-
 const StdoutList = ({ stdout }) => {
-  let ref = useRef(null);
-
-  useEffect(() => {
-    ref.current.scrollToItem(stdout.length - 1)
-  })
-
   return (
     <List
-      className="stdout-list panel atlas-scroll"
-      height={250}
-      itemCount={stdout.length}
-      itemKey={lineKey}
-      itemData={stdout}
-      itemSize={(index) => {
-        const len = stdout[index].str.length;
-        const h = Math.ceil(len / maxChars) * 20
-        console.log(stdout[index])
-        return h;
+      style={listStyle}
+      totalCount={stdout.length}
+      className="stdout-list atlas-scroll"
+      followOutput={true}
+      item={index => {
+        const { ts, str, level } = stdout[index];
+        return (
+          <span className={`stdout-line ${level}`}>
+            <small>{formatTime(ts)}</small>
+            <p>{str}</p>
+          </span>
+        )
       }}
-      ref={ref}
-      style={ListStyle}
-    >
-      {({ index, style, data}) =>
-        <Line
-          index={index}
-          style={style}
-          data={data}
-        />}
-    </List>
+    />
   )
 }
 

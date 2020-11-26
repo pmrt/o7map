@@ -1,6 +1,7 @@
 .stdout-line {
   color: var(--theme-primary);
   display: flex;
+  padding: 2px;
 }
 
 .stdout-line.error {
@@ -35,6 +36,16 @@
   color: #fff;
 }
 
+.console {
+  padding: 10px 10px 0 10px;
+}
+
+.console .input-wrapper {
+  overflow: hidden;
+  position: relative;
+  margin-top: 10px;
+}
+
 .console input {
   position: relative;
   width: 100%;
@@ -59,12 +70,6 @@
 
 .console input:focus + .input-placeholder:after {
   transform: translateX(120px);
-}
-
-.console .input-wrapper {
-  overflow: hidden;
-  position: relative;
-  margin: 0 15px;
 }
 
 /*
