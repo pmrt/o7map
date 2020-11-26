@@ -450,7 +450,7 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
   )
 }
 
-function SystemDetailsPanel({ isDevMode = false, system, mapRef, forceReportUpdateRef, userInfo }) {
+function SystemDetailsPanel({ isDevMode = false, system, mapRef, isVisible, forceReportUpdateRef, userInfo }) {
   const dispatch = useContext(RootDispatch);
 
   if (!system) {
@@ -472,6 +472,7 @@ function SystemDetailsPanel({ isDevMode = false, system, mapRef, forceReportUpda
     tabTitles={{ "System Details": "system-details"}}
     onCloseClick={onCloseClick}
     customParentClassNames={"panels system-details-panel"}
+    isVisible={isVisible}
   >
     <SystemDetails
       tabKey="system-details"

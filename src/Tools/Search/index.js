@@ -9,7 +9,7 @@ import Panel from "../../Panel";
 import Search from "./Search";
 
 
-function SearchPanel({ mapRef, currentMap, forceReportUpdateRef }) {
+function SearchPanel({ mapRef, currentMap, forceReportUpdateRef, isVisible }) {
   const dispatch = useContext(RootDispatch);
 
   const onCloseClick = () => {
@@ -22,6 +22,7 @@ function SearchPanel({ mapRef, currentMap, forceReportUpdateRef }) {
       tabTitles={{ "Search": "search" }}
       onCloseClick={onCloseClick}
       customTitlebarClassNames={"titlebar dark-titlebar"}
+      isVisible={isVisible}
     >
       <Search
       tabKey="search"

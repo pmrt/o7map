@@ -66,6 +66,7 @@ function Panel({
   onTabClick = null,
   onCloseClick = null,
   isDraggable = true,
+  isVisible = false,
   tabTitles,
   children,
   CustomTabs = null,
@@ -95,32 +96,39 @@ function Panel({
     Comp = children;
   }
 
-  const onTabClicked = (title) => {
+  const onTabClicked = title => {
     if (!!onTabClick) {
       onTabClick(title);
     }
   };
 
   const panelRef = useRef(null);
-  const onMouseDown = () => {
+
+  // resetPanelIndex resets all panel index and sets this panel
+  // with the higher zIndex
+  const resetPanelsIndex = () => {
     const panels = document.getElementsByClassName("panels");
     for (let panel of panels) {
       panel.style.removeProperty("z-index");
     }
-
     panelRef.current.style.zIndex = "100";
   }
 
   useEffect(() => {
-    // Bring to front on initial render
-    panelRef.current.style.zIndex = "100";
-  }, [])
+    if (isVisible) {
+      resetPanelsIndex();
+    }
+  }, [isVisible])
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <Wrapper
       isDraggable={isDraggable}
       customDraggableClassName={customDraggableClassName}
-      onMouseDown={onMouseDown}
+      onMouseDown={resetPanelsIndex}
       defaultPosition={defaultPosition}
     >
       <div className={customParentClassNames} ref={panelRef}>

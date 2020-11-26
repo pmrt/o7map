@@ -21,27 +21,27 @@ function Tools({
 }) {
   return (
     <Fragment>
-      {!!activeTools[ToolTypes.SETTINGS] &&
       <SettingsPanel
         stdout={stdout}
         activeTab={activeTabsNames[ToolTypes.SETTINGS]}
         cmdRef={cmdRef}
-      />}
+        isVisible={!!activeTools[ToolTypes.SETTINGS]}
+      />
 
-      {!!activeTools[ToolTypes.SEARCH] &&
       <SearchPanel
         mapRef={mapRef}
         currentMap={currentMap}
-      />}
+        isVisible={!!activeTools[ToolTypes.SEARCH]}
+      />
 
-      {!!activeTools[ToolTypes.SYSTEM_DETAILS] &&
       <SystemDetailsPanel
         isDevMode={isDevMode}
         system={systemDetails}
         mapRef={mapRef}
         forceReportUpdateRef={forceReportUpdateRef}
         userInfo={userInfo}
-      />}
+        isVisible={!!activeTools[ToolTypes.SYSTEM_DETAILS]}
+      />
     </Fragment>
   )
 }
