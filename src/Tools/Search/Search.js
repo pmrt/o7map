@@ -466,6 +466,7 @@ function Search({ mapRef, currentMap }) {
           customCloseBtnClassName={"close-btn2"}
           customTitlebarClassNames={"titlebar2"}
           CustomTabs={SearchTabs}
+          isVisible={true}
           tabTitles={{
             "All Systems": [SearchTabsKeys.SYSTEMS, lenSys],
             "All Regions": [SearchTabsKeys.REGIONS, lenRg],
