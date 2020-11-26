@@ -5,21 +5,18 @@ import theme from "./canvas/theme";
 import "./Map.css";
 import useFabric from "./useFabric";
 import { RootContext } from "../context";
-import { addStdoutLine, setClickedCoords, setCurrentMap, setIsLoading, setIsReceivingReports, setSystemDetailsAndOpen } from "../actions";
+import { addStdoutLine, setClickedCoords, setCurrentMap, setSystemDetailsAndOpen, setIsLoading } from "../actions";
 import useReport from "./useReport";
 
 const HEIGHT_MARGIN = 0;
 const WIDTH_MARGIN = 40;
 
-function EchoesMap({fontSize, mapRef, isDevMode, isLoading, currentMap, forceReportUpdateRef }) {
-  const { dispatch } = useContext(RootContext);
+function EchoesMap() {
+  const { store, dispatch, mapRef } = useContext(RootContext);
+  const { isDevMode, isLoading, currentMap, fontSize } = store;
+
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const setIsReceiving = useCallback((isReceiving) => {
-    dispatch(setIsReceivingReports(isReceiving));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -138,7 +135,7 @@ function EchoesMap({fontSize, mapRef, isDevMode, isLoading, currentMap, forceRep
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useReport(currentMap.mapID, log, setIsReceiving, mapRef, forceReportUpdateRef, 30e3);
+  useReport(currentMap.mapID, 30e3);
 
   useEffect(() => {
     const map = mapRef.current;

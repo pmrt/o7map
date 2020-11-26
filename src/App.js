@@ -42,14 +42,7 @@ function App() {
           <Sidebar />
           <div className="content">
             <Tools />
-            <EchoesMap
-              isDevMode={state.isDevMode}
-              isLoading={state.isLoading}
-              mapRef={mapRef}
-              forceReportUpdateRef={forceReportUpdateRef}
-              fontSize={state.fontSize}
-              currentMap={state.currentMap}
-            />
+            <EchoesMap />
             <MapInfo
               currentMap={state.currentMap}
               isLoading={state.isLoading}
