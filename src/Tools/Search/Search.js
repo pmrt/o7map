@@ -286,8 +286,8 @@ const searchReducer = (state, action) => {
   }
 }
 
-function Search({ mapRef, currentMap }) {
-  const { dispatch: rootDispatch } = useContext(RootContext);
+function Search() {
+  const { dispatch: rootDispatch, mapRef } = useContext(RootContext);
   const [state, dispatch] = useReducer(searchReducer, initialState);
 
   const inputRef = useRef(null);

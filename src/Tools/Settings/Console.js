@@ -66,10 +66,12 @@ function commandReducer(state, action) {
   }
 }
 
-function Console({ stdout, cmdRef }) {
+function Console() {
   const [cmdState, dispatchCmd] = useReducer(commandReducer, initialCommandState);
 
-  const { dispatch } = useContext(RootContext);
+  const { store, dispatch, cmdRef } = useContext(RootContext);
+  const { stdout } = store;
+
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
   // eslint-disable-next-line react-hooks/exhaustive-deps

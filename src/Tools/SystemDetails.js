@@ -3,7 +3,7 @@ import Select from 'react-select';
 
 import { addStdoutLine, setPanelVisibility } from '../actions';
 import { REPORT, Reports, STATIONS, Tools } from '../constants';
-import { RootContext } from '../context';
+import { RootContext, UserContext } from '../context';
 
 import Panel from '../Panel';
 
@@ -245,7 +245,12 @@ const ActionButton = ({ loggedIn, onClick, disabled, children }) => {
   )
 }
 
-function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef, userInfo }) {
+function SystemDetails() {
+  const { store, dispatch, mapRef, forceReportUpdateRef } = useContext(RootContext);
+  const { userInfo } = useContext(UserContext);
+  const { isDevMode, details } = store;
+  const { system } = details;
+
   const {
     ID,
     rawName,
@@ -258,7 +263,6 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
     planets,
   } = system;
 
-  const { dispatch } = useContext(RootContext);
   const [ actions, setActions ] = useState(initialActions)
   const { info, selectedOpt } = actions;
 
@@ -450,8 +454,10 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
   )
 }
 
-function SystemDetailsPanel({ isDevMode = false, system, mapRef, isVisible, forceReportUpdateRef, userInfo }) {
-  const { dispatch } = useContext(RootContext);
+function SystemDetailsPanel({ isVisible }) {
+  const { store, dispatch, mapRef } = useContext(RootContext);
+  const { details } = store;
+  const { system } = details;
 
   if (!system) {
     return null;
@@ -476,12 +482,7 @@ function SystemDetailsPanel({ isDevMode = false, system, mapRef, isVisible, forc
   >
     <SystemDetails
       tabKey="system-details"
-      isDevMode={isDevMode}
-      system={system}
-      mapRef={mapRef}
-      forceReportUpdateRef={forceReportUpdateRef}
-      userInfo={userInfo}
-      />
+    />
   </Panel>
   )
 }

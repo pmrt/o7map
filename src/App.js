@@ -37,22 +37,11 @@ function App() {
   return (
     <div className="App">
       <UserContext.Provider value={{ userInfo }}>
-        <RootContext.Provider value={{ store: state, dispatch }}>
+        <RootContext.Provider value={{ store: state, dispatch, cmdRef, mapRef, forceReportUpdateRef }}>
           <TopBar />
           <Sidebar />
           <div className="content">
-            <Tools
-              activeTools={state.activeTools}
-              stdout={state.stdout}
-              activeTabsNames={state.activeTabsNames}
-              cmdRef={cmdRef}
-              mapRef={mapRef}
-              forceReportUpdateRef={forceReportUpdateRef}
-              currentMap={state.currentMap}
-              isDevMode={state.isDevMode}
-              systemDetails={state.details.system}
-              userInfo={userInfo}
-            />
+            <Tools />
             <EchoesMap
               isDevMode={state.isDevMode}
               isLoading={state.isLoading}
