@@ -3,20 +3,11 @@ import Mapbar from "./Mapbar";
 
 import "./MapInfo.css";
 
-function MapInfo({ currentMap, isLoading, cmdRef, isDevMode, clickedCoords, isReceivingReports }) {
+function MapInfo() {
   return (
     <div className="map-info">
-      <Mapbar
-        cmdRef={cmdRef}
-        currentMap={currentMap}
-        isReceivingReports={isReceivingReports}
-      />
-      <Contextual
-        clickedCoords={clickedCoords}
-        isDevMode={isDevMode}
-        isLoading={isLoading}
-        currentMap={currentMap}
-      />
+      <Mapbar />
+      <Contextual />
     </div>
   )
 }

@@ -1,6 +1,10 @@
+import { useContext } from "react";
+import { RootContext } from "../context";
 import "./Contextual.css";
 
-function Contextual({ currentMap, isLoading, isDevMode, clickedCoords }) {
+function Contextual() {
+  const { store } = useContext(RootContext);
+  const { currentMap, isLoading, isDevMode, clickedCoords} = store;
   const { mapID, mapName, mapSec } = currentMap;
 
   const Loader = isLoading

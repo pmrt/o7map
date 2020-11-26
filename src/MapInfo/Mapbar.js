@@ -1,11 +1,15 @@
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 
 import centerWebp from "../img/center.webp";
 import centerPng from "../img/center.png";
 
 import "./Mapbar.css";
+import { RootContext } from "../context";
 
-function Mapbar({ cmdRef, currentMap, isReceivingReports }) {
+function Mapbar() {
+  const { cmdRef, store } = useContext(RootContext);
+  const { currentMap, isReceivingReports } = store;
+
   const onUniverseClick = useCallback(() => {
     const cmd = cmdRef.current;
     if (!cmd) {

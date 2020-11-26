@@ -43,14 +43,7 @@ function App() {
           <div className="content">
             <Tools />
             <EchoesMap />
-            <MapInfo
-              currentMap={state.currentMap}
-              isLoading={state.isLoading}
-              isDevMode={state.isDevMode}
-              isReceivingReports={state.isReceivingReports}
-              clickedCoords={state.clickedCoords}
-              cmdRef={cmdRef}
-            />
+            <MapInfo />
           </div>
         </RootContext.Provider>
       </UserContext.Provider>
