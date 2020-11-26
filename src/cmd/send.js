@@ -1,7 +1,7 @@
 import { addStdoutLine } from "../actions";
 import { FEEDBACK, ERROR, ROOT_STATE_STORAGE_KEY } from "../constants";
 
-const { UnknownParameterError } = require(".");
+import { UnknownParameterError } from "./index";
 
 async function sendFeedback(ctx, args) {
   const { dispatcher } = ctx;
