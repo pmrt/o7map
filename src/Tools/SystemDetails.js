@@ -223,7 +223,6 @@ const ActionButton = ({ loggedIn, onClick, disabled, children }) => {
     return (
       <a
       class="login-btn"
-      onClick={onClick}
       href="/auth/discord"
       rel="nofollow"
       >
