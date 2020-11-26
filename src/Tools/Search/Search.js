@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useMemo, useReducer, useRef } from "react";
 
 import { addStdoutLine, setSystemDetailsAndOpen } from "../../actions";
-import { RootDispatch } from "../../context";
+import { RootContext } from "../../context";
 import { MapType } from "../../EchoesMap/canvas/consts";
 import { debounce } from "../../EchoesMap/helpers";
 
@@ -287,7 +287,7 @@ const searchReducer = (state, action) => {
 }
 
 function Search({ mapRef, currentMap }) {
-  const rootDispatch = useContext(RootDispatch);
+  const { dispatch: rootDispatch } = useContext(RootContext);
   const [state, dispatch] = useReducer(searchReducer, initialState);
 
   const inputRef = useRef(null);

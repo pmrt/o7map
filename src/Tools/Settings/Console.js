@@ -3,7 +3,7 @@ import { Virtuoso as List } from "react-virtuoso";
 
 import { addStdoutLine } from "../../actions"
 import { UnknownCommandError, UnknownParameterError } from "../../cmd";
-import { RootDispatch } from "../../context";
+import { RootContext } from "../../context";
 import "./Console.css";
 
 function formatTime(ts) {
@@ -69,7 +69,7 @@ function commandReducer(state, action) {
 function Console({ stdout, cmdRef }) {
   const [cmdState, dispatchCmd] = useReducer(commandReducer, initialCommandState);
 
-  const dispatch = useContext(RootDispatch);
+  const { dispatch } = useContext(RootContext);
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
   // eslint-disable-next-line react-hooks/exhaustive-deps

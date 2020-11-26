@@ -3,14 +3,14 @@ import { useContext } from "react";
 import { setPanelVisibility } from "../../actions";
 import { Tools } from "../../constants";
 
-import { RootDispatch } from "../../context";
+import { RootContext } from "../../context";
 
 import Panel from "../../Panel";
 import Search from "./Search";
 
 
 function SearchPanel({ mapRef, currentMap, forceReportUpdateRef, isVisible }) {
-  const dispatch = useContext(RootDispatch);
+  const { dispatch } = useContext(RootContext);
 
   const onCloseClick = () => {
     dispatch(setPanelVisibility(Tools.SEARCH, 0));

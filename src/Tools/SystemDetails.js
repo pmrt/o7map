@@ -3,7 +3,7 @@ import Select from 'react-select';
 
 import { addStdoutLine, setPanelVisibility } from '../actions';
 import { REPORT, Reports, STATIONS, Tools } from '../constants';
-import { RootDispatch } from '../context';
+import { RootContext } from '../context';
 
 import Panel from '../Panel';
 
@@ -258,7 +258,7 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
     planets,
   } = system;
 
-  const dispatch = useContext(RootDispatch);
+  const { dispatch } = useContext(RootContext);
   const [ actions, setActions ] = useState(initialActions)
   const { info, selectedOpt } = actions;
 
@@ -451,7 +451,7 @@ function SystemDetails({ isDevMode = false, system, mapRef, forceReportUpdateRef
 }
 
 function SystemDetailsPanel({ isDevMode = false, system, mapRef, isVisible, forceReportUpdateRef, userInfo }) {
-  const dispatch = useContext(RootDispatch);
+  const { dispatch } = useContext(RootContext);
 
   if (!system) {
     return null;

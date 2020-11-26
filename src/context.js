@@ -1,3 +1,3 @@
 import { createContext } from "react";
 
-export const RootDispatch = createContext(null);
+export const RootContext = createContext(null);

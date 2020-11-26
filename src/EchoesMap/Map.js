@@ -4,7 +4,7 @@ import { debounce } from "./helpers";
 import theme from "./canvas/theme";
 import "./Map.css";
 import useFabric from "./useFabric";
-import { RootDispatch } from "../context";
+import { RootContext } from "../context";
 import { addStdoutLine, setClickedCoords, setCurrentMap, setIsLoading, setIsReceivingReports, setSystemDetailsAndOpen } from "../actions";
 import useReport from "./useReport";
 
@@ -12,7 +12,7 @@ const HEIGHT_MARGIN = 0;
 const WIDTH_MARGIN = 40;
 
 function EchoesMap({fontSize, mapRef, isDevMode, isLoading, currentMap, forceReportUpdateRef }) {
-  const dispatch = useContext(RootDispatch);
+  const { dispatch } = useContext(RootContext);
   const log = useCallback((str, lvl="info") => {
     dispatch(addStdoutLine(str, lvl));
   // eslint-disable-next-line react-hooks/exhaustive-deps

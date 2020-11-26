@@ -1,7 +1,7 @@
 import { useReducer, useRef } from "react";
 
 import './App.css';
-import { RootDispatch } from "./context";
+import { RootContext } from "./context";
 import rootReducer, { getInitialState } from "./reducers";
 import { addStdoutLine } from "./actions";
 
@@ -36,7 +36,7 @@ function App() {
 
   return (
     <div className="App">
-      <RootDispatch.Provider value={dispatch}>
+      <RootContext.Provider value={{ store: state, dispatch }}>
         <TopBar />
         <Sidebar
           activeTools={state.activeTools}
@@ -72,7 +72,7 @@ function App() {
             cmdRef={cmdRef}
           />
         </div>
-      </RootDispatch.Provider>
+      </RootContext.Provider>
     </div>
   );
 }
