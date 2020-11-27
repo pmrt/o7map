@@ -3,24 +3,6 @@
   height: auto;
 }
 
-.system-details .login-btn img {
-  width: 21px;
-  position: absolute;
-  left: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.system-details .login-btn {
-  user-select: none;
-  position: relative;
-  color: #fff;
-  background: #7289DA;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
 .system-details .login-btn:hover {
   background:#FFFFFF;
   color: #000;

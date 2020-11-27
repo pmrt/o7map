@@ -45,3 +45,44 @@
   width: 24px;
   border-radius: 50%;
 }
+
+.login-btn-wrapper {
+  position: relative;
+}
+
+.login-panel {
+  position: absolute;
+  top: -120px;
+  padding: 10px 15px;
+  min-width: 20vw;
+  left: 50px;
+  background: var(--theme-background-grey);
+}
+
+.login-panel h1 {
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 5px 0px;
+}
+
+.login-intro {
+  padding: 5px 0px 15px;
+  position: relative;
+  border: 1px dashed var(--theme-primary)
+}
+
+.login-panel p {
+  text-align: left;
+}
+
+/* .login-panel p:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  transform: translateY(5px);
+  border: 8px solid var(--theme-primary);
+  border-top: 4px solid  transparent;
+  border-bottom: 4px solid transparent;
+  border-right: 4px solid transparent;
+} */

@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 
 import "./Sidebar.css"
 
@@ -27,6 +27,60 @@ import { RootContext, UserContext } from "../context";
 import { setPanelVisibility } from "../actions";
 import { Tools } from "../constants";
 
+import dcLogo from "../img/dc_logo_white.png";
+
+const LoginPanel = ({ isVisible, userInfo }) => {
+  if (!isVisible) {
+    return null;
+  }
+  return <div className="login-panel">
+    <h1>Login</h1>
+    <div className="login-intro">
+      <p>Login with your discord account to be able to send reports and much more</p>
+    </div>
+    <a
+    className="login-btn"
+    href="/auth/discord"
+    rel="nofollow"
+    >
+      <img
+      alt="Discord logo"
+      src={dcLogo}
+      ></img>
+      Login with Discord
+    </a>
+  </div>
+
+}
+
+const LoginButton = ({ userInfo }) => {
+  const [isPanelVisible, setPanelVisible] = useState(0);
+
+  const onLoginButtonClick = () => {
+    setPanelVisible(!isPanelVisible);
+  }
+
+  return (
+    <div className="login-btn-wrapper">
+      <div
+      className={`sidebar-icon login-panel-btn`}
+      alt={!!userInfo ? "User Profile" : "Log in"}
+      onClick={onLoginButtonClick}
+      >
+        <img
+        alt={!!userInfo ? "User Avatar" : "Default avatar"}
+        src={!!userInfo
+          ? userInfo.avatarURL || defaultUserWebp
+          : defaultUserWebp
+        }
+        onError={(e) => { e.target.onerror = null; e.target.src = defaultUserPng }}
+        >
+        </img>
+      </div>
+      <LoginPanel isVisible={isPanelVisible} userInfo={userInfo}/>
+    </div>
+  )
+}
 
 function Sidebar() {
   const { store, dispatch } = useContext(RootContext);
@@ -35,7 +89,6 @@ function Sidebar() {
 
   const isSettingsVisible = activeTools[Tools.SETTINGS];
   const isSearchVisible = activeTools[Tools.SEARCH];
-
   const onSettingsClick = useCallback(() => {
     dispatch(setPanelVisibility(Tools.SETTINGS, !isSettingsVisible))
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,21 +150,8 @@ function Sidebar() {
             >
             </img>
         </a>
-        <div
-          className={`sidebar-icon login-btn`}
-          alt={!!userInfo ? "User Profile" : "Log in"}
-          >
-            <img
-            alt={!!userInfo ? "User Avatar" : "Default avatar"}
-            src={!!userInfo
-              ? userInfo.avatarURL || defaultUserWebp
-              : defaultUserWebp
-            }
-            onError={(e) => { e.target.onerror = null; e.target.src = defaultUserPng }}
-            >
-            </img>
-          </div>
-        </div>
+        <LoginButton userInfo={userInfo} />
+      </div>
     </div>
   )
 }
