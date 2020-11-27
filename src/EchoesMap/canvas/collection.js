@@ -84,6 +84,12 @@ class MapCollection {
       return;
     }
 
+    // Ensure we drop all old events before flushing new ones, just in case
+    // clear() isn't called for some reason. This will help avoiding
+    // memory leak issues
+    this._objsWithEvents.length = 0;
+    this._group.off();
+
     const queue = this._eventQueue;
     for (let event of queue) {
       const { eventName, handler, objType } = event;
@@ -118,9 +124,11 @@ class MapCollection {
       for (let obj of objs) {
         obj.off();
       }
+      this._objsWithEvents.length = 0;
       this._group.off();
       this._group.destroy();
       this._group = null;
+      this.clearReportObjs();
     }
 
     return this;
