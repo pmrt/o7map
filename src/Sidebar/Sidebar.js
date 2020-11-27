@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { Fragment, useCallback, useContext, useState } from "react";
 
 import "./Sidebar.css"
 
@@ -20,8 +20,11 @@ import settingsPng from "../img/settings.png";
 import logoutWebp from "../img/logout.webp";
 import logoutPng from "../img/logout.png";
 
-import defaultUserWebp from "../img/user.webp";
-import defaultUserPng from "../img/user.png";
+import userWebp from "../img/user.webp";
+import userPng from "../img/user.png";
+
+import defaultUserWebp from "../img/dc_default_avatar.webp";
+import defaultUserPng from "../img/dc_default_avatar.png";
 
 import { RootContext, UserContext } from "../context";
 import { setPanelVisibility } from "../actions";
@@ -33,22 +36,50 @@ const LoginPanel = ({ isVisible, userInfo }) => {
   if (!isVisible) {
     return null;
   }
+
+  const Panel =
+    !!userInfo
+      ? (
+        <Fragment>
+          <h1 className="atlas-title">Profile</h1>
+          <p>Welcome {userInfo.tag.substr(0, userInfo.tag.length-5)}</p>
+          <a
+            className="login-btn"
+            alt="Logout session"
+            href="/logout/discord"
+            >
+            <img
+            alt="Logout button"
+            src={logoutWebp}
+            onError={(e) => { e.target.onerror = null; e.target.src = logoutPng }}
+            >
+            </img>
+            Log out
+          </a>
+        </Fragment>
+      )
+      : (
+        <Fragment>
+          <h1 className="atlas-title">Login</h1>
+          <div className="login-intro">
+            <p>Login to be able to send reports and have access to more features in the future.</p>
+          </div>
+          <a
+          className="login-btn"
+          href="/auth/discord"
+          rel="nofollow"
+          >
+            <img
+            alt="Discord logo"
+            src={dcLogo}
+            ></img>
+            Log in with Discord
+          </a>
+        </Fragment>
+      )
+
   return <div className="login-panel">
-    <h1>Login</h1>
-    <div className="login-intro">
-      <p>Login with your discord account to be able to send reports and much more</p>
-    </div>
-    <a
-    className="login-btn"
-    href="/auth/discord"
-    rel="nofollow"
-    >
-      <img
-      alt="Discord logo"
-      src={dcLogo}
-      ></img>
-      Login with Discord
-    </a>
+    {Panel}
   </div>
 
 }
@@ -71,9 +102,9 @@ const LoginButton = ({ userInfo }) => {
         alt={!!userInfo ? "User Avatar" : "Default avatar"}
         src={!!userInfo
           ? userInfo.avatarURL || defaultUserWebp
-          : defaultUserWebp
+          : userWebp
         }
-        onError={(e) => { e.target.onerror = null; e.target.src = defaultUserPng }}
+        onError={(e) => { e.target.onerror = null; e.target.src = userPng }}
         >
         </img>
       </div>
@@ -137,19 +168,6 @@ function Sidebar() {
       </div>
 
       <div className="sidebar-bottom">
-        <a
-          className="sidebar-icon"
-          alt="Logout session"
-          style={{ display: !!userInfo ? "block" : "none" }}
-          href="/logout/discord"
-          >
-            <img
-            alt="Logout button"
-            src={logoutWebp}
-            onError={(e) => { e.target.onerror = null; e.target.src = logoutPng }}
-            >
-            </img>
-        </a>
         <LoginButton userInfo={userInfo} />
       </div>
     </div>

@@ -52,28 +52,32 @@
 
 .login-panel {
   position: absolute;
-  top: -120px;
+  bottom: 12px;
   padding: 10px 15px;
   min-width: 20vw;
   left: 50px;
   background: var(--theme-background-grey);
+  text-align: left;
 }
 
-.login-panel h1 {
-  text-transform: uppercase;
-  font-size: 16px;
-  font-weight: 400;
-  padding: 5px 0px;
+.login-panel:after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  left: -20px;
+  transform: translateY(5px);
+  border: 14px solid var(--theme-background-grey);
+  border-top: 10px solid  transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid transparent;
+}
+
+.login-panel > * {
+  margin: 10px 0;
 }
 
 .login-intro {
-  padding: 5px 0px 15px;
   position: relative;
-  border: 1px dashed var(--theme-primary)
-}
-
-.login-panel p {
-  text-align: left;
 }
 
 /* .login-panel p:before {

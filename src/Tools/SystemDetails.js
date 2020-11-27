@@ -230,7 +230,7 @@ const ActionButton = ({ loggedIn, onClick, disabled, children }) => {
         alt="Discord logo"
         src={dcLogo}
         ></img>
-        Login with Discord
+        Log in with Discord
       </a>
     )
   }
