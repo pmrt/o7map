@@ -47,7 +47,8 @@ function Welcome() {
             name of the system. Alternatively, you can navigate through the map and click
             on the system. You don't need to be logged in to see the reports but you do need
             it to send them.</li>
-          <li>All you need for login in is a Discord account.</li>
+          <li>All you need to log in is a Discord account.</li>
+          <li>You can zoom in/out with the wheel button and pan holding left-click anywhere on the map and dragging.</li>
         </ul>
       </div>
     </div>
