@@ -8,6 +8,7 @@ export const Tools = {
   FILTER: "filter",
   PLANET: "planet",
   SETTINGS: "settings",
+  FEEDBACK: "feedback",
 }
 
 export const Reports = {

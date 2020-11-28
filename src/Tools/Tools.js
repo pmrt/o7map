@@ -5,6 +5,7 @@ import { RootContext } from "../context";
 import SearchPanel from "./Search";
 import SettingsPanel from "./Settings";
 import SystemDetailsPanel from "./SystemDetails";
+import FeedbackPanel from "./Feedback";
 
 import "./Tools.css"
 
@@ -24,6 +25,10 @@ function Tools() {
 
       <SystemDetailsPanel
         isVisible={!!activeTools[ToolTypes.SYSTEM_DETAILS]}
+      />
+
+      <FeedbackPanel
+       isVisible={!!activeTools[ToolTypes.FEEDBACK]}
       />
     </Fragment>
   )

@@ -25,7 +25,7 @@ function SettingsPanel({ activeTab, isVisible }) {
   return (
     <Panel
       defaultPanelKey="console"
-      defaultPosition={{x: 20, y: 80}}
+      defaultPosition={{x: 30, y: 80}}
       selectedPanelName={activeTab}
       onTabClick={onTabClick}
       onCloseClick={onCloseClick}

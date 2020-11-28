@@ -1,0 +1,50 @@
+.panels.feedback-panel {
+  width: 400px;
+  height: auto;
+}
+
+.feedback > * {
+  margin: 15px 20px;
+  position: relative;
+}
+
+.feedback .error-info {
+  border: 1px dashed var(--theme-primary);
+  padding: 8px;
+}
+
+.feedback strong {
+  color: var(--theme-purpled-blue);
+}
+
+.send-feedback {
+  display: flex;
+  flex-direction: column;
+}
+
+.send-feedback textarea {
+  min-height: 100px;
+  padding: 6px;
+  font-size: 12px;
+}
+
+.send-feedback-buttons {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.send-feedback-buttons input[type="checkbox"] {
+  margin: 0 10px 0 20px;
+}
+
+.send-feedback-buttons button {
+  cursor: pointer;
+  transition: all 150ms ease-in;
+}
+
+.send-feedback-buttons button:hover {
+  background: var(--theme-primary);
+  color: var(--theme-background);
+}
+

@@ -12,6 +12,7 @@ export const initialState = {
     [Tools.FILTER]: 0,
     [Tools.PLANET]: 0,
     [Tools.SETTINGS]: 0,
+    [Tools.FEEDBACK]: 0,
   },
   activeTabsNames: {
     [Tools.CREATION]: null,
@@ -19,6 +20,7 @@ export const initialState = {
     [Tools.FILTER]: null,
     [Tools.PLANET]: null,
     [Tools.SETTINGS]: null,
+    [Tools.FEEDBACK]: null,
   },
   currentMap: {
     mapID: "",
