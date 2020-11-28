@@ -1,0 +1,84 @@
+.on-boarding {
+  z-index: 1000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 400px;
+  background: var(--theme-background-grey);
+  padding: 20px;
+}
+
+.welcome-big-title {
+  display: flex;
+  align-items: center;
+}
+
+.on-boarding .logo {
+  width: 42px;
+  margin-right: 10px;
+}
+
+.on-boarding > *:not(:first-child):not(.separator) {
+  margin-top: 25px;
+}
+
+.on-boarding h1 {
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.on-boarding h2 {
+  font-size: 14px;
+}
+
+.on-boarding h3 {
+  font-size: 11px;
+}
+
+.separator {
+  height: 1px;
+  width: 100%;
+  background: rgba(192, 192, 192, 0.2);
+  position: relative;
+  top: 10px;
+}
+
+.hints ul {
+  padding: 5px 20px;
+}
+
+.hints li {
+  margin: 10px 0;
+}
+
+.cross-close-btn {
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0.3;
+  /* Big clickable area for easy click */
+  height: 60px;
+  width: 60px;
+}
+
+.cross-close-btn:hover {
+  opacity: 1;
+}
+
+.cross-close-btn:before, .cross-close-btn:after {
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  height: 30px;
+  width: 2px;
+  background-color: #fff;
+}
+.cross-close-btn:before {
+  transform: rotate(45deg);
+}
+.cross-close-btn:after {
+  transform: rotate(-45deg);
+}

@@ -10,6 +10,7 @@ export const ActionTypes = {
   SET_SYSTEM_DETAILS: "set_system_details",
   SET_SYSTEM_DETAILS_AND_OPEN: "set_system_details_and_open",
   SET_IS_RECEIVING_REPORTS: "set_is_receiving_reports",
+  SET_SHOW_WELCOME: "set_show_welcome",
   RESET_STATE: "reset_state",
 }
 
@@ -57,6 +58,13 @@ export function setPanelVisibility(tool, visible) {
     tool,
     visible: visible,
     type: ActionTypes.SET_PANEL_VISIBILITY,
+  }
+}
+
+export function setShowWelcome(visible) {
+  return {
+    visible: visible,
+    type: ActionTypes.SET_SHOW_WELCOME,
   }
 }
 

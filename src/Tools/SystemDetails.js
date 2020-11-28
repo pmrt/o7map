@@ -222,7 +222,7 @@ const ActionButton = ({ loggedIn, onClick, disabled, children }) => {
   if (!loggedIn) {
     return (
       <a
-      class="login-btn"
+      className="login-btn"
       href="/auth/discord"
       rel="nofollow"
       >

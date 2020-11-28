@@ -37,14 +37,3 @@
 .send-feedback-buttons input[type="checkbox"] {
   margin: 0 10px 0 20px;
 }
-
-.send-feedback-buttons button {
-  cursor: pointer;
-  transition: all 150ms ease-in;
-}
-
-.send-feedback-buttons button:hover {
-  background: var(--theme-primary);
-  color: var(--theme-background);
-}
-

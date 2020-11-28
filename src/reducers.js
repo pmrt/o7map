@@ -33,6 +33,7 @@ export const initialState = {
   isReceivingReports: false,
   isLoading: 1,
   isDevMode: 0,
+  showWelcome: 1,
   clickedCoords: {
     x: 0,
     y: 0,
@@ -166,6 +167,11 @@ function rootReducer(state, action) {
         ...state,
         clickedCoords: action.coords,
       }
+    case ActionTypes.SET_SHOW_WELCOME:
+      return {
+        ...state,
+        showWelcome: action.visible,
+      }
     case ActionTypes.RESET_STATE:
       return {
         ...initialState,
@@ -185,6 +191,7 @@ function persistentReducer(state, action) {
     case ActionTypes.SET_FONT_SIZE:
     case ActionTypes.RESET_STATE:
     case ActionTypes.SET_IS_DEV_MODE:
+    case ActionTypes.SET_SHOW_WELCOME:
       const newState = rootReducer(state, action);
       const clean = {...newState, ...defaultState}
       new Storage().save(clean);

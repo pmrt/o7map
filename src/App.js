@@ -16,6 +16,7 @@ import Tools from "./Tools";
 import Map from "./EchoesMap/canvas/map";
 import TopBar from "./TopBar";
 import { getUser } from "./helpers";
+import Welcome from "./Welcome";
 
 let firstTime = true;
 function App() {
@@ -40,6 +41,7 @@ function App() {
         <RootContext.Provider value={{ store: state, dispatch, cmdRef, mapRef, forceReportUpdateRef }}>
           <TopBar />
           <Sidebar />
+          <Welcome />
           <div className="content">
             <Tools />
             <EchoesMap />

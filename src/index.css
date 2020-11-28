@@ -42,12 +42,19 @@ input {
 
 button {
   background: transparent;
+  cursor: pointer;
   border: 1px solid var(--theme-background-grey);
   color: var(--theme-primary);
   padding: 5px 20px;
   font-size: 11px;
   letter-spacing: .2em;
   text-transform: uppercase;
+  transition: all 150ms ease-in;
+}
+
+button:hover {
+  background: var(--theme-primary);
+  color: var(--theme-background);
 }
 
 a {

@@ -29,7 +29,7 @@ function Feedback() {
         For reaching out to the app developer please send an email to <strong>o7@pedro.to</strong>.
         Only english or spanish.
       </p>
-      <p class="error-info">For errors, please check 'Send logs with errors'. Tip: you can see
+      <p className="error-info">For errors, please check 'Send logs with errors'. Tip: you can see
         your logs in the <strong>'Settings' wheel button on the sidebar &gt; Console</strong> section.
         That's exactly what you will be sending and nothing more.
       </p>
