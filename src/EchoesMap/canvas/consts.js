@@ -3,7 +3,7 @@ export const MIN_ZOOM = 0.7;
 export const STEP_FACTOR = .99;
 
 export const CANVAS_WIDTH_LIMIT = 4000;
-export const CANVAS_HEIGHT_LIMIT = 1800;
+export const CANVAS_HEIGHT_LIMIT = 3000;
 
 export const FONTSIZE = 12;
 export const MIN_FONTSIZE = 4;

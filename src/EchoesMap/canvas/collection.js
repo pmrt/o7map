@@ -8,6 +8,7 @@ class MapCollection {
     this._eventQueue = [];
     this._objsWithEvents = [];
     this._reportObjs = [];
+    this._currentId = null;
     this.opts = opts;
 
     if (!this.MapDataClass || !this.MapTypeClass) {
@@ -128,6 +129,7 @@ class MapCollection {
       this._group.off();
       this._group.destroy();
       this._group = null;
+      this._instance = null;
       this.clearReportObjs();
     }
 
@@ -142,6 +144,7 @@ class MapCollection {
 
   center() {
     this._group.center();
+
 
     return this;
   }
@@ -180,29 +183,30 @@ class MapCollection {
   }
 
   afterRender() {
-    for (let i = 0, len = this._rects.length; i < len; i++) {
-      const rect = this._rects[i];
+    for (let i = 0, len = this._allRects.length; i < len; i++) {
+      const rect = this._allRects[i];
       rect.bringToFront()
     }
 
     // free cached rects
-    this._rects = null;
+    this._allRects = null;
 
     return this;
   }
 
-  render(all) {
+  render(all, id) {
     let mapObjects = [];
     let errors = [];
 
-    this._rects = [];
+    this._allRects = [];
+    this._currentId = id;
     for (let data of all) {
       const d = new this.MapDataClass(data);
       const map = new this.MapTypeClass(d, this._canvas, this._db, this.opts);
-      const ok = map.render();
+      const ok = map.render(id);
       if (ok) {
         mapObjects.push(...map.fabricObjs);
-        this._rects.push(map._rect);
+        this._allRects.push(map._rect);
       } else {
         errors.push({
           message: `WARN: Skipping map '${map.name}'`,

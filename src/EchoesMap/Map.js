@@ -33,6 +33,7 @@ function EchoesMap() {
     hasControls: false,
     backgroundColor: theme.background,
     hoverCursor: 'default',
+    fontFamily: "Roboto Mono",
   });
 
   useEffect(() => {

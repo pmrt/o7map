@@ -336,7 +336,7 @@ class Map extends EventEmitter {
       defer(async () => {
         const start = performance.now();
 
-        await this._fill(MapType.REGION, systems);
+        await this._fill(MapType.REGION, ID, systems);
 
         const end = performance.now();
         this.log(`Finished task: Rendering '${name}'. Took ${Math.ceil(end - start)}ms.`);
@@ -462,8 +462,8 @@ class Map extends EventEmitter {
     return this;
   }
 
-  fillRegion(sysData) {
-    const { errors } = this._sysCollection.render(sysData);
+  fillRegion(regionId, sysData) {
+    const { errors } = this._sysCollection.render(sysData, regionId);
     if (errors.length > 0) {
       for (let err of errors) {
         this.log(err.message, err.type);
@@ -471,9 +471,9 @@ class Map extends EventEmitter {
     }
 
     this._canvas.add(this._sysCollection.group);
-    this._sysCollection
-      .afterRender()
-      .center()
+    this._sysCollection.center();
+    this._sysCollection.centerRegionSystems();
+    this._sysCollection.afterRender()
       .bringToFront();
     return this;
   }
@@ -566,7 +566,6 @@ class Map extends EventEmitter {
     const c = this._canvas;
 
     if (!systemName) {
-      c.setViewportTransform([1, 0, 0, 1, 0, 0]);
       return region;
     }
 
@@ -627,7 +626,7 @@ class Map extends EventEmitter {
         this._regionCollection.center();
         break;
       case MapType.REGION:
-        this._sysCollection.center();
+        this._sysCollection.centerRegionSystems();
         break;
       default:
         this.log(`Cannot center map. Incorrect MapType: ${this._currentMap}`, "error");

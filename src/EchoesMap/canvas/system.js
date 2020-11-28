@@ -176,8 +176,12 @@ export class System {
     })
   }
 
-  render() {
+  render(regionId) {
     const color = getSecColor(this.sec.str) || theme.secondary;
+
+    // if (this.region.id !== regionId) {
+    //   return null;
+    // }
 
     const sysRect = new fabric.Rect({
       left: this.coords.x,
@@ -238,9 +242,10 @@ export class System {
 
       // if (!sameRegion) {
       //   // m is the slope in the point-slope equation of a line
-      //   const m = (y - this.coords.y) / (x - this.coords.x);
-      //   Px = this.coords.x - 100;
-      //   Py = m * (Px - this.coords.x) + this.coords.y;
+      //   // const m = (y - this.coords.y) / (x - this.coords.x);
+      //   // Px = this.coords.x - 100;
+      //   // Py = m * (Px - this.coords.x) + this.coords.y;
+      //   continue;
       // }
 
       const line = new fabric.Line([Px, Py, this.coords.x, this.coords.y], opts);
@@ -306,6 +311,41 @@ export class SystemCollection extends MapCollection {
     return;
   }
 
+  /* centerRegionSystems calculates the center of the systems in the region,
+  excluding the systems in the region which are not part of the region (edges) and
+  centers the canvas to that point*/
+  centerRegionSystems() {
+    let xmax = -99999999, ymax = -99999999, xmin = 99999999, ymin = 99999999;
+    let xminObj, yminObj;
+    for (let obj of this._allRects) {
+      const sysData = obj.get("metadata").data;
+      if (sysData.region.id === this._currentId) {
+        if (obj.left < xmin) {
+          xmin = obj.left;
+          xminObj = obj;
+        } else if (obj.left > xmax) {
+          xmax = obj.left;
+        }
+
+        if (obj.top < ymin) {
+          ymin = obj.top;
+          yminObj = obj;
+        } else if (obj.top > ymax) {
+          ymax = obj.top;
+        }
+      }
+    }
+
+    const x = xminObj.left + (xmax - xmin)/2;
+    const y = yminObj.top + (ymax - ymin)/2;
+    const matrix = this._group.calcTransformMatrix();
+    const p = fabric.util.transformPoint({x, y}, matrix);
+
+    const p2 = new fabric.Point(
+      p.x - this._canvas.getWidth()/2, p.y - this._canvas.getHeight()/2
+    )
+    this._canvas.absolutePan(p2);
+  }
 
   async drawReports(reports) {
     this.clearReportObjs();
