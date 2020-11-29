@@ -25,8 +25,7 @@ function Feedback() {
 
   return (
     <div className="feedback">
-      <p>Any feedback is welcome: Suggestions, error reports, appreciations, ideas, etc.
-        For reaching out to the app developer please send an email to <strong>o7@pedro.to</strong>.
+      <p>Any feedback is welcome. For reaching out to the app developer please send an email to <strong>o7@pedro.to</strong>.
         Only english or spanish.
       </p>
       <p className="error-info">For errors, please check the 'Send logs with errors' box. Tip: you can see
@@ -35,7 +34,7 @@ function Feedback() {
       </p>
       <div className="send-feedback">
         <textarea
-          placeholder="I'd like to be able to"
+          placeholder="Suggestions, error reports, appreciations, ideas... any feedback is welcome!"
           maxLength="1000"
           ref={textareaRef}
         ></textarea>

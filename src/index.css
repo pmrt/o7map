@@ -36,6 +36,7 @@ html {
 }
 
 button,
+textarea,
 input {
   font-family: 'Roboto Mono', monospace;
 }

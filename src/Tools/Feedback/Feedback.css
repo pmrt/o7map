@@ -1,6 +1,7 @@
 .panels.feedback-panel {
   width: 400px;
   height: auto;
+  resize: both;
 }
 
 .feedback > * {
@@ -26,6 +27,9 @@
   min-height: 100px;
   padding: 6px;
   font-size: 12px;
+  background: var(--theme-grey-2);
+  color: #fff;
+  line-height: 1.4em;
 }
 
 .send-feedback-buttons {
