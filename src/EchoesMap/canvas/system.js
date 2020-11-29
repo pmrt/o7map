@@ -37,7 +37,7 @@ export class System {
     this._objs = [];
     this._rect = null;
     this._gates = [];
-    this._fullName = this._systemData.sec
+    this._fullName = this._systemData.sec && !!this._systemData.sec.str
       ? `${this._systemData.name} ${this.sec.str}`
       : this._systemData.name;
     this.opts = opts;
