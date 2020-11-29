@@ -224,7 +224,6 @@ const ActionButton = ({ loggedIn, onClick, disabled, children }) => {
       <a
       className="login-btn"
       href="/auth/discord"
-      rel="nofollow"
       >
         <img
         alt="Discord logo"

@@ -9,16 +9,6 @@
   padding: 20px;
 }
 
-.welcome-big-title {
-  display: flex;
-  align-items: center;
-}
-
-.on-boarding .logo {
-  width: 42px;
-  margin-right: 10px;
-}
-
 .on-boarding > *:not(:first-child):not(.separator) {
   margin-top: 25px;
 }

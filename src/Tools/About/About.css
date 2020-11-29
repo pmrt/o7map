@@ -1,0 +1,36 @@
+.about {
+  position: relative;
+}
+
+.panels.about-panel {
+  width: 300px;
+  height: auto;
+}
+
+.about > *:not(.separator) {
+  margin: 15px 20px;
+  position: relative;
+  text-align: center;
+}
+
+.about .welcome-big-title {
+  justify-content: center;
+}
+
+.about .welcome-title h2{
+  font-size: 11px;
+}
+
+.about .separator {
+  margin: 5px 0 20px 0;
+}
+
+.about strong,
+.about a {
+  color: var(--theme-purpled-blue);
+}
+
+.about .about-thanks-item small {
+  color: var(--theme-light-grey);
+  font-style: italic;
+}

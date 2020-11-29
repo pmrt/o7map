@@ -6,6 +6,7 @@ import SearchPanel from "./Search";
 import SettingsPanel from "./Settings";
 import SystemDetailsPanel from "./SystemDetails";
 import FeedbackPanel from "./Feedback";
+import AboutPanel from "./About";
 
 import "./Tools.css"
 import useKeybinds from "../useKeybinds";
@@ -32,6 +33,10 @@ function Tools() {
 
       <FeedbackPanel
        isVisible={!!activeTools[ToolTypes.FEEDBACK]}
+      />
+
+      <AboutPanel
+        isVisible={!!activeTools[ToolTypes.ABOUT]}
       />
     </Fragment>
   )

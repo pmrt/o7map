@@ -20,6 +20,9 @@ import settingsPng from "../img/settings.png";
 import feedbackWebp from "../img/feedback.webp";
 import feedbackPng from "../img/feedback.png";
 
+import infoWebp from "../img/info.webp";
+import infoPng from "../img/info.png";
+
 import { RootContext, UserContext } from "../context";
 import { setPanelVisibility } from "../actions";
 import { Tools } from "../constants";
@@ -48,6 +51,12 @@ function Sidebar() {
     dispatch(setPanelVisibility(Tools.FEEDBACK, !isFeedbackVisible))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFeedbackVisible]);
+
+  const isAboutVisible = activeTools[Tools.ABOUT];
+  const onAboutClick = useCallback(() => {
+    dispatch(setPanelVisibility(Tools.ABOUT, !isAboutVisible))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAboutVisible]);
 
 
   return (
@@ -88,16 +97,28 @@ function Sidebar() {
       </div>
 
       <div className="sidebar-bottom">
-      <div
-        className={`sidebar-icon ${isFeedbackVisible ? "active": ""}`}
-        alt="Feedback"
-        onClick={onFeedbackClick}>
-          <img
+       <div
+          className={`sidebar-icon ${isFeedbackVisible ? "active": ""}`}
           alt="Feedback"
-          src={feedbackWebp}
-          onError={(e) => { e.target.onerror = null; e.target.src = feedbackPng }}
+          onClick={onFeedbackClick}>
+            <img
+            alt="Feedback"
+            src={feedbackWebp}
+            onError={(e) => { e.target.onerror = null; e.target.src = feedbackPng }}
+            >
+            </img>
+        </div>
+        <div
+          className={`sidebar-icon ${isAboutVisible ? "active": ""}`}
+          alt="About"
+          onClick={onAboutClick}
           >
-          </img>
+            <img
+            alt="About icon"
+            src={infoWebp}
+            onError={(e) => { e.target.onerror = null; e.target.src = infoPng }}
+            >
+            </img>
         </div>
         <LoginButton userInfo={userInfo} />
       </div>

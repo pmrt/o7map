@@ -9,6 +9,7 @@ export const Tools = {
   PLANET: "planet",
   SETTINGS: "settings",
   FEEDBACK: "feedback",
+  ABOUT: "about",
 }
 
 export const Reports = {

@@ -1,30 +1,30 @@
-import { useContext  } from "react";
+import { useContext } from "react";
 import { setPanelVisibility } from "../../actions";
 import { Tools } from "../../constants";
 import { RootContext } from "../../context";
 import Panel from "../../Panel";
-import Feedback from "./Feedback";
+import About from "./About";
 
-function FeedbackPanel({ isVisible }) {
+function AboutPanel({ isVisible }) {
   const { dispatch } = useContext(RootContext);
 
   const onCloseClick = () => {
-    dispatch(setPanelVisibility(Tools.FEEDBACK, 0));
+    dispatch(setPanelVisibility(Tools.ABOUT, 0));
   }
 
   return (
     <Panel
-      defaultPanelKey="feedback"
-      tabTitles={{ "Feedback": "feedback"}}
-      defaultPosition={{x: 40, y: 150}}
+      defaultPanelKey="about"
+      tabTitles={{ "About": "about"}}
+      defaultPosition={{x: 60, y: 200}}
       onCloseClick={onCloseClick}
       customTitlebarClassNames={"titlebar dark-titlebar"}
-      customParentClassNames={"panels feedback-panel"}
+      customParentClassNames={"panels about-panel"}
       isVisible={isVisible}
     >
-      <Feedback tabKey="feedback"/>
+      <About tabKey="about"/>
     </Panel>
   )
 }
 
-export default FeedbackPanel;
+export default AboutPanel;

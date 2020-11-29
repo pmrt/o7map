@@ -42,51 +42,6 @@
 }
 
 .sidebar-bottom .sidebar-icon img {
-  width: 24px;
+  width: 21px;
   border-radius: 50%;
 }
-
-.login-btn-wrapper {
-  position: relative;
-}
-
-.login-panel {
-  position: absolute;
-  bottom: 12px;
-  padding: 10px 15px;
-  min-width: 20vw;
-  left: 50px;
-  background: var(--theme-background-grey);
-  text-align: left;
-}
-
-.login-panel:after {
-  content: '';
-  position: absolute;
-  bottom: 12px;
-  left: -20px;
-  transform: translateY(5px);
-  border: 14px solid var(--theme-background-grey);
-  border-top: 10px solid  transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 10px solid transparent;
-}
-
-.login-panel > * {
-  margin: 10px 0;
-}
-
-.login-intro {
-  position: relative;
-}
-
-/* .login-panel p:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  transform: translateY(5px);
-  border: 8px solid var(--theme-primary);
-  border-top: 4px solid  transparent;
-  border-bottom: 4px solid transparent;
-  border-right: 4px solid transparent;
-} */
