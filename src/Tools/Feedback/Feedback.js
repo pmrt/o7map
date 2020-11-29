@@ -19,7 +19,6 @@ function Feedback() {
     }
 
     const res = await cmd.exec(["send", "feedback", `"${textarea.value}"`, "feedback_tool"]);
-    console.log(res);
     if (canSendLogs) {
       // we don't care about the result
       cmd.exec(["send", "debug"]);
