@@ -53,7 +53,7 @@ class Commander {
     return cmd.join(" ");
   }
 
-  exec(cmd) {
+  async exec(cmd) {
     const strCmd = this.stringifyCmd(cmd);
     this._dispatcher(addStdoutLine("$ > " + strCmd));
 
@@ -67,9 +67,8 @@ class Commander {
       dispatcher: this._dispatcher,
       mapRef: this._mapRef,
     }
-    handler.call(this, ctx, cmd);
 
-    return this;
+    return await handler.call(this, ctx, cmd);
   }
 }
 

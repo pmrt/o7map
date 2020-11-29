@@ -30,11 +30,19 @@ async function sendFeedback(ctx, args) {
         : "ERR: Couldn't send feedback report";
 
     dispatcher(addStdoutLine(msg))
-    return;
+    return {
+      code: resp.status || resp.code || 500,
+      message: resp.message || "Couldn't send feedback report.",
+    };
   }
 
   if (resp.code && resp.code === 200) {
     dispatcher(addStdoutLine(resp.message))
+  }
+
+  return {
+    code: resp.code,
+    message: resp.message,
   }
 }
 
@@ -72,6 +80,11 @@ async function sendError(ctx, args) {
   if (resp.code && resp.code === 200) {
     dispatcher(addStdoutLine(resp.message))
   }
+
+  return {
+    code: resp.code,
+    message: resp.message,
+  }
 }
 
 const props = {
@@ -79,14 +92,14 @@ const props = {
   "debug": sendError,
 }
 
-function send(ctx, cmd) {
+async function send(ctx, cmd) {
   const propName = cmd.shift();
   const handler = props[propName];
   if (!handler) {
     throw new UnknownParameterError(`Send: unknown parameter: ${propName}`);
   }
 
-  handler.call(this, ctx, cmd);
+  return await handler.call(this, ctx, cmd);
 }
 
 export default send;

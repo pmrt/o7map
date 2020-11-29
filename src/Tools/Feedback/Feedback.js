@@ -5,22 +5,26 @@ import "./Feedback.css"
 function Feedback() {
   const { cmdRef } = useContext(RootContext);
   const [ canSendLogs, setCanSendLogs] = useState(false);
+  const [ status, setStatus ] = useState(null);
 
   const textareaRef = useRef(null);
 
   const onCheckboxChange = () => setCanSendLogs(!canSendLogs);
 
-  const onSendLogsClick = useCallback(() => {
+  const onSendLogsClick = useCallback(async () => {
     const cmd = cmdRef.current;
     const textarea = textareaRef.current;
     if (!cmd || !textarea) {
       return null;
     }
 
-    cmd.exec(["send", "feedback", `"${textarea.value}"`, "feedback_tool"]);
+    const res = await cmd.exec(["send", "feedback", `"${textarea.value}"`, "feedback_tool"]);
+    console.log(res);
     if (canSendLogs) {
+      // we don't care about the result
       cmd.exec(["send", "debug"]);
     }
+    setStatus(res);
   }, [canSendLogs, cmdRef])
 
   return (
@@ -38,14 +42,19 @@ function Feedback() {
           maxLength="1000"
           ref={textareaRef}
         ></textarea>
-        <div className="send-feedback-buttons">
-          <button onClick={onSendLogsClick}>Send</button>
-          <input
-          name="send-logs"
-          type="checkbox"
-          onChange={onCheckboxChange}
-          defaultChecked={canSendLogs}></input>
-          <label htmlFor="send-logs">Send logs with errors</label>
+        <div className="send-feedback-actions">
+          <p className={!!status && status.code === 200 ? "success" : ""}>
+            {!!status && !!status.message ? status.message : ""}
+          </p>
+          <div className="send-feedback-buttons">
+            <button onClick={onSendLogsClick}>Send</button>
+            <input
+            name="send-logs"
+            type="checkbox"
+            onChange={onCheckboxChange}
+            defaultChecked={canSendLogs}></input>
+            <label htmlFor="send-logs">Send logs with errors</label>
+          </div>
         </div>
       </div>
     </div>

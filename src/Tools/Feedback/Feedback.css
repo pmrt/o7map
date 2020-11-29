@@ -32,6 +32,18 @@
   line-height: 1.4em;
 }
 
+.send-feedback-actions {
+  margin-top: 20px;
+}
+
+.send-feedback-actions > p {
+  min-height: 15px;
+}
+
+.send-feedback-actions > p.success {
+  color: var(--theme-secondary);
+}
+
 .send-feedback-buttons {
   display: flex;
   align-items: center;
