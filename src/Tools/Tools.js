@@ -8,10 +8,13 @@ import SystemDetailsPanel from "./SystemDetails";
 import FeedbackPanel from "./Feedback";
 
 import "./Tools.css"
+import useKeybinds from "../useKeybinds";
 
 function Tools() {
   const { store } = useContext(RootContext);
   const { activeTools, activeTabsNames } = store;
+
+  useKeybinds();
   return (
     <Fragment>
       <SettingsPanel
