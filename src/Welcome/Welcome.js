@@ -21,9 +21,9 @@ function Welcome() {
   return (
     <div className="on-boarding">
       <div className="welcome-title">
-        <div class="welcome-big-title">
+        <div className="welcome-big-title">
           <img
-            class="logo"
+            className="logo"
             alt="o7map logo"
             src={logoWebp}
             onError={(e) => { e.target.onerror = null; e.target.src = logoPng }}

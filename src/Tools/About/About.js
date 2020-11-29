@@ -7,9 +7,9 @@ import "./About.css"
 const About = () => (
   <div className="about">
     <div className="welcome-title">
-      <div class="welcome-big-title">
+      <div className="welcome-big-title">
         <img
-          class="logo"
+          className="logo"
           alt="o7map logo"
           src={logoWebp}
           onError={(e) => { e.target.onerror = null; e.target.src = logoPng }}
