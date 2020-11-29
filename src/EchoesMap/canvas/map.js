@@ -44,50 +44,6 @@ function insertMap(db, universe, update) {
   })
 }
 
-async function setupDatabase(db, count, log) {
-  const v = window.localStorage.getItem(DATABASE_VERSION_STORAGE_KEY) || 0;
-  const isUpdateAvailable = v > lastDatabaseVersion;
-
-  if (count > 0) {
-    if (!isUpdateAvailable) {
-      log(":: Local database already updated to last version");
-      return;
-    }
-    log(":: Database update available");
-  } else {
-    log(":: Local database empty");
-  }
-
-  let start, end, resp;
-  try {
-    log(":: Fetching map data..")
-    start = performance.now();
-    resp = await fetch("/map/universe.json")
-    end = performance.now();
-    log(`Finished task: fetching. Took ${Math.ceil(end - start)}ms.`);
-    resp = await resp.json();
-  } catch(err) {
-    console.error(err);
-    log([
-      `ERR: Error while fetching map data`,
-      err,
-    ], "error");
-  }
-
-  log(":: Inserting map data to local database..")
-  start = performance.now();
-  await insertMap(db, resp, isUpdateAvailable);
-  end = performance.now();
-  log([
-    `Finished task: Inserting. Took ${Math.ceil(end - start)}ms.`,
-    ":: Database updated",
-  ]
-  );
-
-  window.localStorage.setItem(DATABASE_VERSION_STORAGE_KEY, lastDatabaseVersion);
-  return;
-}
-
 /*
 * Map manages all the logic and map UI of the Eve Echoes Map.
 *
@@ -163,7 +119,7 @@ class Map extends EventEmitter {
         }
 
         let start, end;
-      
+
         this.log(":: Fetching map data..")
         start = performance.now();
         return fetch("/map/universe.json")
