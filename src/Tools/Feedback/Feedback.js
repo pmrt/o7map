@@ -46,7 +46,7 @@ function Feedback() {
           type="checkbox"
           onChange={onCheckboxChange}
           defaultChecked={canSendLogs}></input>
-          <label for="send-logs">Send logs with errors</label>
+          <label htmlFor="send-logs">Send logs with errors</label>
         </div>
       </div>
     </div>
