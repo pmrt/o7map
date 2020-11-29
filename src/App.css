@@ -69,3 +69,31 @@ span.keybind {
   width: 42px;
   margin-right: 10px;
 }
+
+.mobile-notice {
+  display: none;
+  background: var(--theme-background);
+  position: fixed;
+  top: 0px;
+  bottom: 0;
+  right: 0;
+  left: 0px;
+  z-index: 99999;
+  opacity: 1;
+}
+
+.mobile-notice-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px dashed #fff;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+@media only screen and (max-width: 580px) {
+  .mobile-notice {
+    display: block;
+  }
+}

@@ -39,6 +39,11 @@ function App() {
     <div className="App">
       <UserContext.Provider value={{ userInfo }}>
         <RootContext.Provider value={{ store: state, dispatch, cmdRef, mapRef, forceReportUpdateRef }}>
+          <div className="mobile-notice">
+            <div className="mobile-notice-message">
+              <p>Mobile support is in development. Please visit the Desktop site in the meantime. Thank you for your patience.</p>
+            </div>
+          </div>
           <TopBar />
           <Sidebar />
           <Welcome />
