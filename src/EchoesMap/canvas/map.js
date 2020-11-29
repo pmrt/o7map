@@ -18,6 +18,8 @@ import {
   MapType,
   LINK_WIDTH,
   DATABASE_NAME,
+  DATABASE_VERSION_STORAGE_KEY,
+  lastDatabaseVersion,
 } from "./consts";
 import { fabric } from "fabric";
 
@@ -25,6 +27,65 @@ import theme from "./theme";
 
 function defer(fn) {
   setTimeout(fn, 0);
+}
+
+function insertMap(db, universe, update) {
+  return new Promise((resolve, reject) => {
+    db.transaction("rw", db.regions, db.systems, async () => {
+      if (update) {
+        await db.regions.clear();
+        await db.systems.clear();
+      }
+      await db.regions.bulkAdd(universe.r);
+      await db.systems.bulkAdd(universe.s);
+
+      resolve();
+    }).catch(err => reject(err));
+  })
+}
+
+async function setupDatabase(db, count, log) {
+  const v = window.localStorage.getItem(DATABASE_VERSION_STORAGE_KEY) || 0;
+  const isUpdateAvailable = v > lastDatabaseVersion;
+
+  if (count > 0) {
+    if (!isUpdateAvailable) {
+      log(":: Local database already updated to last version");
+      return;
+    }
+    log(":: Database update available");
+  } else {
+    log(":: Local database empty");
+  }
+
+  let start, end, resp;
+  try {
+    log(":: Fetching map data..")
+    start = performance.now();
+    resp = await fetch("/map/universe.json")
+    end = performance.now();
+    log(`Finished task: fetching. Took ${Math.ceil(end - start)}ms.`);
+    resp = await resp.json();
+  } catch(err) {
+    console.error(err);
+    log([
+      `ERR: Error while fetching map data`,
+      err,
+    ], "error");
+  }
+
+  log(":: Inserting map data to local database..")
+  start = performance.now();
+  await insertMap(db, resp, isUpdateAvailable);
+  end = performance.now();
+  log([
+    `Finished task: Inserting. Took ${Math.ceil(end - start)}ms.`,
+    ":: Database updated",
+  ]
+  );
+
+  window.localStorage.setItem(DATABASE_VERSION_STORAGE_KEY, lastDatabaseVersion);
+  return;
 }
 
 /*
@@ -67,6 +128,17 @@ class Map extends EventEmitter {
     return this;
   }
 
+  /*
+    setupDatabase initializes and setups the database. Note that the database version
+    is different from the data version itself, that way you can update the data without
+    updating the database.
+
+    In general, the recommended way to update the database data is to create a json with
+    only the needed data for the update, create a new database version and modify it with
+    the new update, so clients don't have to re-fetch the entire database saving bandwidth.
+    You'll need to fetch the data before creating/opening the database or modify the "ready"
+    handler and create a version patch management.
+  */
   _setupDatabase() {
     this._searchId = null;
     this._db = new Dexie(DATABASE_NAME);
@@ -76,15 +148,22 @@ class Map extends EventEmitter {
     });
 
     this._db.on("ready", () => {
-      // Only execute this op if database is not already populated
       return this._db.regions.count(count => {
+        const v = window.localStorage.getItem(DATABASE_VERSION_STORAGE_KEY) || 0;
+        const isUpdateAvailable = v < lastDatabaseVersion;
+
         if (count > 0) {
-          this.log(":: Local database already populated.")
-          return;
+          if (!isUpdateAvailable) {
+            this.log(":: Local database already updated to last version");
+            return Promise.resolve();
+          }
+          this.log(":: Database update available");
+        } else {
+          this.log(":: Local database empty");
         }
 
         let start, end;
-
+      
         this.log(":: Fetching map data..")
         start = performance.now();
         return fetch("/map/universe.json")
@@ -96,19 +175,27 @@ class Map extends EventEmitter {
           .then(universe => {
             this.log(":: Inserting map data to local database..")
             start = performance.now();
-            return Promise.all([
-              this._db.regions.bulkAdd(universe.r),
-              this._db.systems.bulkAdd(universe.s),
-            ]);
+            return insertMap(this._db, universe, isUpdateAvailable);
           }).then(() => {
             end = performance.now();
-            this.log(`Finished task: Inserting. Took ${Math.ceil(end - start)}ms.`);
+
+            window.localStorage.setItem(DATABASE_VERSION_STORAGE_KEY, lastDatabaseVersion);
+            let msg = `Finished task: Inserting. Took ${Math.ceil(end - start)}ms.`;
+            if (isUpdateAvailable) {
+              msg = [
+                msg,
+                ":: Database updated"
+              ]
+            }
+            this.log(msg);
           }).catch(err => {
-            this.log(`ERR: Error when trying to insert data to local db`, "error");
-            console.error(err);
+            this.log([
+              `ERR: Error when populating local db`,
+              err,
+            ], "error");
           });
       })
-    });
+    })
   }
 
   _onMouseWheel(opt) {

@@ -16,6 +16,11 @@ export const MIN_RECT_SIZE = 4;
 export const LINK_WIDTH = 0.3;
 
 export const DATABASE_NAME = "echoes_atlas_map_db";
+export const DATABASE_VERSION_STORAGE_KEY = "atlas_db_version";
+// lastDatabaseVersion controls the data version. When increased, all clients
+// will try to re-fetch the data. Use with caution as this will consume server
+// bandwidth
+export const lastDatabaseVersion = 2;
 
 export const MapType = {
   UNIVERSE: "universe",
