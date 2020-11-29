@@ -79,7 +79,14 @@ function SearchTabs ({
           <h3
           key={title}
           className={isActive ? customActiveTabClassName : ""}
-          onClick={() => onTabClicked(tabKey)}
+          onTouchStart={e => {
+            onTabClicked(tabKey);
+            e.stopPropagation();
+          }}
+          onMouseDown={e => {
+            onTabClicked(tabKey);
+            e.stopPropagation();
+          }}
         >{title}<span>{lenStr}</span></h3>
         )
       })}

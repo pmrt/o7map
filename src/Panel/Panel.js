@@ -45,7 +45,14 @@ const TabTitles = ({
           <h3
           key={title}
           className={isActive ? customActiveTabClassName : ""}
-          onClick={() => onTabClicked(tabKey)}
+          onTouchStart={e => {
+            onTabClicked(tabKey);
+            e.stopPropagation();
+          }}
+          onMouseDown={e => {
+            onTabClicked(tabKey);
+            e.stopPropagation();
+          }}
           >{title}</h3>
         )
       })}
@@ -152,7 +159,8 @@ function Panel({
             !!onCloseClick &&
             <span
             className={customCloseBtnClassName}
-            onClick={onCloseClick}></span>
+            onTouchStart={onCloseClick}
+            onMouseDown={onCloseClick}></span>
           }
         </div>
         <div className={customParentWrapperClassName}>
