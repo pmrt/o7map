@@ -80,16 +80,47 @@ span.keybind {
   left: 0px;
   z-index: 99999;
   opacity: 1;
+  padding: 40px;
 }
 
 .mobile-notice-message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   border: 1px dashed #fff;
   padding: 10px 20px;
   font-size: 14px;
+}
+
+.mobile-notice-sub {
+  margin-top: 25px;
+}
+
+.mobile-newsletter section {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.mobile-newsletter p {
+  font-size: 12px;
+}
+
+.mobile-newsletter input {
+  font-size: 16px;
+  padding: 12px;
+  outline: none;
+  border: 2px solid transparent;
+}
+.mobile-newsletter input:focus {
+  border: 2px solid var(--theme-purpled-blue);
+}
+
+.mobile-newsletter button {
+  padding: 10px 20px;
+  font-size: 11px;
+}
+
+.mobile-notice-sub-status {
+  margin: 15px 0;
 }
 
 @media only screen and (max-width: 580px) {

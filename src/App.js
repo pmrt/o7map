@@ -1,4 +1,4 @@
-import { useReducer, useRef } from "react";
+import { useCallback, useReducer, useRef, useState } from "react";
 
 import './App.css';
 import { RootContext, UserContext } from "./context";
@@ -17,6 +17,37 @@ import Map from "./EchoesMap/canvas/map";
 import TopBar from "./TopBar";
 import { getUser } from "./helpers";
 import Welcome from "./Welcome";
+import InlineFeedback from "./InlineFeedback";
+
+const MobileOverlay = () => {
+  const [status, setStatus] = useState(null);
+
+  const onSendResponse = useCallback(res => {
+    let msg =
+      res.code === 200
+        ? "You will receive an email when ready"
+        : "Couldn't set up reminder";
+    setStatus({ message: msg, code: res.code });
+  }, []);
+  return (
+    <div className="mobile-notice">
+      <div className="mobile-notice-message">
+        <p>Mobile support is in development. Please visit the Desktop site in the meantime. Thank you for your patience.</p>
+      </div>
+      <div className="mobile-notice-sub">
+        <InlineFeedback
+          description="When ready, send an email to"
+          placeholder="hi@example.com"
+          type="mobile_sup_email"
+          className="mobile-newsletter"
+          buttonText="Notify me"
+          onSendResponse={onSendResponse}
+        />
+        <p class="mobile-notice-sub-status">{!!status && !!status.message ? status.message : ""}</p>
+      </div>
+    </div>
+  )
+}
 
 let firstTime = true;
 function App() {
@@ -39,11 +70,7 @@ function App() {
     <div className="App">
       <UserContext.Provider value={{ userInfo }}>
         <RootContext.Provider value={{ store: state, dispatch, cmdRef, mapRef, forceReportUpdateRef }}>
-          <div className="mobile-notice">
-            <div className="mobile-notice-message">
-              <p>Mobile support is in development. Please visit the Desktop site in the meantime. Thank you for your patience.</p>
-            </div>
-          </div>
+          <MobileOverlay />
           <TopBar />
           <Sidebar />
           <Welcome />
