@@ -9,7 +9,7 @@
     "@testing-library/user-event": "^12.1.10",
     "d3-interpolate": "^2.0.1",
     "dexie": "^3.0.2",
-    "fabric": "^4.2.0",
+    "fabric-with-gestures": "^4.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-draggable": "^4.4.3",

@@ -1,4 +1,4 @@
-import { fabric } from "fabric";
+import { fabric } from "fabric-with-gestures";
 
 class MapCollection {
   constructor(canvas, db, opts) {

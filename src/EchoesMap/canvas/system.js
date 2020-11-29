@@ -1,4 +1,4 @@
-import { fabric } from "fabric";
+import { fabric } from "fabric-with-gestures";
 import { getSecColor, lerp, lerpColor, wrapText } from "../helpers";
 import { REPORT_SYSTEM_MIN_RADIUS, REPORT_SYSTEM_MAX_RADIUS, TEXT_PADDING, MIN_TEXT_PADDING } from "./consts";
 import theme from "./theme";

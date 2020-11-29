@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { fabric } from "fabric";
+import { fabric } from "fabric-with-gestures";
 
 function useFabric(fabricRef, fabricOpts) {
   // return a callback ref https://reactjs.org/docs/refs-and-the-dom.html#callback-refs & https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node

@@ -5288,10 +5288,10 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-fabric@^4.2.0:
+fabric-with-gestures@^4.2.0:
   version "4.2.0"
-  resolved "https://registry.yarnpkg.com/fabric/-/fabric-4.2.0.tgz#c16daf5559a9ed457d51eeb938099565ef1b44ba"
-  integrity sha512-wPC08+Uh+Z5U6BYSlzT7I+xxn7tkwYEKJ5EqDvQ2+a2hGSHuVJHm5DEUTnXkDrLrKamNthbPfCGNoOa1RoTVgg==
+  resolved "https://registry.yarnpkg.com/fabric-with-gestures/-/fabric-with-gestures-4.2.0.tgz#04924f6f1495a587399103b2c3869f050c4c8f58"
+  integrity sha512-YMr6PQS3gQLmSpKjm+tRbOSXP78FRXL11GOGwJ8YS6IOh01JA27JZcug1SPPD/mrMg7jUctlgUdzkat5pUs/EA==
   optionalDependencies:
     canvas "^2.6.1"
     jsdom "^15.2.1"

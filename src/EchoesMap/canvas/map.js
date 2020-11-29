@@ -21,7 +21,8 @@ import {
   DATABASE_VERSION_STORAGE_KEY,
   lastDatabaseVersion,
 } from "./consts";
-import { fabric } from "fabric";
+// import { fabric } from "fabric-";
+import { fabric } from "fabric-with-gestures";
 
 import theme from "./theme";
 
@@ -154,16 +155,29 @@ class Map extends EventEmitter {
     })
   }
 
-  _onMouseWheel(opt) {
+  _onZoom(opt) {
     const evt = opt.e;
     const zoom = this._canvas.getZoom();
-    const delta = evt.deltaY;
 
-    let newZoom = zoom * STEP_FACTOR ** delta;
-    newZoom = Math.min(newZoom, MAX_ZOOM);
-    newZoom = Math.max(newZoom, MIN_ZOOM);
+    let newZoom, Px, Py;
+    if (evt.touches && evt.touches.length === 2) {
+      const { state, x, y } = opt.self;
+      if (state === "start") {
+        this._zoomStart = this._canvas.getZoom();
+      }
+      newZoom = this._zoomStart * opt.self.scale;
+      Px = x;
+      Py = y;
+    } else {
+      const { deltaY, offsetX, offsetY } = evt;
+      newZoom = zoom * STEP_FACTOR ** deltaY;
+      newZoom = Math.min(newZoom, MAX_ZOOM);
+      newZoom = Math.max(newZoom, MIN_ZOOM);
+      Px = offsetX;
+      Py = offsetY;
+    }
 
-    this._canvas.zoomToPoint({ x: evt.offsetX, y: evt.offsetY }, newZoom);
+    this._canvas.zoomToPoint({ x: Px, y: Py }, newZoom);
 
     let newFontSize = this.opts.fontSize
     / newZoom;
@@ -188,22 +202,38 @@ class Map extends EventEmitter {
 
     const evt = opt.e;
 
+    // if (evt.touches && evt.touches.length >= 2) {
+    //   return;
+    // }
+
     this._canvas.isDragging = true;
     this._canvas.selection = false;
-    this._canvas.lastPosX = evt.clientX;
-    this._canvas.lastPosY = evt.clientY;
+    this._canvas.lastPosX = evt.clientX || evt.layerX;
+    this._canvas.lastPosY = evt.clientY || evt.layerY;
+  }
+
+  _onMouseUp(opt) {
+    if (this._canvas.isDragging) {
+      this._canvas.setViewportTransform(this._canvas.viewportTransform);
+      this._canvas.isDragging = false;
+      this.selection = true;
+    }
+    this._canvas.setCursor("default");
   }
 
   _onMouseMove(opt) {
     const evt = opt.e;
 
     if (this._canvas.isDragging) {
+      const x = evt.clientX || evt.layerX;
+      const y = evt.clientY || evt.layerY;
+
       this._canvas.setCursor("grabbing");
       const zoom = this._canvas.getZoom();
       let vpt = this._canvas.viewportTransform;
 
-      vpt[4] += evt.clientX - this._canvas.lastPosX;
-      vpt[5] += evt.clientY - this._canvas.lastPosY;
+      vpt[4] += x - this._canvas.lastPosX;
+      vpt[5] += y - this._canvas.lastPosY;
 
       if (vpt[4] < this._canvas.getWidth() - CANVAS_WIDTH_LIMIT * zoom) {
         vpt[4] = this._canvas.getWidth() - CANVAS_WIDTH_LIMIT * zoom;
@@ -218,18 +248,9 @@ class Map extends EventEmitter {
       }
 
       this._canvas.requestRenderAll();
-      this._canvas.lastPosX = evt.clientX;
-      this._canvas.lastPosY = evt.clientY;
+      this._canvas.lastPosX = x;
+      this._canvas.lastPosY = y;
     }
-  }
-
-  _onMouseUp(opt) {
-    if (this._canvas.isDragging) {
-      this._canvas.setViewportTransform(this._canvas.viewportTransform);
-      this._canvas.isDragging = false;
-      this.selection = true;
-    }
-    this._canvas.setCursor("default");
   }
 
   _onObjMouseOver(opt) {
@@ -324,7 +345,11 @@ class Map extends EventEmitter {
 
   _setupEvents() {
     this._canvas.on("mouse:wheel", opt => {
-      this._onMouseWheel(opt)
+      this._onZoom(opt)
+    });
+
+    this._canvas.on('touch:gesture', opt => {
+      this._onZoom(opt)
     });
 
     this._canvas.on("mouse:down", opt => {
@@ -482,6 +507,10 @@ class Map extends EventEmitter {
   }
 
   async _fill(type, ...args) {
+    if (this._canvas.isDragging) {
+      return;
+    }
+
     this.clear();
 
     switch (type) {
