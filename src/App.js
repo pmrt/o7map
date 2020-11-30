@@ -43,7 +43,7 @@ const MobileOverlay = () => {
           buttonText="Notify me"
           onSendResponse={onSendResponse}
         />
-        <p class="mobile-notice-sub-status">{!!status && !!status.message ? status.message : ""}</p>
+        <p className="mobile-notice-sub-status">{!!status && !!status.message ? status.message : ""}</p>
       </div>
     </div>
   )
