@@ -141,6 +141,7 @@ export class Region {
       originY: 'center',
       metadata: {
         data: this,
+        ogColor: color,
       },
     });
     this._rect = regionRect;

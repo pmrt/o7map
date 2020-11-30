@@ -267,29 +267,38 @@ class Map extends EventEmitter {
       default:
     }
 
-    this._mouseHoverSelection.push({
-      obj,
-      ogFill: obj.get("fill"),
-    });
     obj.set({ fill: theme.active });
+    this._mouseHoverSelection.push(obj);
     this._canvas.requestRenderAll();
-  }
-
-  _resetMouseHoverSelection() {
-    const sel = this._mouseHoverSelection;
-    for (let i=0, len = sel.length; i < len; i++) {
-      const objData = sel[i];
-      const { obj, ogFill } = objData;
-      obj.set({ fill: ogFill })
-    }
-    this._canvas.requestRenderAll();
-    this._mouseHoverSelection.length = 0;
-
-    return this;
   }
 
   _onObjMouseOut(opt) {
-    this._resetMouseHoverSelection();
+    const obj = opt.target;
+    if (obj) {
+      const md = obj.get("metadata");
+      if (md) {
+        obj.set({ fill: md.ogColor });
+      }
+      this._mouseHoverSelection.splice(this._mouseHoverSelection.indexOf(obj), 1);
+      console.log(this._mouseHoverSelection);
+      this._canvas.requestRenderAll();
+    }
+  }
+
+  _onMouseOut() {
+    const sel = this._mouseHoverSelection;
+    console.log(this._mouseHoverSelection);
+    for (let i=0, len = sel.length; i<len; i++) {
+      const obj = sel[i];
+      if (obj) {
+        const md = obj.get("metadata");
+        if (md) {
+          obj.set({ fill: md.ogColor });
+        }
+      }
+      this._mouseHoverSelection.splice(i, 1);
+    }
+    this._canvas.requestRenderAll();
   }
 
   _onObjMouseDown(opt) {
@@ -375,6 +384,10 @@ class Map extends EventEmitter {
     this._regionCollection.on("mouseout", opt => {
       this._onObjMouseOut(opt);
     }, "rect");
+
+    this._canvas.on("mouse:out", opt => {
+      this._onMouseOut(opt)
+    });
 
     this._sysCollection.on("mousedown", opt => {
       this._onObjMouseDown(opt);

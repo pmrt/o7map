@@ -198,6 +198,7 @@ export class System {
       originY: 'center',
       metadata: {
         data: this,
+        ogColor: color,
       },
     });
     this._rect = sysRect;
