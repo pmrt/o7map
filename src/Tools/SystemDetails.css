@@ -17,7 +17,7 @@
   transition: color 100ms ease-in, background 100ms ease-in;
 }
 
-.system-buttons a:hover
+.system-buttons a:hover,
 .system-buttons button:hover {
   color: #000;
 }
