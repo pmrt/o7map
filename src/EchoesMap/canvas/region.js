@@ -126,6 +126,18 @@ export class Region {
   render() {
     const color = getSecColor(this.sec.str) || theme.secondary;
 
+    const nameTextbox = this._text = new fabric.Textbox(wrapText(this.name, 20), {
+      width: 50,
+      fontSize: this.opts.fontSize,
+      fontFamily: "Roboto Mono",
+      fill: theme.inactive,
+      fontWeight: "100",
+      textAlign: "center",
+      metadata: {
+        data: this,
+      },
+    })
+
     const regionRect = new fabric.Rect({
       left: this.coords.x,
       top: this.coords.y,
@@ -142,20 +154,10 @@ export class Region {
       metadata: {
         data: this,
         ogColor: color,
+        label: nameTextbox,
       },
     });
     this._rect = regionRect;
-
-    const nameTextbox = this._text = new fabric.Textbox(wrapText(this.name, 20), {
-      width: 50,
-      fontSize: this.opts.fontSize,
-      fontFamily: "Roboto Mono",
-      fill: theme.primary,
-      textAlign: "center",
-      metadata: {
-        data: this,
-      },
-    })
 
     nameTextbox.set({
       left: this.coords.x - nameTextbox.getScaledWidth() / 2,
@@ -245,7 +247,19 @@ export class RegionCollection extends MapCollection {
         originX: "center",
         originY: "center",
         evented: false,
+        metadata: {
+          rect,
+        }
       })
+
+      const md = rect.get("metadata");
+      if (md) {
+        const textbox = md.label;
+        textbox.set({
+          fontWeight: "900",
+          fill: theme.primary,
+        })
+      }
 
       this.addReportObj(circle);
       this._group.add(circle);

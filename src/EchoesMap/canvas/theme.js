@@ -1,5 +1,6 @@
 const darkEve = {
   primary: "#ffffff",
+  inactive: "#CFCFCF",
   secondary: "#c1fadb",
   active: "#ffffff",
   background: "#000000",

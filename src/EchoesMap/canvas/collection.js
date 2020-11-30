@@ -1,4 +1,5 @@
 import { fabric } from "fabric-with-gestures";
+import theme from "./theme";
 
 class MapCollection {
   constructor(canvas, db, opts) {
@@ -40,6 +41,19 @@ class MapCollection {
   // canvas.requestRenderAll may be needed after this.
   clearReportObjs() {
     for (let obj of this._reportObjs) {
+      const md = obj.get("metadata");
+      if (md) {
+        const rect = md.rect;
+        const rmd = rect.get("metadata");
+        if (rmd) {
+          const textbox = rmd.label;
+          textbox.set({
+            fontWeight: "100",
+            fill: theme.inactive,
+          })
+        }
+      }
+
       if (this._group) {
         this._group.remove(obj)
       }
