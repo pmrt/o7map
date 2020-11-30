@@ -24,8 +24,11 @@ const LoginPanel = ({ isVisible, setVisible, userInfo }) => {
     panel.focus();
   }, [isVisible])
 
-  const onPanelBlur = () => {
-    setVisible(0);
+  const onPanelBlur = (e) => {
+    // https://github.com/facebook/react/issues/6410
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setVisible(0);
+    }
   }
 
   if (!isVisible) {
@@ -72,7 +75,7 @@ const LoginPanel = ({ isVisible, setVisible, userInfo }) => {
         </Fragment>
       )
 
-  return <div className="login-panel" tabIndex={0} ref={panelRef} onBlur={onPanelBlur}>
+  return <div className="login-panel" tabIndex={-1} ref={panelRef} onBlur={onPanelBlur}>
     {Panel}
   </div>
 
