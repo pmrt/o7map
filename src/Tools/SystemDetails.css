@@ -3,17 +3,11 @@
   height: auto;
 }
 
-.system-details .login-btn:hover {
-  background:#FFFFFF;
-  color: #000;
-}
-
 .system-buttons a,
 .system-buttons button {
   display: block;
   text-align: center;
   text-transform: uppercase;
-  background: transparent;
   border: 1px solid var(--theme-background-grey);
   color: var(--theme-primary);
   padding: 10px 20px;
@@ -21,12 +15,6 @@
   margin-top: 6px;
   cursor: pointer;
   transition: color 100ms ease-in, background 100ms ease-in;
-}
-
-.system-buttons a:hover,
-.system-buttons button:hover {
-  background: var(--theme-grey-2);
-  color: var(--theme-light-yellow);
 }
 
 .system-buttons a[disabled]:hover,
