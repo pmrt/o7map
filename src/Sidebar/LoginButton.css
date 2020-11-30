@@ -10,6 +10,7 @@
   left: 50px;
   background: var(--theme-background-grey);
   text-align: left;
+  outline: none;
 }
 
 .login-panel:after {

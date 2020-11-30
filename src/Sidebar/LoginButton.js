@@ -8,12 +8,26 @@ import userPng from "../img/user.png";
 import defaultUserWebp from "../img/dc_default_avatar.webp";
 // import defaultUserPng from "../img/dc_default_avatar.png";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import dcLogo from "../img/dc_logo_white.png";
 import "./LoginButton.css";
 
-const LoginPanel = ({ isVisible, userInfo }) => {
+const LoginPanel = ({ isVisible, setVisible, userInfo }) => {
+  const panelRef = useRef(null);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) {
+      return;
+    }
+    panel.focus();
+  }, [isVisible])
+
+  const onPanelBlur = () => {
+    setVisible(0);
+  }
+
   if (!isVisible) {
     return null;
   }
@@ -58,7 +72,7 @@ const LoginPanel = ({ isVisible, userInfo }) => {
         </Fragment>
       )
 
-  return <div className="login-panel">
+  return <div className="login-panel" tabIndex={0} ref={panelRef} onBlur={onPanelBlur}>
     {Panel}
   </div>
 
@@ -88,7 +102,11 @@ const LoginButton = ({ userInfo }) => {
         >
         </img>
       </div>
-      <LoginPanel isVisible={isPanelVisible} userInfo={userInfo}/>
+      <LoginPanel
+      isVisible={isPanelVisible}
+      setVisible={setPanelVisible}
+      userInfo={userInfo}
+      />
     </div>
   )
 }
