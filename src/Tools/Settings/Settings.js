@@ -34,7 +34,7 @@ function Settings() {
           </p>
          <InlineFeedback
           description=""
-          placeholder="I'd to be able to..."
+          placeholder="I'd like to be able to..."
           type="settings_ideas"
           className="settings-feedback"
           onSendResponse={onSendResponse}
