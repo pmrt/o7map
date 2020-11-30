@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useRef } from "react"
-import { addStdoutLine } from "../actions";
+import { addStdoutLine, setIsReceivingReports } from "../actions";
 import { REPORTS } from "../constants";
 import { RootContext } from "../context";
 
@@ -12,7 +12,7 @@ function useReport(regionId, wait) {
   }, []);
 
   const setIsReceiving = useCallback((isReceiving) => {
-    dispatch(setIsReceiving(isReceiving));
+    dispatch(setIsReceivingReports(isReceiving));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
