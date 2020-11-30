@@ -204,7 +204,7 @@ export class System {
 
     const nameTextbox = this._text = new fabric.Textbox(wrapText(this.name, 20), {
       width: 50,
-      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
       fontSize: this.opts.fontSize,
       fontFamily: "Roboto Mono",
       fill: theme.primary,
