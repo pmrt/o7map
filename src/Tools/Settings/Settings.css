@@ -12,3 +12,35 @@
 .settings p {
   margin-right: 30px;
 }
+
+.settings li.feedback-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.settings-feedback {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.feedback-item small {
+  margin-left: 10px;
+}
+
+.feedback-item small.success {
+  color: var(--theme-secondary);
+}
+
+.settings-feedback section {
+  display: flex;
+}
+
+.settings-feedback input {
+  outline: none;
+  border: none;
+  padding: 6px;
+  flex-grow: 1;
+  background: var(--theme-grey-2);
+  color: #fff;
+}
