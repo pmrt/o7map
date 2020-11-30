@@ -71,7 +71,6 @@ function useReport(regionId, wait) {
       if (!didCancel && mapRef.current) {
         mapRef.current.drawReports(reports);
         timeoutRef.current = setTimeout(renderReports, wait);
-        forceReportUpdateRef.current = renderReports;
         log(`Reports updated. Next update scheduled: T+${wait/1000}s`);
         setIsReceiving(true);
       }
@@ -82,13 +81,13 @@ function useReport(regionId, wait) {
       return;
     }
 
+    forceReportUpdateRef.current = renderReports;
     if (!mapRef.current.isRendered()) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(renderReports, 1500);
     } else {
       renderReports();
     }
-
 
     return () => {
       clearTimeout(timeoutRef.current);

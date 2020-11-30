@@ -343,7 +343,7 @@ function SystemDetails() {
         })
 
         if (forceReportUpdateRef.current) {
-          delay(() => forceReportUpdateRef.current(), 5e3);
+          delay(() => forceReportUpdateRef.current(), 2e3);
         }
         return
       case 429:
