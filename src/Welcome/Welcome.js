@@ -43,7 +43,7 @@ function Welcome() {
             on the number of votes. Reports have a limited duration that can vary over time.
           </li>
           <li>Sending a report is quite straightforward: Open the search tool
-            (click the magnifier icon on the sidebar or just press <span className="keybind">S</span>) and type the
+            (click the magnifier icon on the sidebar or just press <span className="keybind">⇧</span>+<span className="keybind">S</span>) and type the
             name of the system. Alternatively, you can navigate through the map and click
             on the system. You don't need to be logged in to see the reports but you do need
             it to send them.</li>

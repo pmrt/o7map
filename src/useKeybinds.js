@@ -9,20 +9,23 @@ function useKeybinds() {
 
   const isSearchVisible = activeTools[Tools.SEARCH];
   useEffect(() => {
-    const onKeyUp = (e) => {
+    const onKeyDown = e => {
       switch (e.key) {
-        case "s":
-          if (!isSearchVisible) {
-            dispatch(setPanelVisibility(Tools.SEARCH, 1));
+        case "S":
+          if (e.shiftKey) {
+              if (!isSearchVisible) {
+                dispatch(setPanelVisibility(Tools.SEARCH, 1));
+              }
+            e.preventDefault();
+            return;
           }
-          break;
         default:
       }
     }
 
-    const l = window.addEventListener("keyup", onKeyUp);
+    document.addEventListener("keydown", onKeyDown);
     return () => {
-      window.removeEventListener("keyup", l);
+      document.removeEventListener("keydown", onKeyDown);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSearchVisible]);
