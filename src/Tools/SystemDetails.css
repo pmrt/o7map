@@ -17,11 +17,10 @@
   transition: color 100ms ease-in, background 100ms ease-in;
 }
 
-.system-buttons a:hover {
-  background: var(--theme-grey-2);
-  color: var(--theme-light-yellow);
+.system-buttons a:hover
+.system-buttons button:hover {
+  color: #000;
 }
-
 
 .system-buttons a[disabled]:hover,
 .system-buttons button[disabled]:hover {
