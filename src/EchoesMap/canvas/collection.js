@@ -40,8 +40,12 @@ class MapCollection {
   // canvas.requestRenderAll may be needed after this.
   clearReportObjs() {
     for (let obj of this._reportObjs) {
-      this._group.remove(obj)
-      this._canvas.remove(obj)
+      if (this._group) {
+        this._group.remove(obj)
+      }
+      if (this._canvas) {
+        this._canvas.remove(obj)
+      }
     }
     this._reportObjs.length = 0;
 
