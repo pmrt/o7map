@@ -19,6 +19,7 @@ function useKeybinds() {
             e.preventDefault();
             return;
           }
+          break;
         default:
       }
     }
