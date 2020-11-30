@@ -36,7 +36,7 @@ function useReport(regionId, wait) {
         resp = await fetchReport();
       } catch (err) {
         console.log(err);
-        if (++errCount > 3) {
+        if (++errCount > 10) {
           log("ERR: Cancelling reports subscription due to >3 errors", "error");
           return;
         }
