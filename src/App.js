@@ -25,7 +25,7 @@ const MobileOverlay = () => {
   const onSendResponse = useCallback(res => {
     let msg =
       res.code === 200
-        ? "You will receive an email when ready"
+        ? "You will receive an email when it's ready"
         : "Couldn't set up reminder";
     setStatus({ message: msg, code: res.code });
   }, []);
